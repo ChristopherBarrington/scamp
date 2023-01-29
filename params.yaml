@@ -1,0 +1,127 @@
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------
+# define project information
+
+project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    feature types:
+        Gene Expression:
+            - AHM4688A1
+            - AHM4688A2
+            - AHM4688A3
+            - AHM4688A15
+            - AHM4688A17
+        Chromatin Accessibility:
+            - AHM4688A4
+            - AHM4688A5
+            - AHM4688A6
+            - AHM4688A16
+            - AHM4688A18
+    genomes:
+        mouse:
+            organism: mus musculus
+            assembly: mm10
+            fasta files: inputs/fasta
+            gtf files: inputs/gtf
+            non-nuclear contigs:
+                - chrM
+            motifs: inputs/motifs.txt
+            ensembl release: 90
+        MOUSE:
+            organism: mus musculus
+            assembly: mm10
+            fasta files: inputs/fasta
+            gtf files: inputs/gtf
+            non-nuclear contigs:
+                - chrM
+            motifs: inputs/motifs.txt
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------
+# define parameters that are shared across _all_ datasets
+
+shared parameters:
+    cell ranger:
+        stage type: cell ranger
+        genome: mouse
+        fastq paths:
+            - inputs/primary_data/220406_A01366_0169_AHC3HVDMXY/fastq
+            - inputs/primary_data/220407_A01366_0171_AH3W3LDRX2/fastq
+    CELL RANGER ARC:
+        stage type: cell ranger arc
+        genome: MOUSE
+        fastq paths:
+            - inputs/primary_data/220406_A01366_0169_AHC3HVDMXY/fastq
+            - inputs/primary_data/220407_A01366_0171_AH3W3LDRX2/fastq
+            - inputs/primary_data/220420_A01366_0179_BH72WWDMXY/fastq
+            - inputs/primary_data/220422_A01366_0180_BHJLLNDSX3/fastq
+            - inputs/primary_data/220726_A01366_0242_BHN3GKDSX3/fastq
+            - inputs/primary_data/220726_A01366_0243_AH5KL2DRX2/fastq
+            - inputs/primary_data/220823_A01366_0268_AH5HJJDRX2/fastq
+            - inputs/primary_data/220907_A01366_0275_AHGFV2DMXY/fastq
+    A SECOND CELL RANGER ARC:
+        stage type: cell ranger arc
+        genome: mouse
+        fastq paths:
+            - inputs/primary_data/220406_A01366_0169_AHC3HVDMXY/fastq
+            - inputs/primary_data/220407_A01366_0171_AH3W3LDRX2/fastq
+            - inputs/primary_data/220420_A01366_0179_BH72WWDMXY/fastq
+            - inputs/primary_data/220422_A01366_0180_BHJLLNDSX3/fastq
+            - inputs/primary_data/220726_A01366_0242_BHN3GKDSX3/fastq
+            - inputs/primary_data/220726_A01366_0243_AH5KL2DRX2/fastq
+            - inputs/primary_data/220823_A01366_0268_AH5HJJDRX2/fastq
+            - inputs/primary_data/220907_A01366_0275_AHGFV2DMXY/fastq
+    SEURAT:
+        stage type: seurat
+        genome: mouse
+        quantification stage: CELL RANGER ARC
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------
+# run cell ranger pipeline(s)
+
+CELL RANGER ARC:
+    8 weeks replicate 1:
+        samples: [AHM4688A1, AHM4688A4]
+        quantification path: inputs/q8wr1
+        index path: inputs/mm10
+
+    8 weeks replicate 2:
+        samples: [AHM4688A2, AHM4688A5]
+
+    8 weeks replicate 3:
+        samples: [AHM4688A3, AHM4688A6]
+
+A SECOND CELL RANGER ARC:
+    8 weeks replicate 1:
+        samples: [AHM4688A1, AHM4688A4]
+
+    8 weeks replicate 2:
+        samples: [AHM4688A2, AHM4688A5]
+
+    8 weeks replicate 3:
+        samples: [AHM4688A3, AHM4688A6]
+
+cell ranger:
+    8 weeks replicate 1:
+        samples: AHM4688A1
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------
+# run seurat pipeline(s)
+
+SEURAT:
+    8 weeks replicate 1:
+        foo: kallisto|bustools
+
+            
+    8 weeks replicate 2:
+        foo: bar
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------
+# run velocyto pipeline(s)
+
+# rna velocity:
+#     8 weeks replicate 1:
+#         quantification path: ^cell ranger
+
