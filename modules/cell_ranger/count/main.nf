@@ -12,11 +12,9 @@ process count {
 		val uid, emit: uid
 		path 'index_path', emit: index_path
 		path "$output_directory/outs", emit: quantification_path
-		path 'software_versions.yaml', emit: software_versions
+		path 'versions.yaml', emit: versions
 
-	stub:
-		"""
-		mkdir --parents $output_directory/outs
-		touch software_versions.yaml
-		"""
+	script:
+		samples_regex = samples.join('|')
+		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }
