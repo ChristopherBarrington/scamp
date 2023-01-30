@@ -4,13 +4,13 @@ process merge_yaml {
 	time '10m'
 
 	input:
-		path 'input_software_versions_?.yaml'
+		path 'input_?.yaml'
 
 	output:
-		path 'software_versions.yaml', emit: path
+		path 'output.yaml', emit: path
 
 	script:
 		"""
-		yq eval-all '. as \$item ireduce ({}; . * \$item )' input_software_versions_*.yaml > software_versions.yaml
+		yq eval-all '. as \$item ireduce ({}; . * \$item )' input_*.yaml > output.yaml
 		"""
 }
