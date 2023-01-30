@@ -15,6 +15,5 @@ process count {
 		path 'versions.yaml', emit: versions
 
 	script:
-		samples_regex = samples.join('|')
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }
