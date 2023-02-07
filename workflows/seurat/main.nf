@@ -5,7 +5,8 @@
 
 include { read_matrix as read_cell_ranger_arc_output } from '../../modules/seurat/read_matrices/cell_ranger/arc'
 
-include { check_for_matching_key_values ; format_unique_key ; print_as_json ; val_to_path } from '../../modules/utilities'
+include { format_unique_key } from '../../modules/utilities/format_unique_key'
+include { print_as_json }     from '../../modules/utilities/print_as_json'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow

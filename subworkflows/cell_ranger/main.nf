@@ -6,15 +6,8 @@
 // include { mkref } from '../../modules/cell_ranger/mkref'
 include { count } from '../../modules/cell_ranger/count'
 
-include { add_parameter_sets ;
-          check_for_matching_key_values ;
-          concat_workflow_emissions ;
-          concatenate_maps_list ;
-          get_feature_types ;
-          make_map ;
-          print_as_json ;
-          rename_map_keys ;
-          val_to_path } from '../../modules/utilities'
+include { make_map }      from '../../modules/utilities/make_map'
+include { print_as_json } from '../../modules/utilities/print_as_json'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow

@@ -1,5 +1,11 @@
 #! /bin/env Rscript
 
-sessionInfo()
-
 file(description='seurat.rds', open='w') |> close()
+
+#
+# collect environment variables from the process
+#
+
+uid <- "$foo"
+
+print(uid)

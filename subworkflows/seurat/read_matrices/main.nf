@@ -7,15 +7,7 @@ include { read_cell_ranger_rna_atac_matrices } from '../../modules/seurat/read_c
 
 include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
 
-include { add_parameter_sets ;
-          check_for_matching_key_values ;
-          concat_workflow_emissions ;
-          concatenate_maps_list ;
-          get_feature_types ;
-          make_map ;
-          print_as_json ;
-          rename_map_keys ;
-          val_to_path } from '../../modules/utilities'
+include { print_as_json } from '../../modules/utilities/print_as_json'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow

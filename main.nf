@@ -1,12 +1,14 @@
 
 
-
-// get workflows for this pipeline
-
 include { quantification } from './workflows/quantification'
-include { seurat } from './workflows/seurat'
+include { seurat }         from './workflows/seurat'
 
-include { get_complete_stage_parameters ; make_map ; print_as_json } from './modules/utilities'
+include { print_as_json } from './modules/utilities/print_as_json'
+
+include { get_complete_stage_parameters } from './modules/utilities/get_complete_stage_parameters'
+include { make_map } from './modules/utilities/make_map'
+include { print_pipeline_title } from './modules/utilities/print_pipeline_title'
+
 
 // define the workflow for this pipeline
 
