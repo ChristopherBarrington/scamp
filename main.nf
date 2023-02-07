@@ -1,4 +1,7 @@
 
+// -------------------------------------------------------------------------------------------------
+// specify modules relevant to this workflow
+// -------------------------------------------------------------------------------------------------
 
 include { quantification } from './workflows/quantification'
 include { seurat }         from './workflows/seurat'
@@ -10,7 +13,9 @@ include { make_map } from './modules/utilities/make_map'
 include { print_pipeline_title } from './modules/utilities/print_pipeline_title'
 
 
-// define the workflow for this pipeline
+// -------------------------------------------------------------------------------------------------
+// define the workflow
+// -------------------------------------------------------------------------------------------------
 
 workflow {
 	
