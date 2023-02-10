@@ -1,0 +1,137 @@
+#! /bin/env Rscript
+
+# *************************************************************************************************
+# give a list of assays and assay names, create a minimal seurat object
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# these functions are used to track the software versions and nextflow properties used in the task
+# -------------------------------------------------------------------------------------------------
+
+# writes versions of non-base packages attached in the session
+record_package_versions <- function()
+	sessionInfo()[['otherPkgs']] |>
+		lapply(`[[`, 'Version') |>
+		append(list(R={sessionInfo()[['R.version']][['version.string']]})) |>
+		{\\(x) x[names(x) |> order()]}() |>
+		write_process_yaml(file='versions.yaml')
+
+# writes nextflow properties received by the task to task.yaml
+# `vars` is a list; the values of the list are assigned to variables named as the keys in the global environment
+record_nextflow_properties <- function(vars) {
+	# write a list of variables to a yaml file
+	Map(X=names(vars), V=vars, f=function(X,V) {assign(x=X, value=V, envir=globalenv())}) |> invisible()
+	write_process_yaml(content=vars, file='task.yaml')
+}
+
+# accepts a list of key/values to write to `file` under a root key of the nextflow process name
+write_process_yaml <- function(content, file)
+	# write content of a yaml under a key identifying the process
+	list(content) |>
+		purrr::set_names('${task.process}') |>
+		yaml::write_yaml(file=file)
+
+# format an output message
+log_message <- function(x, level='note')
+	switch(level,
+	       `main` = stringr::str_c(' ', x, ' ') |> stringr::str_pad(side='both', width=100, pad='='),
+	       `section` = stringr::str_c(x, ' ') |> stringr::str_pad(side='right', width=100, pad='-'),
+	       `note` = stringr::str_c('   ', x)) |>
+	        stringr::str_trim(side='right') |>
+		base::message()
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(magrittr)
+library(purrr)
+library(Seurat)
+library(Signac)
+library(stringr)
+
+record_package_versions()
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(uid  = "$uid",
+     assay_names = "$assay_names",
+     dataset = "$dataset",
+     misc_names = "$misc_names",
+     project = "$project",
+     output_seurat = "$output_seurat") |> record_nextflow_properties()
+
+# -------------------------------------------------------------------------------------------------
+# start the task
+# -------------------------------------------------------------------------------------------------
+
+log_message(uid, level='main')
+
+# -------------------------------------------------------------------------------------------------
+# create a seurat object with at least one assay
+# -------------------------------------------------------------------------------------------------
+
+log_message("creating seurat object", level='section')
+
+assay_files <- list.files(path='assays', pattern='*.rds', full.names=TRUE)
+assay_names %<>% str_split(pattern=',') %>% pluck(1)
+
+if(length(assay_names) != length(assay_files))
+	stop('number of assay files does not match number of comma-separated assay names!')
+
+sprintf(fmt='found %s assays', length(assay_names)) |> log_message()
+
+for(i in seq_along(assay_files)) {
+	assay_file <- assay_files[i]
+	assay_name <- assay_names[i]
+
+	sprintf(fmt='adding `%s` from %s', assay_name, assay_file) |> log_message()
+
+	if(i == 1) {
+		CreateSeuratObject(project=project, meta.data=NULL,
+		                   counts=readRDS(assay_file), assay=assay_name,
+		                   names.field=1, names.delim='_',
+		                   min.cells=0, min.features=0) -> seurat
+	} else {
+		seurat[[assay_name]] <- readRDS(assay_file)
+	}
+}
+
+# -------------------------------------------------------------------------------------------------
+# rename cells to add the dataset, making them unique across datasets
+# -------------------------------------------------------------------------------------------------
+
+seurat %<>% RenameCells(add.cell.id=dataset)
+
+# -------------------------------------------------------------------------------------------------
+# add useful parts of the index to the misc slot of the seurat object
+# -------------------------------------------------------------------------------------------------
+
+log_message("adding information to seurat object's misc slot", level='section')
+
+misc_files <- list.files(path='misc', pattern='*.rds', full.names=TRUE)
+misc_names %<>% str_split(pattern=',') %>% pluck(1)
+
+if(length(misc_names) != length(misc_files))
+	stop('number of assay files does not match number of comma-separated assay names!')
+
+for(i in seq_along(misc_files)) {
+	misc_file <- misc_files[i]
+	misc_name <- misc_names[i]
+
+	sprintf(fmt='adding `%s` from %s', misc_name, misc_file) |> log_message()
+
+	Misc(object=seurat, slot=misc_name) <- readRDS(misc_file)
+}
+
+# -------------------------------------------------------------------------------------------------
+# write any output files
+# -------------------------------------------------------------------------------------------------
+
+log_message("writing output files", level='section')
+
+saveRDS(object=seurat, file=output_seurat)
+
+log_message("script completed", level='main')
