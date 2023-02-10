@@ -1,0 +1,122 @@
+#! /bin/env Rscript
+
+# *************************************************************************************************
+# given a path of cell ranger formatted output, create an assay ready to use in seurat
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# these functions are used to track the software versions and nextflow properties used in the task
+# -------------------------------------------------------------------------------------------------
+
+# writes versions of non-base packages attached in the session
+record_package_versions <- function()
+	sessionInfo()[['otherPkgs']] |>
+		lapply(`[[`, 'Version') |>
+		append(list(R={sessionInfo()[['R.version']][['version.string']]})) |>
+		{\\(x) x[names(x) |> order()]}() |>
+		write_process_yaml(file='versions.yaml')
+
+# writes nextflow properties received by the task to task.yaml
+# `vars` is a list; the values of the list are assigned to variables named as the keys in the global environment
+record_nextflow_properties <- function(vars) {
+	# write a list of variables to a yaml file
+	Map(X=names(vars), V=vars, f=function(X,V) {assign(x=X, value=V, envir=globalenv())}) |> invisible()
+	write_process_yaml(content=vars, file='task.yaml')
+}
+
+# accepts a list of key/values to write to `file` under a root key of the nextflow process name
+write_process_yaml <- function(content, file)
+	# write content of a yaml under a key identifying the process
+	list(content) |>
+		purrr::set_names('${task.process}') |>
+		yaml::write_yaml(file=file)
+
+# format an output message
+log_message <- function(x, level='note')
+	switch(level,
+	       `main` = stringr::str_c(' ', x, ' ') |> stringr::str_pad(side='both', width=100, pad='='),
+	       `section` = stringr::str_c(x, ' ') |> stringr::str_pad(side='right', width=100, pad='-'),
+	       `note` = stringr::str_c('   ', x)) |>
+	        stringr::str_trim(side='right') |>
+		base::message()
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(dplyr)
+library(purrr)
+library(Seurat)
+library(stringr)
+library(tibble)
+
+record_package_versions()
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(uid  = "$uid",
+     feature_identifier = "$feature_identifier",
+     inputs             = "$inputs",
+     feature_type       = "$feature_type",
+     output_assay       = "$output_assay",
+     output_features    = "$output_features") |> record_nextflow_properties()
+
+# -------------------------------------------------------------------------------------------------
+# read cell ranger formatted output into a list of counts matrices
+# -------------------------------------------------------------------------------------------------
+
+log_message('reading counts matrices', level='section')
+
+counts_input_path <- file.path(inputs, 'filtered_feature_bc_matrix')
+
+switch(feature_identifier,
+       accession=1,
+       name=2,
+       0) -> gene_column
+
+sprintf(fmt='input counts matrices: %s', counts_input_path) |> log_message()
+sprintf(fmt='using `%s` (column %s) as gene identifiers', feature_identifier, gene_column) |> log_message()
+
+Read10X(data.dir=counts_input_path,
+        gene.column=gene_column,
+        cell.column=1,
+        unique.features=TRUE,
+        strip.suffix=FALSE) -> all_counts
+
+# -------------------------------------------------------------------------------------------------
+# create assay from the counts
+# -------------------------------------------------------------------------------------------------
+
+log_message('creating new assay', level='section')
+
+if(class(all_counts) == 'list')
+	all_counts |> pluck(feature_type) -> all_counts
+
+CreateAssayObject(counts=all_counts, min.cells=0, min.features=0) |>
+	{\\(x) Cells(x) |> str_remove_all('-1\$') |> RenameCells(object=x)}() -> new_assay
+
+# -------------------------------------------------------------------------------------------------
+# get a copy of the features file, used to convert between accessions and feature names
+# -------------------------------------------------------------------------------------------------
+
+log_message("copying features file", level='section')
+
+# read the cell ranger features file that provides (ensembl) id and (gene name)
+counts_input_path |>
+	file.path('features.tsv.gz') |>
+	read.delim(sep='\t', header=FALSE) |>
+	rename(any_of(c(accession='V1', name='V2', feature_type='V3', chromosome='V4', start='V5', end='V6'))) |>
+	filter_at('feature_type', \\(x) x==feature_type) -> features
+
+# -------------------------------------------------------------------------------------------------
+# write any output files
+# -------------------------------------------------------------------------------------------------
+
+log_message("writing output files", level='section')
+
+saveRDS(object=new_assay, file=output_assay)
+saveRDS(object=features, file=output_features)
+
+log_message("script completed", level='main')
