@@ -1,0 +1,133 @@
+#! /bin/env Rscript
+
+# *************************************************************************************************
+# given a path of cell ranger formatted output, create an assay ready to use in seurat
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# these functions are used to track the software versions and nextflow properties used in the task
+# -------------------------------------------------------------------------------------------------
+
+# writes versions of non-base packages attached in the session
+record_package_versions <- function()
+	sessionInfo()[['otherPkgs']] |>
+		lapply(`[[`, 'Version') |>
+		append(list(R={sessionInfo()[['R.version']][['version.string']]})) |>
+		{\\(x) x[names(x) |> order()]}() |>
+		write_process_yaml(file='versions.yaml')
+
+# writes nextflow properties received by the task to task.yaml
+# `vars` is a list; the values of the list are assigned to variables named as the keys in the global environment
+record_nextflow_properties <- function(vars) {
+	# write a list of variables to a yaml file
+	Map(X=names(vars), V=vars, f=function(X,V) {assign(x=X, value=V, envir=globalenv())}) |> invisible()
+	write_process_yaml(content=vars, file='task.yaml')
+}
+
+# accepts a list of key/values to write to `file` under a root key of the nextflow process name
+write_process_yaml <- function(content, file)
+	# write content of a yaml under a key identifying the process
+	list(content) |>
+		purrr::set_names('${task.process}') |>
+		yaml::write_yaml(file=file)
+
+# format an output message
+log_message <- function(x, level='note')
+	switch(level,
+	       `main` = stringr::str_c(' ', x, ' ') |> stringr::str_pad(side='both', width=100, pad='='),
+	       `section` = stringr::str_c(x, ' ') |> stringr::str_pad(side='right', width=100, pad='-'),
+	       `note` = stringr::str_c('   ', x)) |>
+	        stringr::str_trim(side='right') |>
+		base::message()
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(dplyr)
+library(magrittr)
+library(purrr)
+library(scales)
+library(Seurat)
+library(Signac)
+library(stringr)
+
+record_package_versions()
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(uid             = "$uid",
+     inputs          = "$inputs",
+     annotations     = "$annotations",
+     output_assay    = "$output_assay",
+     output_features = "$output_features") |> record_nextflow_properties()
+
+# -------------------------------------------------------------------------------------------------
+# start the task
+# -------------------------------------------------------------------------------------------------
+
+log_message(uid, level='main')
+
+# -------------------------------------------------------------------------------------------------
+# read cell ranger arc count output into a list of counts matrices
+# -------------------------------------------------------------------------------------------------
+
+log_message('reading count matrices', level='section')
+
+counts_input_path <- file.path(inputs, 'filtered_feature_bc_matrix') 
+
+sprintf(fmt='input counts matrices: %s', counts_input_path) |> log_message()
+
+Read10X(data.dir=counts_input_path,
+        gene.column=1,
+        cell.column=1,
+        unique.features=TRUE,
+        strip.suffix=FALSE) -> all_counts
+
+# -------------------------------------------------------------------------------------------------
+# create the atac-seq assay
+# -------------------------------------------------------------------------------------------------
+
+log_message('creating atac-seq assay', level='section')
+
+atac_fragments_file <- file.path(inputs, 'atac_fragments.tsv.gz')
+all_counts |> pluck('Peaks') -> atac_counts
+atac_counts |> rownames() |> StringToGRanges(sep=c(':', '-')) -> atac_peak_granges
+
+sprintf(fmt='atac-seq fragments file: %s', atac_fragments_file) |> log_message()
+atac_peak_granges |> length() |> comma() |> sprintf(fmt='%s atac peaks identified') |> log_message()
+
+annotations %<>% readRDS()
+seqinfo <- seqinfo(annotations)
+
+CreateChromatinAssay(counts=atac_counts, ranges=atac_peak_granges,
+                     genome=seqinfo, sep=c(':', '-'),
+                     fragments=atac_fragments_file, annotation=annotations,
+                     min.cells=0, max.cells=NULL, min.features=0) |>
+	{\\(x) Cells(x) |> str_remove_all('-1\$') |> RenameCells(object=x)}() -> new_assay
+
+# -------------------------------------------------------------------------------------------------
+# get a copy of the atac peaks
+# -------------------------------------------------------------------------------------------------
+
+log_message("copying features file", level='section')
+
+# read the cell ranger features file that provides (ensembl) id and (gene name)
+counts_input_path |>
+	file.path('features.tsv.gz') |>
+	read.delim(sep='\t', header=FALSE) |>
+	rename(any_of(c(accession='V1', name='V2', feature_type='V3', chromosome='V4', start='V5', end='V6'))) |>
+	filter(feature_type=='Peaks') -> features
+
+# -------------------------------------------------------------------------------------------------
+# write any output files
+# -------------------------------------------------------------------------------------------------
+
+log_message("writing output files", level='section')
+
+saveRDS(object=new_assay, file=output_assay)
+saveRDS(object=features, file=output_features)
+
+log_message("script completed", level='main')
