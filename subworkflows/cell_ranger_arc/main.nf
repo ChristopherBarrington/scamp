@@ -64,7 +64,7 @@ workflow cell_ranger_arc {
 		feature_type_params = get_feature_types()
 
 		// make channels to create the libraries csv file that cell ranger arc count expects
-		fastq_paths       = channel.fromPath(filtered_stage_parameters.collect{x -> x.get('fastq paths')}.flatten().unique()).collect()
+		fastq_paths       = channel.from(filtered_stage_parameters.collect{x -> x.get('fastq paths')}.flatten().unique()).collect()
 		fastq_files_regex = channel.value('(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz')
 		samples           = channel.value(feature_type_params.collect{x -> x.get('sample name')})
 		feature_types     = channel.value(feature_type_params.collect{x -> x.get('feature type')})
