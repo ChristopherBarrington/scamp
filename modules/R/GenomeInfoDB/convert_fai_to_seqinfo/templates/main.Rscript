@@ -1,0 +1,94 @@
+#! /bin/env Rscript
+
+# *************************************************************************************************
+# given the path to an fai file, this script:
+# - creates a Seqinfo object
+# - saves it as an rds file
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# these functions are used to track the software versions and nextflow properties used in the task
+# -------------------------------------------------------------------------------------------------
+
+# writes versions of non-base packages attached in the session
+record_package_versions <- function()
+	sessionInfo()[['otherPkgs']] |>
+		lapply(`[[`, 'Version') |>
+		append(list(R={sessionInfo()[['R.version']][['version.string']]})) |>
+		{\\(x) x[names(x) |> order()]}() |>
+		write_process_yaml(file='versions.yaml')
+
+# writes nextflow properties received by the task to task.yaml
+# `vars` is a list; the values of the list are assigned to variables named as the keys in the global environment
+assign_and_record_nextflow_properties <- function(vars) {
+	# write a list of variables to a yaml file
+	Map(X=names(vars), V=vars, f=function(X,V) {assign(x=X, value=V, envir=globalenv())}) |> invisible()
+	write_process_yaml(content=vars, file='task.yaml')
+}
+
+# accepts a list of key/values to write to `file` under a root key of the nextflow process name
+write_process_yaml <- function(content, file)
+	# write content of a yaml under a key identifying the process
+	list(content) |>
+		purrr::set_names('${task.process}') |>
+		yaml::write_yaml(file=file)
+
+# format an output message
+log_message <- function(x, level='note')
+	switch(level,
+	       `main` = stringr::str_c(' ', x, ' ') |> stringr::str_pad(side='both', width=100, pad='='),
+	       `section` = stringr::str_c(x, ' ') |> stringr::str_pad(side='right', width=100, pad='-'),
+	       `note` = stringr::str_c('   ', x)) |>
+	        stringr::str_trim(side='right') |>
+		base::message()
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(dplyr)
+library(gtools)
+library(magrittr)
+library(GenomeInfoDb)
+library(rtracklayer)
+
+record_package_versions()
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(uid            = "$uid",
+     genome_name    = "$genome_name",
+     fai_file       = "$fai_file",
+     output_seqinfo = "$output_seqinfo") |> assign_and_record_nextflow_properties()
+
+# -------------------------------------------------------------------------------------------------
+# start the task
+# -------------------------------------------------------------------------------------------------
+
+log_message(uid, level='main')
+
+# -------------------------------------------------------------------------------------------------
+# make a Seqinfo object for the genome
+# -------------------------------------------------------------------------------------------------
+
+log_message('making a Seqinfo object for the genome', level='section')
+
+read.delim(file=fai_file, header=FALSE, sep='\t') |>
+	select(seqnames=V1, seqlengths=V2) |>
+	arrange(mixedorder(seqnames)) |>
+	arrange(match(seqnames, mixedsort(seqnames))) |>
+	as.list() |>
+	append(list(genome=genome_name)) |>
+	do.call(what=Seqinfo) -> seqinfo
+
+# -------------------------------------------------------------------------------------------------
+# write any output files
+# -------------------------------------------------------------------------------------------------
+
+log_message("writing output files", level='section')
+
+saveRDS(object=seqinfo, file=output_seqinfo)
+
+log_message("script completed", level='main')
