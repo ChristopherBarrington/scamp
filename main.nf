@@ -9,7 +9,7 @@ include { seurat }         from './workflows/seurat'
 include { print_as_json } from './modules/utilities/print_as_json'
 
 include { get_complete_stage_parameters } from './modules/utilities/get_complete_stage_parameters'
-include { make_map } from './modules/utilities/make_map'
+include { make_map }                      from './modules/utilities/make_map'
 include { print_pipeline_title }          from './modules/utilities/print_pipeline_title'
 
 print_pipeline_title()

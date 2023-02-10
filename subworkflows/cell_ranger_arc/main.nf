@@ -7,13 +7,11 @@ include { count }              from '../../modules/cell_ranger_arc/count'
 include { make_libraries_csv } from '../../modules/cell_ranger_arc/make_libraries_csv'
 include { mkref }              from '../../modules/cell_ranger_arc/mkref'
 
-include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
-
 include { concat_workflow_emissions } from '../../modules/utilities/concat_workflow_emissions'
 include { get_feature_types }         from '../../modules/utilities/get_feature_types'
 include { make_map }                  from '../../modules/utilities/make_map'
 
-include { print_as_json }             from '../../modules/utilities/print_as_json'
+include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -144,7 +142,11 @@ workflow cell_ranger_arc {
 
 		merge_software_versions(versions)
 
-		// render a report
+		// -------------------------------------------------------------------------------------------------
+		// render a report for this part of the analysis
+		// -------------------------------------------------------------------------------------------------
+
+		// TODO: add process to render a chapter of a report
 
 	emit:
 		subworkflows         = quantified_datasets.count().flatMap{['cell ranger arc'].multiply(it)}
