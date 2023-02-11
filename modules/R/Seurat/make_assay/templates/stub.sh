@@ -1,3 +1,3 @@
 #! /bin/env bash
 
-touch {assay,features}.rds {task,versions}.yaml
+touch assay.rds {task,versions}.yaml

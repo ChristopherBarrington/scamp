@@ -10,8 +10,10 @@ process make_chromatin_assay {
 	input:
 		val uid
 		val tag
-		path 'inputs'
-		path 'annotations'
+		path 'annotations.rds'
+		path 'counts_matrices.rds'
+		path 'quantification_path'
+		val feature_type
 
 	// define expected output channels
 	output:
@@ -19,7 +21,6 @@ process make_chromatin_assay {
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'assay.rds', emit: assay
-		path 'features.rds', emit: features
 
 	// define additional nextflow properties to pass to the template script
 	script:

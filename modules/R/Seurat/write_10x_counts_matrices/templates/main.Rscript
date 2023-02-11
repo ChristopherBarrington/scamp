@@ -1,7 +1,7 @@
 #! /bin/env Rscript
 
 # *************************************************************************************************
-# given a path of cell ranger formatted output, create an assay ready to use in seurat
+# creates a list of counts matrices from a cell ranger formatted output directory
 # *************************************************************************************************
 
 # -------------------------------------------------------------------------------------------------
@@ -12,13 +12,11 @@
 record_package_versions <- function()
 	sessionInfo()[['otherPkgs']] |>
 		lapply(`[[`, 'Version') |>
-		append(list(R={sessionInfo()[['R.version']][['version.string']]})) |>
-		{\\(x) x[names(x) |> order()]}() |>
 		write_process_yaml(file='versions.yaml')
 
 # writes nextflow properties received by the task to task.yaml
 # `vars` is a list; the values of the list are assigned to variables named as the keys in the global environment
-record_nextflow_properties <- function(vars) {
+assign_and_record_nextflow_properties <- function(vars) {
 	# write a list of variables to a yaml file
 	Map(X=names(vars), V=vars, f=function(X,V) {assign(x=X, value=V, envir=globalenv())}) |> invisible()
 	write_process_yaml(content=vars, file='task.yaml')
@@ -44,9 +42,10 @@ log_message <- function(x, level='note')
 # attach and record packages used in this Rscript
 # -------------------------------------------------------------------------------------------------
 
-library(purrr)
+library(plyr)
+library(dplyr)
+library(magrittr)
 library(Seurat)
-library(stringr)
 
 record_package_versions()
 
@@ -55,21 +54,45 @@ record_package_versions()
 # -------------------------------------------------------------------------------------------------
 
 list(uid = "$uid",
-     feature_type = "$feature_type") |> record_nextflow_properties()
+     feature_identifier = "$feature_identifier") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
-# create assay from the counts
+# start the task
 # -------------------------------------------------------------------------------------------------
 
-log_message('creating new assay', level='section')
+log_message(uid, level='main')
 
-all_counts <- readRDS(file='counts_matrices.rds')
+# -------------------------------------------------------------------------------------------------
+# read cell ranger formatted barcoded counts matrix into a list of counts matrices
+# -------------------------------------------------------------------------------------------------
 
-if(class(all_counts) == 'list')
-	all_counts |> pluck(feature_type) -> all_counts
+log_message('reading barcoded counts matrix', level='section')
 
-CreateAssayObject(counts=all_counts, min.cells=0, min.features=0) |>
-	{\\(x) Cells(x) |> str_remove_all('-1\$') |> RenameCells(object=x)}() -> assay
+switch(feature_identifier,
+       accession=1,
+       name=2,
+       0) -> gene_column
+
+Sys.readlink('barcoded_matrix') |> sprintf(fmt='input barcoded counts matrix: %s') |> log_message()
+sprintf(fmt='using `%s` (column %s) as gene identifiers', feature_identifier, gene_column) |> log_message()
+
+Read10X(data.dir='barcoded_matrix',
+        gene.column=gene_column,
+        cell.column=1,
+        unique.features=TRUE,
+        strip.suffix=FALSE) -> all_counts
+
+# -------------------------------------------------------------------------------------------------
+# get a copy of the features file, used to convert between accessions and feature names
+# -------------------------------------------------------------------------------------------------
+
+log_message("copying features file", level='section')
+
+# read the cell ranger features file that provides (ensembl) id and (gene name)
+file.path('barcoded_matrix', 'features.tsv.gz') |>
+	read.delim(sep='\t', header=FALSE) |>
+	rename(any_of(c(accession='V1', name='V2', feature_type='V3', chromosome='V4', start='V5', end='V6'))) |>
+	dlply(~feature_type, select, -feature_type) -> features
 
 # -------------------------------------------------------------------------------------------------
 # write any output files
@@ -77,6 +100,7 @@ CreateAssayObject(counts=all_counts, min.cells=0, min.features=0) |>
 
 log_message("writing output files", level='section')
 
-saveRDS(object=assay, file='assay.rds')
+saveRDS(object=all_counts, file='counts_matrices.rds')
+saveRDS(object=features, file='features.rds')
 
 log_message("script completed", level='main')
