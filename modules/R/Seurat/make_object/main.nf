@@ -10,7 +10,7 @@ process make_object {
 		val tag
 		path 'assays/?.rds'
 		val assay_names
-		val dataset
+		val dataset_tag
 		path 'misc/?.rds'
 		val misc_names
 		val project
