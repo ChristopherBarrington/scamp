@@ -8,7 +8,6 @@ process make_assay {
 	input:
 		val uid
 		val tag
-
 		val feature_identifier
 		val feature_type
 		path 'inputs'
@@ -17,7 +16,6 @@ process make_assay {
 		val uid, emit: uid
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
-
 		path 'assay.rds', emit: assay
 		path 'features.rds', emit: features
 

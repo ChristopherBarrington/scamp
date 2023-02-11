@@ -8,7 +8,6 @@ process convert_gtf_to_granges {
 	input:
 		val uid
 		val tag
-
 		val genome_name
 		path gtf_file
 		path fai_file
@@ -17,10 +16,8 @@ process convert_gtf_to_granges {
 		val uid, emit: uid
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
-
 		path 'granges.rds', emit: granges
 
 	script:
-		output_granges = 'granges.rds'
 		template workflow.stubRun ? 'main.Rscript' : 'main.Rscript'
 }
