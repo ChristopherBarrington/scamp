@@ -58,10 +58,9 @@ record_package_versions()
 
 list(uid  = "$uid",
      assay_names = "$assay_names",
-     dataset = "$dataset",
+     dataset_tag = "$dataset_tag",
      misc_names = "$misc_names",
-     project = "$project",
-     output_seurat = "$output_seurat") |> record_nextflow_properties()
+     project = "$project") |> record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # start the task
@@ -77,6 +76,9 @@ log_message("creating seurat object", level='section')
 
 assay_files <- list.files(path='assays', pattern='*.rds', full.names=TRUE)
 assay_names %<>% str_split(pattern=',') %>% pluck(1)
+
+sprintf(fmt='found %s assays', length(assay_files)) |> log_message()
+sprintf(fmt='provided %s assay names', length(assay_names)) |> log_message()
 
 if(length(assay_names) != length(assay_files))
 	stop('number of assay files does not match number of comma-separated assay names!')
@@ -100,10 +102,10 @@ for(i in seq_along(assay_files)) {
 }
 
 # -------------------------------------------------------------------------------------------------
-# rename cells to add the dataset, making them unique across datasets
+# rename cells to add the dataset tag, making them unique across datasets
 # -------------------------------------------------------------------------------------------------
 
-seurat %<>% RenameCells(add.cell.id=dataset)
+seurat %<>% RenameCells(add.cell.id=dataset_tag)
 
 # -------------------------------------------------------------------------------------------------
 # add useful parts of the index to the misc slot of the seurat object
@@ -114,8 +116,11 @@ log_message("adding information to seurat object's misc slot", level='section')
 misc_files <- list.files(path='misc', pattern='*.rds', full.names=TRUE)
 misc_names %<>% str_split(pattern=',') %>% pluck(1)
 
+sprintf(fmt='found %s misc files', length(misc_files)) |> log_message()
+sprintf(fmt='provided %s misc names', length(misc_names)) |> log_message()
+
 if(length(misc_names) != length(misc_files))
-	stop('number of assay files does not match number of comma-separated assay names!')
+	stop('number of misc files does not match number of comma-separated assay misc!')
 
 for(i in seq_along(misc_files)) {
 	misc_file <- misc_files[i]
@@ -132,6 +137,6 @@ for(i in seq_along(misc_files)) {
 
 log_message("writing output files", level='section')
 
-saveRDS(object=seurat, file=output_seurat)
+saveRDS(object=seurat, file='seurat.rds')
 
 log_message("script completed", level='main')
