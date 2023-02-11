@@ -24,6 +24,5 @@ process make_object {
 	script:
 		assay_names = assay_names.join(',')
 		misc_names = misc_names.join(',')
-		output_seurat = 'seurat.rds'
 		template workflow.stubRun ? 'stub.sh' : 'main.Rscript'
 }

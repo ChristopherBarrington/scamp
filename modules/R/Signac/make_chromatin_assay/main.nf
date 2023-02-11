@@ -24,8 +24,5 @@ process make_chromatin_assay {
 
 	// define additional nextflow properties to pass to the template script
 	script:
-		feature_type = 'Chromatin Accessibility'
-		output_assay = 'assay.rds'
-		output_features = 'features.rds'
 		template workflow.stubRun ? 'stub.sh' : 'main.Rscript'
 }

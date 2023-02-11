@@ -18,7 +18,5 @@ process make_assay {
 		path 'assay.rds', emit: assay
 
 	script:
-		output_assay = 'assay.rds'
-		output_features = 'features.rds'
 		template workflow.stubRun ? 'stub.sh' : 'main.Rscript'
 }

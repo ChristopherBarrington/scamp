@@ -58,10 +58,9 @@ record_package_versions()
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid            = "$uid",
-     genome_name    = "$genome_name",
-     fai_file       = "$fai_file",
-     output_seqinfo = "$output_seqinfo") |> assign_and_record_nextflow_properties()
+list(uid = "$uid",
+     genome_name = "$genome_name",
+     fai_file = "$fai_file") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # start the task
@@ -89,6 +88,6 @@ read.delim(file=fai_file, header=FALSE, sep='\t') |>
 
 log_message("writing output files", level='section')
 
-saveRDS(object=seqinfo, file=output_seqinfo)
+saveRDS(object=seqinfo, file='seqinfo.rds')
 
 log_message("script completed", level='main')

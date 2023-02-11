@@ -58,11 +58,10 @@ record_package_versions()
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid            = "$uid",
-     genome_name    = "$genome_name",
-     gtf_file       = "$gtf_file",
-     fai_file       = "$fai_file",
-     output_granges = "$output_granges") |> assign_and_record_nextflow_properties()
+list(uid = "$uid",
+     genome_name = "$genome_name",
+     gtf_file = "$gtf_file",
+     fai_file = "$fai_file") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # start the task
@@ -101,6 +100,6 @@ seqinfo(granges) <- seqinfo
 
 log_message("writing output files", level='section')
 
-saveRDS(object=granges, file=output_granges)
+saveRDS(object=granges, file='granges.rds')
 
 log_message("script completed", level='main')
