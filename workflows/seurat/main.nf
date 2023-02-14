@@ -122,7 +122,7 @@ workflow seurat {
 
 		// get the unique set of quantification matrices and feature identifiers' columns
 		expression_methods.cell_ranger_arc
-			.map{[it.subMap('quantification path'), ['accession','name']]}
+			.map{[it.subMap('index path', 'quantification path'), ['accession','name']]}
 			.transpose()
 			.map{it.first() + [identifier:it.last()]}
 			.unique()
@@ -222,6 +222,12 @@ workflow seurat {
 			.filter{check_for_matching_key_values(it, 'genome')}
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it).subMap(['dataset name', 'granges', 'counts_matrices', 'quantification path'])}
+		barcoded_matrices
+			.filter{it.get('identifier') == 'accession'}
+			.combine(granges_files.map{it.subMap(['index path','granges'])})
+			.filter{check_for_matching_key_values(it, 'index path')}
+			.map{concatenate_maps_list(it)}
+			.map{it.subMap(['tag', 'granges', 'counts_matrices', 'quantification path'])}
 			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays_to_create', pretty:true)
 			.set{chromatin_assays_to_create}
 
@@ -231,6 +237,7 @@ workflow seurat {
 			.set{versions}
 		// create the channels for the process to make a chromatin assay
 		tags                 = chromatin_assays_to_create.map{it.get('dataset name')}
+		tags                 = chromatin_assays_to_create.map{it.get('tag')}
 		annotations          = chromatin_assays_to_create.map{it.get('granges')}
 		counts_matrices      = chromatin_assays_to_create.map{it.get('counts_matrices')}
 		quantification_paths = chromatin_assays_to_create.map{it.get('quantification path')}
