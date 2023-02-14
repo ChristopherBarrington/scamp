@@ -122,28 +122,25 @@ workflow seurat {
 
 		// get the unique set of quantification matrices and feature identifiers' columns
 		expression_methods.cell_ranger_arc
-			.map{it.subMap(['gene identifiers', 'quantification path'])}
+			.map{[it.subMap('quantification path'), ['accession','name']]}
+			.transpose()
+			.map{it.first() + [identifier:it.last()]}
 			.unique()
 			.map{it + ['barcoded matrix path': Paths.get(it.get('quantification path').toString(), 'filtered_feature_bc_matrix')]}
-			.map{it + ['uid': it.toString().md5().substring(0, 6)]}
+			.map{it + ['tag': it.toString().md5().substring(0, 9)]}
 			.dump(tag:'seurat:cell_ranger_arc:barcoded_matrices_to_read', pretty:true)
 			.set{barcoded_matrices_to_read}
 
 		// create the channels for the process to make an RNA assay
-		unique_identifiers    = barcoded_matrices_to_read.map{it.get('uid')}
-		tags                  = barcoded_matrices_to_read.map{it.get('uid')}
+		tags                  = barcoded_matrices_to_read.map{it.get('tag')}
 		barcoded_matrix_paths = barcoded_matrices_to_read.map{it.get('barcoded matrix path')}
-		feature_identifiers   = barcoded_matrices_to_read.map{it.get('gene identifiers')}
+		identifiers           = barcoded_matrices_to_read.map{it.get('identifier')}
 
-		write_10x_counts_matrices(unique_identifiers, tags, barcoded_matrix_paths, feature_identifiers)
+		write_10x_counts_matrices(barcoded_matrices_to_read, tags, barcoded_matrix_paths, identifiers)
 
 		// make a channel of newly created counts matrices
-		merge_process_emissions(write_10x_counts_matrices, ['uid', 'counts_matrices', 'features'])
-			.map{x -> rename_map_keys(x, 'counts_matrices', 'counts matrices')}
-			.combine(barcoded_matrices_to_read)
-			.filter{check_for_matching_key_values(it, 'uid')}
-			.map{concatenate_maps_list(it)}
-			.map{it.findAll{it.key != 'uid'}}
+		merge_process_emissions(write_10x_counts_matrices, ['metadata', 'counts_matrices', 'features'])
+			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'seurat:cell_ranger_arc:barcoded_matrices', pretty:true)
 			.set{barcoded_matrices}
 
