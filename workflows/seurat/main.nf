@@ -89,6 +89,32 @@ workflow seurat {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 		// -------------------------------------------------------------------------------------------------
+		// make GRanges objects for gene annotations of the genomes
+		// -------------------------------------------------------------------------------------------------
+
+		// create the channels for the process to make GRanges objects using Cell Ranger ARC indexes
+		expression_methods.cell_ranger_arc
+			.map{it.subMap(['genome', 'index path'])}
+			.unique()
+			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf.gz')]}
+			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
+			.dump(tag:'seurat:cell_ranger_arc:gtf_files_to_convert_to_granges', pretty:true)
+			.set{gtf_files_to_convert_to_granges}
+
+		tags      = gtf_files_to_convert_to_granges.map{it.get('genome')}
+		genomes   = gtf_files_to_convert_to_granges.map{it.get('genome')}
+		gtf_files = gtf_files_to_convert_to_granges.map{it.get('gtf')}
+		fai_files = gtf_files_to_convert_to_granges.map{it.get('fai')}
+
+		convert_gtf_to_granges(gtf_files_to_convert_to_granges, tags, genomes, gtf_files, fai_files)
+
+		// make a channel of newly created GRanges rds files
+		merge_process_emissions(convert_gtf_to_granges, ['metadata', 'granges'])
+			.map{merge_metadata_and_process_output(it)}
+			.dump(tag:'seurat:cell_ranger_arc:granges_files', pretty:true)
+			.set{granges_files}
+
+		// -------------------------------------------------------------------------------------------------
 		// read the 10X cell ranger matrices into an object
 		// -------------------------------------------------------------------------------------------------
 
