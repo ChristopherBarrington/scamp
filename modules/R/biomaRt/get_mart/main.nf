@@ -6,14 +6,12 @@ process process_name {
 	time '1h'
 
 	input:
-		val uid
 		val tag
 
 		val channel_1
 		val channel_1
 
 	output:
-		val uid, emit: uid
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 

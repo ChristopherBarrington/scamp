@@ -6,14 +6,12 @@ process convert_gtf_to_granges {
 	time '1h'
 
 	input:
-		val uid
 		val tag
 		val genome_name
 		path gtf_file
 		path fai_file
 
 	output:
-		val uid, emit: uid
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'granges.rds', emit: granges
