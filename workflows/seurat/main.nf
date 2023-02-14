@@ -24,6 +24,7 @@ include { format_unique_key }             from '../../modules/utilities/format_u
 include { make_map }                      from '../../modules/utilities/make_map'
 include { merge_process_emissions }       from '../../modules/utilities/merge_process_emissions'
 include { rename_map_keys }               from '../../modules/utilities/rename_map_keys'
+include { merge_metadata_and_process_output } from '../../modules/utilities/merge_metadata_and_process_output'
 
 include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
 include { merge_yaml as merge_task_properties }   from '../../modules/yq/merge_yaml'
