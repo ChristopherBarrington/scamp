@@ -148,83 +148,16 @@ workflow seurat {
 		// make an RNA assay
 		// -------------------------------------------------------------------------------------------------
 
+		// create the channels for the process to make an RNA assay
 		tags            = barcoded_matrices.map{it.get('tag')}
 		counts_matrices = barcoded_matrices.map{it.get('counts_matrices')}
 
 		make_rna_assay(barcoded_matrices, tags, 'Gene Expression', counts_matrices)
 
 		// make a channel of newly created rna assays
-		// -------------------------------------------------------------------------------------------------
-		// make GRanges objects for gene annotations of the genomes
-		// -------------------------------------------------------------------------------------------------
-
-		// create the channels for the process to make GRanges objects using Cell Ranger ARC indexes
-		expression_methods.cell_ranger_arc
-			.map{it.subMap(['genome', 'index path'])}
-			.unique()
-			.map{it + [uid: it.toString().md5()]}
-			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf.gz')]}
-			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
-			.dump(tag:'seurat:cell_ranger_arc:gtf_files_to_convert_to_granges', pretty:true)
-			.set{gtf_files_to_convert_to_granges}
-
-		unique_identifiers = gtf_files_to_convert_to_granges.map{it.get('uid')}
-		tags               = gtf_files_to_convert_to_granges.map{it.get('genome')}
-		genome_names       = gtf_files_to_convert_to_granges.map{it.get('genome')}
-		gtf_files          = gtf_files_to_convert_to_granges.map{it.get('gtf')}
-		fai_files          = gtf_files_to_convert_to_granges.map{it.get('fai')}
-
-		convert_gtf_to_granges(unique_identifiers, tags, genome_names, gtf_files, fai_files)
-
-		// make a channel of newly created GRanges rds files
-		merge_process_emissions(convert_gtf_to_granges, ['uid', 'granges'])
-			.map{x -> rename_map_keys(x, 'granges' ,'genes granges')}
-			.combine(gtf_files_to_convert_to_granges)
-			.filter{it.first().get('uid') == it.last().get('uid')}
-			.map{it.first() + it.last()}
-			.map{it.subMap(['genome', 'index path', 'genes granges'])}
-			.dump(tag:'seurat:cell_ranger_arc:granges_files', pretty:true)
-			.set{granges_files}
-
-		// -------------------------------------------------------------------------------------------------
-		// make an ATAC assay
-		// -------------------------------------------------------------------------------------------------
-
-		// combine annotations and quantifications
-		expression_methods.cell_ranger_arc
-			.combine(granges_files)
-			.filter{check_for_matching_key_values(it, 'genome')}
-			.filter{check_for_matching_key_values(it, 'index path')}
-			.map{it.first() + it.last().subMap('genes granges')}
-			.combine(barcoded_matrices)
-			.filter{check_for_matching_key_values(it, 'gene identifiers')}
-			.filter{check_for_matching_key_values(it, 'quantification path')}
-			.map{it.first() + it.last().subMap('matrices path', 'counts matrices')}
-			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays_to_create', pretty:true)
-			.set{chromatin_assays_to_create}
-
-		// create the channels for the process to make a chromatin assay
-		unique_identifiers   = chromatin_assays_to_create.map{it.get('unique id')}
-		tags                 = chromatin_assays_to_create.map{it.get('dataset name')}
-		annotations          = chromatin_assays_to_create.map{it.get('genes granges')}
-		counts_matrices      = chromatin_assays_to_create.map{it.get('counts matrices')}
-		quantification_paths = chromatin_assays_to_create.map{it.get('quantification path')}
-
-		make_chromatin_assay(unique_identifiers, tags, annotations, counts_matrices, quantification_paths, 'Peaks')
-
-		// make a channel of newly created chromatin assays
-		merge_process_emissions(make_chromatin_assay, ['uid', 'assay'])
-			.map{rename_map_keys(it, ['uid', 'assay'], ['unique id', 'chromatin assay'])}
-			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays', pretty:true)
-			.set{chromatin_assays}
-
-		// -------------------------------------------------------------------------------------------------
-		// make a seurat object using rna and atac assays and the annotations
-		// -------------------------------------------------------------------------------------------------
 		merge_process_emissions(make_rna_assay, ['metadata', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
-			.map{rename_map_keys(it, 'assay', 'rna assay')}
-			.map{rename_map_keys(it, 'rna assay', sprintf('rna assay by %s', it.get('identifier')))}
+			.map{rename_map_keys(it, 'assay', sprintf('rna_assay_by_%s', it.get('identifier')))}
 			.dump(tag:'seurat:cell_ranger_arc:rna_assays_branched', pretty:true)
 			.branch({
 				identifier = it.get('identifier')
@@ -270,19 +203,39 @@ workflow seurat {
 			.map{it.last() + it.first().subMap('seurat path')}
 			.dump(tag:'seurat:cell_ranger_arc:seurat_objects', pretty:true)
 			.set{seurat_objects}
+			.map{it.subMap(['quantification path', 'rna_assay_by_accession', 'rna_assay_by_name'])}
+			.dump(tag:'seurat:cell_ranger_arc:rna_assays', pretty:true)
+			.set{rna_assays}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for cell ranger arc stage
+		// make an ATAC assay
 		// -------------------------------------------------------------------------------------------------
 
 		all_processes = [write_10x_counts_matrices, make_rna_assay, convert_gtf_to_granges, make_chromatin_assay, make_seurat_object]
+		// create the channels for the process to make a chromatin assay
+		expression_methods.cell_ranger_arc
+			.map{it.subMap('dataset name', 'genome', 'quantification path')}
+			.unique()
+			.combine(granges_files.map{it.subMap(['genome','granges'])})
+			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'})
+			.filter{check_for_matching_key_values(it, 'genome')}
+			.filter{check_for_matching_key_values(it, 'quantification path')}
+			.map{concatenate_maps_list(it).subMap(['dataset name', 'granges', 'counts_matrices', 'quantification path'])}
+			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays_to_create', pretty:true)
+			.set{chromatin_assays_to_create}
 
 		// collate the software version yaml files into one
 		concat_workflow_emissions(all_processes, 'versions')
 			.collect()
 			.set{versions}
+		// create the channels for the process to make a chromatin assay
+		tags                 = chromatin_assays_to_create.map{it.get('dataset name')}
+		annotations          = chromatin_assays_to_create.map{it.get('granges')}
+		counts_matrices      = chromatin_assays_to_create.map{it.get('counts_matrices')}
+		quantification_paths = chromatin_assays_to_create.map{it.get('quantification path')}
 
-		merge_software_versions(versions)
+		make_chromatin_assay(chromatin_assays_to_create, tags, annotations, counts_matrices, quantification_paths, 'Peaks')
 
 		// collate the software version yaml files into one
 		concat_workflow_emissions(all_processes, 'task')
@@ -291,6 +244,13 @@ workflow seurat {
 			.map{it.subMap(['quantification path', 'rna assay by accession', 'rna assay by name'])}
 			.dump(tag:'seurat:cell_ranger_arc:rna_assays', pretty:true)
 			.set{rna_assays}
+		// make a channel of newly created chromatin assays
+		merge_process_emissions(make_chromatin_assay, ['metadata', 'assay'])
+			.map{merge_metadata_and_process_output(it)}
+			.map{rename_map_keys(it, 'assay', 'chromatin_assay')}
+			.map{it.subMap(['quantification path', 'chromatin_assay'])}
+			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays', pretty:true)
+			.set{chromatin_assays}
 
 		merge_task_properties(task_properties)
 
