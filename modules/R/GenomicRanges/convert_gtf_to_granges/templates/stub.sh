@@ -1,3 +1,3 @@
 #! /bin/env bash
 
-touch $output_granges {task,versions}.yaml
+touch granges.rds {task,versions}.yaml

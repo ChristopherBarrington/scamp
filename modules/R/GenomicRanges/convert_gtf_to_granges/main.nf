@@ -17,5 +17,5 @@ process convert_gtf_to_granges {
 		path 'granges.rds', emit: granges
 
 	script:
-		template workflow.stubRun ? 'main.Rscript' : 'main.Rscript'
+		template workflow.stubRun ? 'stub.sh' : 'main.Rscript'
 }

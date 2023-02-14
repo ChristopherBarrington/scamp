@@ -23,16 +23,15 @@ record_package_versions()
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid = "$uid",
-     genome_name = "$genome_name",
-     gtf_file = "$gtf_file",
-     fai_file = "$fai_file") |> assign_and_record_nextflow_properties()
+list(genome = "$genome",
+     gtf_file = "$gtf",
+     fai_file = "$fai") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # start the task
 # -------------------------------------------------------------------------------------------------
 
-log_message(uid, level='main')
+log_message('converting a gtf file to granges', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # make a Seqinfo object for the genome
@@ -45,7 +44,7 @@ read.delim(file=fai_file, header=FALSE, sep='\t') |>
 	arrange(mixedorder(seqnames)) |>
 	arrange(match(seqnames, mixedsort(seqnames))) |>
 	as.list() |>
-	append(list(genome=genome_name)) |>
+	append(list(genome=genome)) |>
 	do.call(what=Seqinfo) -> seqinfo
 
 # -------------------------------------------------------------------------------------------------
@@ -55,6 +54,9 @@ read.delim(file=fai_file, header=FALSE, sep='\t') |>
 log_message('making a granges of the gene models', level='section')
 
 import(con=gtf_file, format='GTF') -> granges
+
+if(mcols(granges)\$gene_biotype |> is.null())
+	mcols(granges)\$gene_biotype <- mcols(granges)\$gene_type
 
 seqlevels(granges) <- seqlevels(seqinfo)
 seqinfo(granges) <- seqinfo
