@@ -131,7 +131,7 @@ workflow seurat {
 			.dump(tag:'seurat:cell_ranger_arc:barcoded_matrices_to_read', pretty:true)
 			.set{barcoded_matrices_to_read}
 
-		// create the channels for the process to make an RNA assay
+		// create the channels for the process to make a 10X matrix
 		tags                  = barcoded_matrices_to_read.map{it.get('tag')}
 		barcoded_matrix_paths = barcoded_matrices_to_read.map{it.get('barcoded matrix path')}
 		identifiers           = barcoded_matrices_to_read.map{it.get('identifier')}
@@ -148,28 +148,12 @@ workflow seurat {
 		// make an RNA assay
 		// -------------------------------------------------------------------------------------------------
 
-		// combine the counts matrices into a channel
-		expression_methods.cell_ranger_arc
-			.combine(barcoded_matrices)
-			.filter{check_for_matching_key_values(it, 'gene identifiers')}
-			.filter{check_for_matching_key_values(it, 'quantification path')}
-			.map{it.first() + it.last().subMap('matrices path', 'counts matrices')}
-			.dump(tag:'seurat:cell_ranger_arc:rna_assays_to_create', pretty:true)
-			.set{rna_assays_to_create}
+		tags            = barcoded_matrices.map{it.get('tag')}
+		counts_matrices = barcoded_matrices.map{it.get('counts_matrices')}
 
-		// create the channels for the process to make an RNA assay
-		unique_identifiers  = rna_assays_to_create.map{it.get('unique id')}
-		tags                = rna_assays_to_create.map{it.get('dataset name')}
-		counts_matrices = rna_assays_to_create.map{it.get('counts matrices')}
-
-		make_rna_assay(unique_identifiers, tags, 'Gene Expression', counts_matrices)
+		make_rna_assay(barcoded_matrices, tags, 'Gene Expression', counts_matrices)
 
 		// make a channel of newly created rna assays
-		merge_process_emissions(make_rna_assay, ['uid', 'assay'])
-			.map{rename_map_keys(it, ['uid', 'assay'], ['unique id', 'rna assay'])}
-			.dump(tag:'seurat:cell_ranger_arc:rna_assays', pretty:true)
-			.set{rna_assays}
-
 		// -------------------------------------------------------------------------------------------------
 		// make GRanges objects for gene annotations of the genomes
 		// -------------------------------------------------------------------------------------------------
@@ -237,6 +221,16 @@ workflow seurat {
 		// -------------------------------------------------------------------------------------------------
 		// make a seurat object using rna and atac assays and the annotations
 		// -------------------------------------------------------------------------------------------------
+		merge_process_emissions(make_rna_assay, ['metadata', 'assay'])
+			.map{merge_metadata_and_process_output(it)}
+			.map{rename_map_keys(it, 'assay', 'rna assay')}
+			.map{rename_map_keys(it, 'rna assay', sprintf('rna assay by %s', it.get('identifier')))}
+			.dump(tag:'seurat:cell_ranger_arc:rna_assays_branched', pretty:true)
+			.branch({
+				identifier = it.get('identifier')
+				accession: identifier == 'accession'
+				name: identifier == 'name'})
+			.set{rna_assays_branched}
 
 		// combine the annotations and rna and chromatin assays into a channel
 		expression_methods.cell_ranger_arc
@@ -248,6 +242,8 @@ workflow seurat {
 			.map{concatenate_maps_list(it)}
 			.combine(barcoded_matrices)
 			.filter{check_for_matching_key_values(it, 'gene identifiers')}
+		rna_assays_branched.accession
+			.combine(rna_assays_branched.name)
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
 			.dump(tag:'seurat:cell_ranger_arc:seurat_objects_to_create', pretty:true)
@@ -292,6 +288,9 @@ workflow seurat {
 		concat_workflow_emissions(all_processes, 'task')
 			.collect()
 			.set{task_properties}
+			.map{it.subMap(['quantification path', 'rna assay by accession', 'rna assay by name'])}
+			.dump(tag:'seurat:cell_ranger_arc:rna_assays', pretty:true)
+			.set{rna_assays}
 
 		merge_task_properties(task_properties)
 
