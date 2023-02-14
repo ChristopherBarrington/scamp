@@ -17,14 +17,15 @@ include { write_10x_counts_matrices }         from '../../modules/R/Seurat/write
 
 include { make_chromatin_assay } from '../../modules/R/Signac/make_chromatin_assay'
 
-include { check_for_matching_key_values } from '../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }     from '../../modules/utilities/concat_workflow_emissions'
-include { concatenate_maps_list }         from '../../modules/utilities/concatenate_maps_list'
-include { format_unique_key }             from '../../modules/utilities/format_unique_key'
-include { make_map }                      from '../../modules/utilities/make_map'
-include { merge_process_emissions }       from '../../modules/utilities/merge_process_emissions'
-include { rename_map_keys }               from '../../modules/utilities/rename_map_keys'
+include { check_for_matching_key_values }     from '../../modules/utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../modules/utilities/concat_workflow_emissions'
+include { concatenate_maps_list }             from '../../modules/utilities/concatenate_maps_list'
+include { format_unique_key }                 from '../../modules/utilities/format_unique_key'
+include { make_map }                          from '../../modules/utilities/make_map'
 include { merge_metadata_and_process_output } from '../../modules/utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../modules/utilities/merge_process_emissions'
+include { remove_keys_from_map }              from '../../modules/utilities/remove_keys_from_map'
+include { rename_map_keys }                   from '../../modules/utilities/rename_map_keys'
 
 include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
 include { merge_yaml as merge_task_properties }   from '../../modules/yq/merge_yaml'
