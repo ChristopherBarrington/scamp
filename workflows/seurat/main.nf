@@ -175,20 +175,10 @@ workflow seurat {
 			.set{rna_assays}
 
 		// -------------------------------------------------------------------------------------------------
-		// make summary report for cell ranger arc stage
 		// make an ATAC assay
 		// -------------------------------------------------------------------------------------------------
 
-		all_processes = [write_10x_counts_matrices, make_rna_assay, convert_gtf_to_granges, make_chromatin_assay, make_seurat_object]
 		// create the channels for the process to make a chromatin assay
-		expression_methods.cell_ranger_arc
-			.map{it.subMap('dataset name', 'genome', 'quantification path')}
-			.unique()
-			.combine(granges_files.map{it.subMap(['genome','granges'])})
-			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'})
-			.filter{check_for_matching_key_values(it, 'genome')}
-			.filter{check_for_matching_key_values(it, 'quantification path')}
-			.map{concatenate_maps_list(it).subMap(['dataset name', 'granges', 'counts_matrices', 'quantification path'])}
 		barcoded_matrices
 			.filter{it.get('identifier') == 'accession'}
 			.combine(granges_files.map{it.subMap(['index path','granges'])})
@@ -198,12 +188,7 @@ workflow seurat {
 			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays_to_create', pretty:true)
 			.set{chromatin_assays_to_create}
 
-		// collate the software version yaml files into one
-		concat_workflow_emissions(all_processes, 'versions')
-			.collect()
-			.set{versions}
 		// create the channels for the process to make a chromatin assay
-		tags                 = chromatin_assays_to_create.map{it.get('dataset name')}
 		tags                 = chromatin_assays_to_create.map{it.get('tag')}
 		annotations          = chromatin_assays_to_create.map{it.get('granges')}
 		counts_matrices      = chromatin_assays_to_create.map{it.get('counts_matrices')}
@@ -211,13 +196,6 @@ workflow seurat {
 
 		make_chromatin_assay(chromatin_assays_to_create, tags, annotations, counts_matrices, quantification_paths, 'Peaks')
 
-		// collate the software version yaml files into one
-		concat_workflow_emissions(all_processes, 'task')
-			.collect()
-			.set{task_properties}
-			.map{it.subMap(['quantification path', 'rna assay by accession', 'rna assay by name'])}
-			.dump(tag:'seurat:cell_ranger_arc:rna_assays', pretty:true)
-			.set{rna_assays}
 		// make a channel of newly created chromatin assays
 		merge_process_emissions(make_chromatin_assay, ['metadata', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
@@ -226,7 +204,6 @@ workflow seurat {
 			.dump(tag:'seurat:cell_ranger_arc:chromatin_assays', pretty:true)
 			.set{chromatin_assays}
 
-		merge_task_properties(task_properties)
 		// -------------------------------------------------------------------------------------------------
 		// make a seurat object using rna and atac assays and the annotations
 		// -------------------------------------------------------------------------------------------------
@@ -261,6 +238,25 @@ workflow seurat {
 			.dump(tag:'seurat:cell_ranger_arc:seurat_objects', pretty:true)
 			.set{seurat_objects}
 
+		// -------------------------------------------------------------------------------------------------
+		// make summary report for cell ranger arc stage
+		// -------------------------------------------------------------------------------------------------
+
+		all_processes = [convert_gtf_to_granges, write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_seurat_object]
+
+		// collate the software version yaml files into one
+		concat_workflow_emissions(all_processes, 'versions')
+			.collect()
+			.set{versions}
+
+		merge_software_versions(versions)
+
+		// collate the software version yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
+			.collect()
+			.set{task_properties}
+
+		merge_task_properties(task_properties)
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis
