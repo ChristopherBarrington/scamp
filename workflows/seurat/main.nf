@@ -127,7 +127,8 @@ workflow seurat {
 			.map{it.first() + [identifier:it.last()]}
 			.unique()
 			.map{it + ['barcoded matrix path': Paths.get(it.get('quantification path').toString(), 'filtered_feature_bc_matrix')]}
-			.map{it + ['tag': it.toString().md5().substring(0, 9)]}
+			.map{it + ['tag': it.toString().md5().take(9)]}
+			// .map{it + ['tag': it.get('quantification path').toString().takeRight(33)]}
 			.dump(tag:'seurat:cell_ranger_arc:barcoded_matrices_to_read', pretty:true)
 			.set{barcoded_matrices_to_read}
 
