@@ -6,6 +6,7 @@ process make_object {
 	time '1h'
 
 	input:
+		val metadata
 		val tag
 		path 'assays/?.rds'
 		val assay_names
@@ -15,6 +16,7 @@ process make_object {
 		val project
 
 	output:
+		val metadata, emit: metadata
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'seurat.rds', emit: seurat

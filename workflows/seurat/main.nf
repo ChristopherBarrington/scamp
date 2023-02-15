@@ -166,44 +166,10 @@ workflow seurat {
 				name: identifier == 'name'})
 			.set{rna_assays_branched}
 
-		// combine the annotations and rna and chromatin assays into a channel
-		expression_methods.cell_ranger_arc
-			.combine(granges_files)
-			.combine(rna_assays)
-			.combine(chromatin_assays)
-			.filter{check_for_matching_key_values(it, 'genome')}
-			.filter{check_for_matching_key_values(it, 'unique id')}
-			.map{concatenate_maps_list(it)}
-			.combine(barcoded_matrices)
-			.filter{check_for_matching_key_values(it, 'gene identifiers')}
 		rna_assays_branched.accession
 			.combine(rna_assays_branched.name)
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
-			.dump(tag:'seurat:cell_ranger_arc:seurat_objects_to_create', pretty:true)
-			.set{seurat_objects_to_create}
-
-		// create the channels for the process to make a seurat object
-
-		uids         = seurat_objects_to_create.map{it.get('unique id')}
-		tags         = seurat_objects_to_create.map{it.get('dataset name')}
-		assays       = seurat_objects_to_create.map{it.subMap(['rna assay', 'chromatin assay']).values()}
-		assay_names  = seurat_objects_to_create.map{['RNA', 'ATAC']}
-		dataset_tags = seurat_objects_to_create.map{it.get('dataset tag')}
-		misc_files   = seurat_objects_to_create.map{it.subMap(['genes granges', 'features']).values()}
-		misc_names   = seurat_objects_to_create.map{['gene_models', 'features']}
-		projects     = seurat_objects_to_create.map{it.get('dataset name')}
-
-		make_seurat_object(uids, tags, assays, assay_names, dataset_tags, misc_files, misc_names, projects)
-
-		// add the new objects into the parameters channel
-		merge_process_emissions(make_seurat_object, ['uid', 'seurat'])
-			.map{rename_map_keys(it, ['uid', 'seurat'], ['unique id', 'seurat path'])}
-			.combine(seurat_objects_to_create)
-			.filter{check_for_matching_key_values(it, 'unique id')}
-			.map{it.last() + it.first().subMap('seurat path')}
-			.dump(tag:'seurat:cell_ranger_arc:seurat_objects', pretty:true)
-			.set{seurat_objects}
 			.map{it.subMap(['quantification path', 'rna_assay_by_accession', 'rna_assay_by_name'])}
 			.dump(tag:'seurat:cell_ranger_arc:rna_assays', pretty:true)
 			.set{rna_assays}
@@ -261,6 +227,40 @@ workflow seurat {
 			.set{chromatin_assays}
 
 		merge_task_properties(task_properties)
+		// -------------------------------------------------------------------------------------------------
+		// make a seurat object using rna and atac assays and the annotations
+		// -------------------------------------------------------------------------------------------------
+
+		// combine the annotations and rna and chromatin assays into a channel
+		expression_methods.cell_ranger_arc
+			.combine(rna_assays)
+			.combine(chromatin_assays)
+			.combine(granges_files.map{it.subMap(['genome', 'index path', 'granges'])})
+			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'}.map{it.subMap(['index path', 'quantification path', 'features'])})
+			.filter{check_for_matching_key_values(it, 'genome')}
+			.filter{check_for_matching_key_values(it, 'index path')}
+			.filter{check_for_matching_key_values(it, 'quantification path')}
+			.map{concatenate_maps_list(it)}
+			.dump(tag:'seurat:cell_ranger_arc:seurat_objects_to_create', pretty:true)
+			.set{seurat_objects_to_create}
+
+		// create the channels for the process to make a seurat object
+		tags         = seurat_objects_to_create.map{it.get('dataset name')}
+		assays       = seurat_objects_to_create.map{it.subMap(['rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay']).values()}
+		assay_names  = seurat_objects_to_create.map{['RNA', 'RNA_alt', 'ATAC']}
+		dataset_tags = seurat_objects_to_create.map{it.get('dataset tag')}
+		misc_files   = seurat_objects_to_create.map{it.subMap(['granges', 'features']).values()}
+		misc_names   = seurat_objects_to_create.map{['gene_models', 'features']}
+		projects     = seurat_objects_to_create.map{it.get('dataset name')}
+
+		make_seurat_object(seurat_objects_to_create, tags, assays, assay_names, dataset_tags, misc_files, misc_names, projects)
+
+		// add the new objects into the parameters channel
+		merge_process_emissions(make_seurat_object, ['metadata', 'seurat'])
+			.map{merge_metadata_and_process_output(it)}
+			.dump(tag:'seurat:cell_ranger_arc:seurat_objects', pretty:true)
+			.set{seurat_objects}
+
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis
