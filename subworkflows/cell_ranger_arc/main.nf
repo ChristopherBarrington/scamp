@@ -72,13 +72,56 @@ workflow cell_ranger_arc {
 			.dump(tag: 'quantification:cell_ranger_arc:stage_parameters_with_index_paths', pretty: true)
 			.set{stage_parameters_with_index_paths}
 
+//		// -------------------------------------------------------------------------------------------------
+//		// make a sample sheet for all samples that need to be quantified in some dataset
+//		// -------------------------------------------------------------------------------------------------
+//
+//		// get the feature types from params
+//		channel
+//			.value(get_feature_types())
+//			.map{it + [fastq_paths:filtered_stage_parameters.collect{it.get('fastq paths')}.flatten().unique()]}
+//			.map{it + [fastq_files_regex:'(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
+//			.dump(tag:'feature_type_params', pretty:true)
+//			.set{feature_type_params}
+//
+//		// make channels to create the libraries csv file that cell ranger arc count expects
+//		fastq_paths       = feature_type_params.map{it.get('fastq_paths')}
+//		fastq_files_regex = feature_type_params.map{it.get('fastq_files_regex')}
+//		samples           = feature_type_params.map{it.get('sample_names')}
+//		feature_types     = feature_type_params.map{it.get('feature_types')}
+//
+//		make_libraries_csv(feature_type_params, fastq_paths, fastq_files_regex, samples, feature_types)
+//
+//		// make a channel of newly created genome indexes, each defined in a map
+//		merge_process_emissions(make_libraries_csv, ['metadata', 'path'])
+//			.map{rename_map_keys(it, 'path', 'project_libraries_csv')}
+//			.map{merge_metadata_and_process_output(it)}
+//			.dump(tag: 'quantification:cell_ranger_arc:project_libraries_csv', pretty: true)
+//			.set{project_libraries_csv}
+
 		// -------------------------------------------------------------------------------------------------
-		// make a sample sheet for all samples that need to be quantified in some dataset
+		// identify which datasets need to be quantified
 		// -------------------------------------------------------------------------------------------------
 
-		// get the feature types from params
-		channel
-			.value(get_feature_types())
+		// branch datasets into two channels: {missing,provided} according to the presence of the 'quantification path' key
+		stage_parameters_with_index_paths
+			.branch({
+				def quantification_provided = it.containsKey('quantification path')
+				missing: quantification_provided == false
+				provided: quantification_provided == true})
+			.set{dataset_quantification}
+
+		dataset_quantification.missing.dump(tag: 'quantification:cell_ranger_arc:dataset_quantification.missing', pretty: true)
+		dataset_quantification.provided.dump(tag: 'quantification:cell_ranger_arc:dataset_quantification.provided', pretty: true)
+
+		// -------------------------------------------------------------------------------------------------
+		// make a sample sheet of all samples in any dataset that should be quantified
+		// -------------------------------------------------------------------------------------------------
+
+		// when there is at least one missing quantification, prepare a channel to create the sample sheet
+		dataset_quantification.missing
+			.first()
+			.map{get_feature_types()}
 			.map{it + [fastq_paths:filtered_stage_parameters.collect{it.get('fastq paths')}.flatten().unique()]}
 			.map{it + [fastq_files_regex:'(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
 			.dump(tag:'feature_type_params', pretty:true)
@@ -100,37 +143,30 @@ workflow cell_ranger_arc {
 			.set{project_libraries_csv}
 
 		// -------------------------------------------------------------------------------------------------
-		// quantify datasets that do not provide `quantification path`
+		// quantify datasets that do not provide a `quantification path`
 		// -------------------------------------------------------------------------------------------------
 
-		// branch datasets into two channels: {missing,provided} according to the presence of the 'quantification path' key
-		stage_parameters_with_index_paths
+		dataset_quantification.missing
 			.combine(project_libraries_csv)
 			.map{it.first() + it.last().subMap('project_libraries_csv')}
-			.branch({
-				def quantification_provided = it.containsKey('quantification path')
-				missing: quantification_provided == false
-				provided: quantification_provided == true})
+			.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
-		datasets_to_quantify.missing.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify.missing', pretty: true)
-		datasets_to_quantify.provided.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify.provided', pretty: true)
-
 		// make channels of parameters for samples that need to be quantified
-		tags                 = datasets_to_quantify.missing.map{it.get('dataset name')}
-		dataset_directories  = datasets_to_quantify.missing.map{it.get('dataset dir')}
-		samples              = datasets_to_quantify.missing.map{it.get('samples')}
-		additional_arguments = datasets_to_quantify.missing.map{it.get('additional arguments', '')}
-		index_paths          = datasets_to_quantify.missing.map{it.get('index path')}
-		sample_sheet_file    = datasets_to_quantify.missing.map{it.get('project_libraries_csv')}
+		tags                 = datasets_to_quantify.map{it.get('dataset name')}
+		dataset_directories  = datasets_to_quantify.map{it.get('dataset dir')}
+		samples              = datasets_to_quantify.map{it.get('samples')}
+		additional_arguments = datasets_to_quantify.map{it.get('additional arguments', '')}
+		index_paths          = datasets_to_quantify.map{it.get('index path')}
+		sample_sheet_file    = datasets_to_quantify.map{it.get('project_libraries_csv')}
 
-		count(datasets_to_quantify.missing, tags, dataset_directories, samples, additional_arguments, index_paths, sample_sheet_file)
+		count(datasets_to_quantify, tags, dataset_directories, samples, additional_arguments, index_paths, sample_sheet_file)
 
 		// make a channel of newly quantified datasets, each defined in a map
 		merge_process_emissions(count, ['metadata', 'libraries', 'quantification_path'])
 			.map{rename_map_keys(it, ['libraries', 'quantification_path'], ['libraries_csv', 'quantification path'])}
 			.map{merge_metadata_and_process_output(it)}
-			.concat(datasets_to_quantify.provided)
+			.concat(dataset_quantification.provided)
 			.dump(tag:'quantification:cell_ranger_arc:stage_parameters_with_quantification_paths', pretty:true)
 			.set{stage_parameters_with_quantification_paths}
 
