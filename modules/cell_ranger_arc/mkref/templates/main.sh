@@ -9,7 +9,8 @@ cat $path_to_gtfs/*.gtf > features.gtf
 
 #
 # todo: filter the gtf
-# 
+# ! make sure gene_type not gene_biotype !
+#
 
 # reformat non-nuclear contigs
 NON_NUCLEAR_CONTIGS=`echo -n $non_nuclear_contigs | sed --regexp-extended 's/\\[|,|\\]//g' | jq -R -s -c 'split(\" \")'`

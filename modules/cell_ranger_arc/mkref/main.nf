@@ -6,7 +6,7 @@ process mkref {
 	time '12h'
 
 	input:
-		val uid
+		val metadata
 		val tag
 		val organism
 		val assembly
@@ -16,9 +16,10 @@ process mkref {
 		path path_to_gtfs
 
 	output:
-		val uid, emit: uid
-		path assembly, emit: path
+		val metadata, emit: metadata
+		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
+		path assembly, emit: path
 
 	script:
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'

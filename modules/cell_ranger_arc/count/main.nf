@@ -6,7 +6,7 @@ process count {
 	time '3d'
 
 	input:
-		val uid
+		val metadata
 		val tag
 		val output_directory
 		val samples
@@ -15,11 +15,11 @@ process count {
 		file 'all_libraries.csv'
 
 	output:
-		val uid, emit: uid
-		path 'index_path', emit: index_path
-		path "$output_directory/outs", emit: quantification_path
+		val metadata, emit: metadata
+    path 'task.yaml', emit: task
+    path 'versions.yaml', emit: versions
 		path 'libraries.csv', emit: libraries
-		path 'versions.yaml', emit: versions
+    path "$output_directory/outs", emit: quantification_path
 
 	script:
 		samples_regex = samples.join('|')

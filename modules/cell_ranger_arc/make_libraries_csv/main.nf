@@ -4,12 +4,14 @@ process make_libraries_csv {
 	time '10m'
 
 	input:
+		val metadata
 		path 'fastq_path_?'
 		val fastq_files_regex
 		val samples
 		val feature_types
 
 	output:
+		val metadata, emit: metadata
 		path 'libraries.csv', emit: path
 
 	script:
