@@ -40,11 +40,6 @@ workflow cell_ranger {
 			.set{quantified_datasets}
 
 	emit:
-		subworkflows         = quantified_datasets.count().flatMap{['cell ranger'].multiply(it)}
-		unique_ids           = quantified_datasets.flatMap{it.get('unique id')}
-		stage_names          = quantified_datasets.flatMap{it.get('stage name')}
-		dataset_names        = quantified_datasets.flatMap{it.get('dataset name')}
-		index_paths          = quantified_datasets.flatMap{it.get('index path')}
-		quantification_paths = quantified_datasets.flatMap{it.get('quantification path')}
-		report               = channel.of('report.document')
+		result = ''
+		report = channel.of('report.document')
 }

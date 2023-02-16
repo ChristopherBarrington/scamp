@@ -39,18 +39,8 @@ workflow quantification {
 		all_quantifications = [cell_ranger, cell_ranger_arc]
 
 		// concatenate output channels from each subworkflow
-		all_subworkflows         = concat_workflow_emissions(all_quantifications, 'subworkflows')
-		all_unique_ids           = concat_workflow_emissions(all_quantifications, 'unique_ids')
-		all_stage_names          = concat_workflow_emissions(all_quantifications, 'stage_names')
-		all_dataset_names        = concat_workflow_emissions(all_quantifications, 'dataset_names')
-		all_index_paths          = concat_workflow_emissions(all_quantifications, 'index_paths')
-		all_quantification_paths = concat_workflow_emissions(all_quantifications, 'quantification_paths')
+		all_results = concat_workflow_emissions(all_quantifications, 'result')
 
 	emit:
-		subworkflows         = all_subworkflows
-		unique_ids           = all_unique_ids
-		stage_names          = all_stage_names
-		dataset_names        = all_dataset_names
-		index_paths          = all_index_paths
-		quantification_paths = all_quantification_paths
+		result = all_results
 }

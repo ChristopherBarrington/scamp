@@ -152,11 +152,6 @@ workflow cell_ranger_arc {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		subworkflows         = quantified_datasets.count().flatMap{['cell ranger arc'].multiply(it)}
-		unique_ids           = quantified_datasets.flatMap{it.get('unique id')}
-		stage_names          = quantified_datasets.flatMap{it.get('stage name')}
-		dataset_names        = quantified_datasets.flatMap{it.get('dataset name')}
-		index_paths          = quantified_datasets.flatMap{it.get('index path')}
-		quantification_paths = quantified_datasets.flatMap{it.get('quantification path')}
-		report               = channel.of('report.document')
+		result = stage_parameters_with_quantification_paths
+		report = channel.of('report.document')
 }

@@ -37,7 +37,7 @@ include { merge_yaml as merge_task_properties }   from '../../modules/yq/merge_y
 workflow seurat {
 	take:
 		complete_stage_parameters
-		quantified_datasets
+		quantification_results
 
 	main:
 		// -------------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ workflow seurat {
 
 		// get the quantification paths for the internal quantified datasets and join the remainder back on
 		quantification_sources.internal
-			.combine(quantified_datasets)
+			.combine(quantification_results)
 			.filter{format_unique_key(it.first().subMap(['quantification stage','dataset name'])) == it.last().get('unique id')}
 			.map{it.first() + it.last().subMap(['quantification method', 'quantification path', 'index path'])}
 			.concat(quantification_sources.external)
