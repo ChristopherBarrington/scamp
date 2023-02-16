@@ -72,33 +72,6 @@ workflow cell_ranger_arc {
 			.dump(tag: 'quantification:cell_ranger_arc:stage_parameters_with_index_paths', pretty: true)
 			.set{stage_parameters_with_index_paths}
 
-//		// -------------------------------------------------------------------------------------------------
-//		// make a sample sheet for all samples that need to be quantified in some dataset
-//		// -------------------------------------------------------------------------------------------------
-//
-//		// get the feature types from params
-//		channel
-//			.value(get_feature_types())
-//			.map{it + [fastq_paths:filtered_stage_parameters.collect{it.get('fastq paths')}.flatten().unique()]}
-//			.map{it + [fastq_files_regex:'(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
-//			.dump(tag:'feature_type_params', pretty:true)
-//			.set{feature_type_params}
-//
-//		// make channels to create the libraries csv file that cell ranger arc count expects
-//		fastq_paths       = feature_type_params.map{it.get('fastq_paths')}
-//		fastq_files_regex = feature_type_params.map{it.get('fastq_files_regex')}
-//		samples           = feature_type_params.map{it.get('sample_names')}
-//		feature_types     = feature_type_params.map{it.get('feature_types')}
-//
-//		make_libraries_csv(feature_type_params, fastq_paths, fastq_files_regex, samples, feature_types)
-//
-//		// make a channel of newly created genome indexes, each defined in a map
-//		merge_process_emissions(make_libraries_csv, ['metadata', 'path'])
-//			.map{rename_map_keys(it, 'path', 'project_libraries_csv')}
-//			.map{merge_metadata_and_process_output(it)}
-//			.dump(tag: 'quantification:cell_ranger_arc:project_libraries_csv', pretty: true)
-//			.set{project_libraries_csv}
-
 		// -------------------------------------------------------------------------------------------------
 		// identify which datasets need to be quantified
 		// -------------------------------------------------------------------------------------------------
