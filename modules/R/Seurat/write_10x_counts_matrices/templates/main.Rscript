@@ -16,18 +16,13 @@ library(Seurat)
 
 record_package_versions()
 
+log_message('reading a cell ranger formatted counts matrix into a list of matrices', level='main')
+
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid = "$uid",
-     feature_identifier = "$feature_identifier") |> assign_and_record_nextflow_properties()
-
-# -------------------------------------------------------------------------------------------------
-# start the task
-# -------------------------------------------------------------------------------------------------
-
-log_message(uid, level='main')
+list(feature_identifier = "$feature_identifier") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # read cell ranger formatted barcoded counts matrix into a list of counts matrices
@@ -49,6 +44,8 @@ Read10X(data.dir='barcoded_matrix',
         unique.features=TRUE,
         strip.suffix=FALSE) -> all_counts
 
+saveRDS(object=all_counts, file='counts_matrices.rds')
+
 # -------------------------------------------------------------------------------------------------
 # get a copy of the features file, used to convert between accessions and feature names
 # -------------------------------------------------------------------------------------------------
@@ -61,13 +58,4 @@ file.path('barcoded_matrix', 'features.tsv.gz') |>
 	rename(any_of(c(accession='V1', name='V2', feature_type='V3', chromosome='V4', start='V5', end='V6'))) |>
 	dlply(~feature_type, select, -feature_type) -> features
 
-# -------------------------------------------------------------------------------------------------
-# write any output files
-# -------------------------------------------------------------------------------------------------
-
-log_message("writing output files", level='section')
-
-saveRDS(object=all_counts, file='counts_matrices.rds')
 saveRDS(object=features, file='features.rds')
-
-log_message("script completed", level='main')

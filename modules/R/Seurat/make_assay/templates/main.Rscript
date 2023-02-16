@@ -15,12 +15,13 @@ library(stringr)
 
 record_package_versions()
 
+log_message('making an assay using seurat', level='main')
+
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid = "$uid",
-     feature_type = "$feature_type") |> assign_and_record_nextflow_properties()
+list(feature_type = "$feature_type") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # create assay from the counts
@@ -36,12 +37,4 @@ if(class(all_counts) == 'list')
 CreateAssayObject(counts=all_counts, min.cells=0, min.features=0) |>
 	{\\(x) Cells(x) |> str_remove_all('-1\$') |> RenameCells(object=x)}() -> assay
 
-# -------------------------------------------------------------------------------------------------
-# write any output files
-# -------------------------------------------------------------------------------------------------
-
-log_message("writing output files", level='section')
-
 saveRDS(object=assay, file='assay.rds')
-
-log_message("script completed", level='main')

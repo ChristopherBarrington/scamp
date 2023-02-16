@@ -6,17 +6,16 @@ process process_name {
 	time '1h'
 
 	input:
-		val uid
+		val metadata
 		val tag
 
 		val channel_1
 		val channel_1
 
 	output:
-		val uid, emit: uid
+		val metadata, emit: metadata
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
-
 		path 'output_1.rds', emit: output_1
 
 	script:

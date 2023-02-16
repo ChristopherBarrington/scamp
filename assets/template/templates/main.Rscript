@@ -5,61 +5,23 @@
 # *************************************************************************************************
 
 # -------------------------------------------------------------------------------------------------
-# these functions are used to track the software versions and nextflow properties used in the task
-# -------------------------------------------------------------------------------------------------
-
-# writes versions of non-base packages attached in the session
-record_package_versions <- function()
-	sessionInfo()[['otherPkgs']] |>
-		lapply(`[[`, 'Version') |>
-		write_process_yaml(file='versions.yaml')
-
-# writes nextflow properties received by the task to task.yaml
-# `vars` is a list; the values of the list are assigned to variables named as the keys in the global environment
-assign_and_record_nextflow_properties <- function(vars) {
-	# write a list of variables to a yaml file
-	Map(X=names(vars), V=vars, f=function(X,V) {assign(x=X, value=V, envir=globalenv())}) |> invisible()
-	write_process_yaml(content=vars, file='task.yaml')
-}
-
-# accepts a list of key/values to write to `file` under a root key of the nextflow process name
-write_process_yaml <- function(content, file)
-	# write content of a yaml under a key identifying the process
-	list(content) |>
-		purrr::set_names('${task.process}') |>
-		yaml::write_yaml(file=file)
-
-# format an output message
-log_message <- function(x, level='note')
-	switch(level,
-	       `main` = stringr::str_c(' ', x, ' ') |> stringr::str_pad(side='both', width=100, pad='='),
-	       `section` = stringr::str_c(x, ' ') |> stringr::str_pad(side='right', width=100, pad='-'),
-	       `note` = stringr::str_c('   ', x)) |>
-	        stringr::str_trim(side='right') |>
-		base::message()
-
-# -------------------------------------------------------------------------------------------------
 # attach and record packages used in this Rscript
 # -------------------------------------------------------------------------------------------------
 
 library(magrittr)
+library(scampr)
 library(Seurat)
 
 record_package_versions()
+
+log_message('a very short message of what this script does', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid  = "$uid",
-     arg1 = "$arg2",
+list(arg1 = "$arg2",
      arg2 = "$arg2") |> assign_and_record_nextflow_properties()
-
-# -------------------------------------------------------------------------------------------------
-# start the task
-# -------------------------------------------------------------------------------------------------
-
-log_message(uid, level='main')
 
 # -------------------------------------------------------------------------------------------------
 # some informative title
@@ -68,11 +30,9 @@ log_message(uid, level='main')
 log_message('an informative status message', level='section')
 
 # -------------------------------------------------------------------------------------------------
-# write any output files
+# write any output files that haven't already
 # -------------------------------------------------------------------------------------------------
 
 log_message("writing output files", level='section')
 
 saveRDS(object=seurat, file='seurat.rds')
-
-log_message("script completed", level='main')

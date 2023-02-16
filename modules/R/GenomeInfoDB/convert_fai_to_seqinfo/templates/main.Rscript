@@ -19,19 +19,14 @@ library(scampr)
 
 record_package_versions()
 
+log_message('making a seqinfo from fai', level='main')
+
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid = "$uid",
-     genome_name = "$genome_name",
+list(genome_name = "$genome_name",
      fai_file = "$fai_file") |> assign_and_record_nextflow_properties()
-
-# -------------------------------------------------------------------------------------------------
-# start the task
-# -------------------------------------------------------------------------------------------------
-
-log_message(uid, level='main')
 
 # -------------------------------------------------------------------------------------------------
 # make a Seqinfo object for the genome
@@ -47,12 +42,4 @@ read.delim(file=fai_file, header=FALSE, sep='\t') |>
 	append(list(genome=genome_name)) |>
 	do.call(what=Seqinfo) -> seqinfo
 
-# -------------------------------------------------------------------------------------------------
-# write any output files
-# -------------------------------------------------------------------------------------------------
-
-log_message("writing output files", level='section')
-
 saveRDS(object=seqinfo, file='seqinfo.rds')
-
-log_message("script completed", level='main')

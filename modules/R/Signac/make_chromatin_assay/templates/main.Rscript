@@ -19,18 +19,13 @@ library(stringr)
 
 record_package_versions()
 
+log_message('making a chromatin assay using signac', level='main')
+
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid = "$uid",
-     feature_type = "$feature_type") |> assign_and_record_nextflow_properties()
-
-# -------------------------------------------------------------------------------------------------
-# start the task
-# -------------------------------------------------------------------------------------------------
-
-log_message(uid, level='main')
+list(feature_type = "$feature_type") |> assign_and_record_nextflow_properties()
 
 # -------------------------------------------------------------------------------------------------
 # get data to make the assay
@@ -70,12 +65,4 @@ CreateChromatinAssay(counts=atac_counts, ranges=atac_peaks,
                      min.cells=0, max.cells=NULL, min.features=0) |>
 	{\\(x) Cells(x) |> str_remove_all('-1\$') |> RenameCells(object=x)}() -> assay
 
-# -------------------------------------------------------------------------------------------------
-# write any output files
-# -------------------------------------------------------------------------------------------------
-
-log_message("writing output files", level='section')
-
 saveRDS(object=assay, file='assay.rds')
-
-log_message("script completed", level='main')

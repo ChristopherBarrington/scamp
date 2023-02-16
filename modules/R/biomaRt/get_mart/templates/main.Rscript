@@ -13,19 +13,14 @@ library(scampr)
 
 record_package_versions()
 
+log_message('making a connection to biomart', level='main')
+
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid  = "$uid",
-     arg1 = "$arg2",
+list(arg1 = "$arg2",
      arg2 = "$arg2") |> assign_and_record_nextflow_properties()
-
-# -------------------------------------------------------------------------------------------------
-# start the task
-# -------------------------------------------------------------------------------------------------
-
-log_message(uid, level='main')
 
 # -------------------------------------------------------------------------------------------------
 # some informative title
@@ -40,5 +35,3 @@ log_message('an informative status message', level='section')
 log_message("writing output files", level='section')
 
 saveRDS(object=seurat, file='seurat.rds')
-
-log_message("script completed", level='main')

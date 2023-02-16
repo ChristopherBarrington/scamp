@@ -6,11 +6,13 @@ process convert_fai_to_seqinfo {
 	time '1h'
 
 	input:
+		val metadata
 		val tag
 		val genome_name
 		path fai_file
 
 	output:
+		val metadata, emit: metadata
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'seqinfo.rds', emit: seqinfo

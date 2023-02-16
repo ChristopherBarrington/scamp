@@ -8,7 +8,6 @@ write_yaml.sh ${task.process}:versions "cell ranger arc" "\${VERSION}" > task.ya
 
 # write parameters to a (yaml) file
 write_yaml.sh "${task.process}:$tag" \
-	uid "$uid" \
 	output_directory "$output_directory" \
 	samples "$samples" \
 	index_path "`realpath index_path`" \

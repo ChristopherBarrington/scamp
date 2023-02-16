@@ -17,21 +17,16 @@ library(stringr)
 
 record_package_versions()
 
+log_message('making a seurat object from a collection of assays', level='main')
+
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(uid  = "$uid",
-     assay_names = "$assay_names",
+list(assay_names = "$assay_names",
      dataset_tag = "$dataset_tag",
      misc_names = "$misc_names",
      project = "$project") |> assign_and_record_nextflow_properties()
-
-# -------------------------------------------------------------------------------------------------
-# start the task
-# -------------------------------------------------------------------------------------------------
-
-log_message(uid, level='main')
 
 # -------------------------------------------------------------------------------------------------
 # create a seurat object with at least one assay
@@ -70,6 +65,8 @@ for(i in seq_along(assay_files)) {
 # rename cells to add the dataset tag, making them unique across datasets
 # -------------------------------------------------------------------------------------------------
 
+log_message("renaming cells to include abbreviated dataset", level='section')
+
 seurat %<>% RenameCells(add.cell.id=dataset_tag)
 
 # -------------------------------------------------------------------------------------------------
@@ -96,12 +93,4 @@ for(i in seq_along(misc_files)) {
 	Misc(object=seurat, slot=misc_name) <- readRDS(misc_file)
 }
 
-# -------------------------------------------------------------------------------------------------
-# write any output files
-# -------------------------------------------------------------------------------------------------
-
-log_message("writing output files", level='section')
-
 saveRDS(object=seurat, file='seurat.rds')
-
-log_message("script completed", level='main')

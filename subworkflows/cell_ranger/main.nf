@@ -24,16 +24,15 @@ workflow cell_ranger {
 		// -------------------------------------------------------------------------------------------------
 
 		// make channels of parameters for samples that need to be quantified
-		unique_identifiers   = channel.of('UID1', 'UID2')
 		dataset_names        = channel.of('foo 123', 'bar 456')
 		dataset_directories  = channel.of('foo_123', 'bar_456')
 		index_paths          = channel.fromPath(['inputs/mm10', 'inputs/mm10'])
 		additional_arguments = channel.value('')
 
-		count(unique_identifiers, dataset_names, dataset_directories, index_paths, additional_arguments)
+		count('', dataset_names, dataset_directories, index_paths, additional_arguments)
 
 		// make a channel of dataset (names) and paths that contain quantified data
-		count.out.uid
+		count.out.metadata
 			.merge(count.out.index_path)
 			.merge(count.out.quantification_path)
 			.map{ x -> make_map(x+['DSN','cell ranger'], ['unique id', 'index path','quantification path', 'dataset name', 'stage name']) }
