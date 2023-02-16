@@ -33,21 +33,21 @@ workflow cell_ranger_arc {
 
 		// branch parameters into two channels: {missing,provided} according to the presence of the 'index path' key
 		channel
-                        .fromList(filtered_stage_parameters)
-                        .branch{
-                                def index_provided = it.containsKey('index path')
-                                missing: index_provided == false
-                                provided: index_provided == true}
-                        .set{stage_parameters_branched_by_index_path}
+			.fromList(filtered_stage_parameters)
+			.branch{
+				def index_provided = it.containsKey('index path')
+				missing: index_provided == false
+				provided: index_provided == true}
+			.set{stage_parameters_branched_by_index_path}
 
-                stage_parameters_branched_by_index_path.missing.dump(tag:'quantification:cell_ranger_arc:stage_parameters_branched_by_index_path.missing', pretty:true)
-                stage_parameters_branched_by_index_path.provided.dump(tag:'quantification:cell_ranger_arc:stage_parameters_branched_by_index_path.provided', pretty:true)
+		stage_parameters_branched_by_index_path.missing.dump(tag:'quantification:cell_ranger_arc:stage_parameters_branched_by_index_path.missing', pretty:true)
+		stage_parameters_branched_by_index_path.provided.dump(tag:'quantification:cell_ranger_arc:stage_parameters_branched_by_index_path.provided', pretty:true)
 
-                stage_parameters_branched_by_index_path.missing
-                	.map{it.get('genome parameters')}
-                	.unique()
-                	.dump(tag:'quantification:cell_ranger_arc:genomes_with_missing_indexes', pretty:true)
-                	.set{genomes_with_missing_indexes}
+		stage_parameters_branched_by_index_path.missing
+			.map{it.get('genome parameters')}
+			.unique()
+			.dump(tag:'quantification:cell_ranger_arc:genomes_with_missing_indexes', pretty:true)
+			.set{genomes_with_missing_indexes}
 
 		// make channels of parameters for genomes that need indexes to be created
 		tags                = genomes_with_missing_indexes.map{it.get('genome')}
@@ -152,11 +152,11 @@ workflow cell_ranger_arc {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		subworkflows         = '' //quantified_datasets.count().flatMap{['cell ranger arc'].multiply(it)}
-		unique_ids           = '' //quantified_datasets.flatMap{it.get('unique id')}
-		stage_names          = '' //quantified_datasets.flatMap{it.get('stage name')}
-		dataset_names        = '' //quantified_datasets.flatMap{it.get('dataset name')}
-		index_paths          = '' //quantified_datasets.flatMap{it.get('index path')}
-		quantification_paths = '' //quantified_datasets.flatMap{it.get('quantification path')}
-		report               = '' //channel.of('report.document')
+		subworkflows         = quantified_datasets.count().flatMap{['cell ranger arc'].multiply(it)}
+		unique_ids           = quantified_datasets.flatMap{it.get('unique id')}
+		stage_names          = quantified_datasets.flatMap{it.get('stage name')}
+		dataset_names        = quantified_datasets.flatMap{it.get('dataset name')}
+		index_paths          = quantified_datasets.flatMap{it.get('index path')}
+		quantification_paths = quantified_datasets.flatMap{it.get('quantification path')}
+		report               = channel.of('report.document')
 }
