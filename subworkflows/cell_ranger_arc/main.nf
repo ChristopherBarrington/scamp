@@ -98,12 +98,12 @@ workflow cell_ranger_arc {
 			.combine(index_paths)
 			.filter{check_for_matching_key_values(it, 'genome')}
 			.map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['dataset name', 'dataset dir', 'samples', 'index path'])}
+			.map{it.subMap(['unique id', 'dataset dir', 'samples', 'index path'])}
 			.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
-		tags              = datasets_to_quantify.map{it.get('dataset name')}
+		tags              = datasets_to_quantify.map{it.get('unique id')}
 		ids               = datasets_to_quantify.map{it.get('dataset dir')}
 		samples           = datasets_to_quantify.map{it.get('samples')}
 		index_paths       = datasets_to_quantify.map{it.get('index path')}
@@ -118,6 +118,18 @@ workflow cell_ranger_arc {
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'quantification:cell_ranger_arc:quantified_datasets', pretty:true)
 			.set{quantified_datasets}
+
+		// -------------------------------------------------------------------------------------------------
+		// join any/all information back onto the parameters ready to emit
+		// -------------------------------------------------------------------------------------------------
+
+		channel
+			.fromList(filtered_stage_parameters)
+			.combine(quantified_datasets)
+			.filter{check_for_matching_key_values(it, ['unique id'])}
+			.map{it.first() + it.last().subMap(['index path', 'libraries_csv', 'quantification path'])}
+			.dump(tag:'quantification:cell_ranger_arc:final_results', pretty:true)
+			.set{final_results}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for cell ranger arc stage
@@ -140,6 +152,6 @@ workflow cell_ranger_arc {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		result = quantified_datasets
+		result = final_results
 		report = channel.of('report.document')
 }
