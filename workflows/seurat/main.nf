@@ -111,7 +111,7 @@ workflow seurat {
 		convert_gtf_to_granges(gtf_files_to_convert_to_granges, tags, genomes, gtf_files, fai_files)
 
 		// make a channel of newly created GRanges rds files
-		merge_process_emissions(convert_gtf_to_granges, ['metadata', 'granges'])
+		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'seurat:cell_ranger_arc:granges_files', pretty:true)
 			.set{granges_files}
@@ -140,7 +140,7 @@ workflow seurat {
 		write_10x_counts_matrices(barcoded_matrices_to_read, tags, barcoded_matrix_paths, identifiers)
 
 		// make a channel of newly created counts matrices
-		merge_process_emissions(write_10x_counts_matrices, ['metadata', 'counts_matrices', 'features'])
+		merge_process_emissions(write_10x_counts_matrices, ['opt', 'counts_matrices', 'features'])
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'seurat:cell_ranger_arc:barcoded_matrices', pretty:true)
 			.set{barcoded_matrices}
@@ -156,7 +156,7 @@ workflow seurat {
 		make_rna_assay(barcoded_matrices, tags, 'Gene Expression', counts_matrices)
 
 		// make a channel of newly created rna assays
-		merge_process_emissions(make_rna_assay, ['metadata', 'assay'])
+		merge_process_emissions(make_rna_assay, ['opt', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
 			.map{rename_map_keys(it, 'assay', sprintf('rna_assay_by_%s', it.get('identifier')))}
 			.dump(tag:'seurat:cell_ranger_arc:rna_assays_branched', pretty:true)
@@ -197,7 +197,7 @@ workflow seurat {
 		make_chromatin_assay(chromatin_assays_to_create, tags, annotations, counts_matrices, quantification_paths, 'Peaks')
 
 		// make a channel of newly created chromatin assays
-		merge_process_emissions(make_chromatin_assay, ['metadata', 'assay'])
+		merge_process_emissions(make_chromatin_assay, ['opt', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
 			.map{rename_map_keys(it, 'assay', 'chromatin_assay')}
 			.map{it.subMap(['quantification path', 'chromatin_assay'])}
@@ -233,7 +233,7 @@ workflow seurat {
 		make_seurat_object(seurat_objects_to_create, tags, assays, assay_names, dataset_tags, misc_files, misc_names, projects)
 
 		// add the new objects into the parameters channel
-		merge_process_emissions(make_seurat_object, ['metadata', 'seurat'])
+		merge_process_emissions(make_seurat_object, ['opt', 'seurat'])
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'seurat:cell_ranger_arc:seurat_objects', pretty:true)
 			.set{seurat_objects}

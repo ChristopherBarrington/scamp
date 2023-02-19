@@ -8,7 +8,7 @@ process make_chromatin_assay {
 
 	// define expected input channels
 	input:
-		val metadata
+		val opt
 		val tag
 		path 'annotations.rds'
 		path 'counts_matrices.rds'
@@ -17,7 +17,7 @@ process make_chromatin_assay {
 
 	// define expected output channels
 	output:
-		val metadata, emit: metadata
+		val opt, emit: opt
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'assay.rds', emit: assay

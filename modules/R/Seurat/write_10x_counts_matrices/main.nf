@@ -8,14 +8,14 @@ process write_10x_counts_matrices {
 
 	// define expected input channels
 	input:
-		val metadata
+		val opt
 		val tag
 		path 'barcoded_matrix'
 		val feature_identifier
 
 	// define expected output channels
 	output:
-		val metadata, emit: metadata
+		val opt, emit: opt
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'counts_matrices.rds', emit: counts_matrices
