@@ -3,5 +3,6 @@
 include { remove_keys_from_map } from '../remove_keys_from_map'
 
 def merge_metadata_and_process_output(x) {
-	x.get('metadata') + remove_keys_from_map(x, 'metadata')
+	def keyset = x.keySet()
+	x.get(keyset.first()) + x.subMap(keyset.tail())
 }
