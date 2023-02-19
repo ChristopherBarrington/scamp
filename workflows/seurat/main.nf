@@ -44,11 +44,9 @@ workflow seurat {
 		// get the seurat parameters in order, collecting quantification paths as required
 		// -------------------------------------------------------------------------------------------------
 
-		seurat_parameters = complete_stage_parameters.findAll{x -> x.get('stage type').equals('seurat')}
-
 		// split the seurat analyses into those that are already quantified and those that were quantified here
 		channel
-			.fromList(seurat_parameters)
+			.fromList(complete_stage_parameters.findAll{x -> x.get('stage type').equals('seurat')})
 			.branch({
 				def quantification_path_provided = it.containsKey('quantification path')
 				internal: quantification_path_provided == false
@@ -61,20 +59,21 @@ workflow seurat {
 		// get the quantification paths for the internal quantified datasets and join the remainder back on
 		quantification_sources.internal
 			.combine(quantification_results)
-			.filter{format_unique_key(it.first().subMap(['quantification stage','dataset name'])) == it.last().get('unique id')}
-			.map{it.first() + it.last().subMap(['quantification method', 'quantification path', 'index path'])}
+			.filter{it.first().get('quantification stage') == it.last().get('stage name')}
+			.filter{check_for_matching_key_values(it, 'dataset name')}
+			.map{it.first() + it.last().subMap(['quantification path', 'index path']) + ['quantification type': it.last().get('stage type')]}
 			.concat(quantification_sources.external)
-			.dump(tag:'filtered_stage_parameters', pretty:true)
-			.set{filtered_stage_parameters}
+			.dump(tag:'seurat:stage_parameters', pretty:true)
+			.set{stage_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// split quantified datasets into quantification method channels
 		// -------------------------------------------------------------------------------------------------
 
 		// branch the datasets based on how they were quantified; a different module for each method will be used
-		filtered_stage_parameters
+		stage_parameters
 			.branch({
-				quantification_method = it.get('quantification method')
+				quantification_method = it.get('quantification type')
 				cell_ranger: quantification_method == 'cell ranger'
 				cell_ranger_arc: quantification_method == 'cell ranger arc'
 				kallisto_bustools: quantification_method == 'kallisto|bustools'
@@ -108,6 +107,7 @@ workflow seurat {
 		gtf_files = gtf_files_to_convert_to_granges.map{it.get('gtf')}
 		fai_files = gtf_files_to_convert_to_granges.map{it.get('fai')}
 
+		// make the granges rds files from gtf files
 		convert_gtf_to_granges(gtf_files_to_convert_to_granges, tags, genomes, gtf_files, fai_files)
 
 		// make a channel of newly created GRanges rds files
@@ -137,6 +137,7 @@ workflow seurat {
 		barcoded_matrix_paths = barcoded_matrices_to_read.map{it.get('barcoded matrix path')}
 		identifiers           = barcoded_matrices_to_read.map{it.get('identifier')}
 
+		// write 10x matrix of counts to rds file
 		write_10x_counts_matrices(barcoded_matrices_to_read, tags, barcoded_matrix_paths, identifiers)
 
 		// make a channel of newly created counts matrices
@@ -153,6 +154,7 @@ workflow seurat {
 		tags            = barcoded_matrices.map{it.get('tag')}
 		counts_matrices = barcoded_matrices.map{it.get('counts_matrices')}
 
+		// write rna assay to rds file
 		make_rna_assay(barcoded_matrices, tags, 'Gene Expression', counts_matrices)
 
 		// make a channel of newly created rna assays
@@ -194,6 +196,7 @@ workflow seurat {
 		counts_matrices      = chromatin_assays_to_create.map{it.get('counts_matrices')}
 		quantification_paths = chromatin_assays_to_create.map{it.get('quantification path')}
 
+		// write chromatin assay to rds file
 		make_chromatin_assay(chromatin_assays_to_create, tags, annotations, counts_matrices, quantification_paths, 'Peaks')
 
 		// make a channel of newly created chromatin assays
@@ -218,11 +221,12 @@ workflow seurat {
 			.filter{check_for_matching_key_values(it, 'index path')}
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
+			.map{it.subMap(['unique id', 'rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay', 'dataset tag', 'granges', 'features', 'dataset name'])}
 			.dump(tag:'seurat:cell_ranger_arc:seurat_objects_to_create', pretty:true)
 			.set{seurat_objects_to_create}
 
 		// create the channels for the process to make a seurat object
-		tags         = seurat_objects_to_create.map{it.get('dataset name')}
+		tags         = seurat_objects_to_create.map{it.get('unique id')}
 		assays       = seurat_objects_to_create.map{it.subMap(['rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay']).values()}
 		assay_names  = seurat_objects_to_create.map{['RNA', 'RNA_alt', 'ATAC']}
 		dataset_tags = seurat_objects_to_create.map{it.get('dataset tag')}
@@ -230,6 +234,7 @@ workflow seurat {
 		misc_names   = seurat_objects_to_create.map{['gene_models', 'features']}
 		projects     = seurat_objects_to_create.map{it.get('dataset name')}
 
+		// read the two rna assays and chromatin accessibility assay into a seurat object and write to rds file
 		make_seurat_object(seurat_objects_to_create, tags, assays, assay_names, dataset_tags, misc_files, misc_names, projects)
 
 		// add the new objects into the parameters channel
