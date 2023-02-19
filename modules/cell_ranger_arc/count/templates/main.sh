@@ -23,7 +23,8 @@ cellranger-arc count \
 	--id=$id \
 	--libraries=libraries.csv \
 	--reference=index_path \
-	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()}
+	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
+	--disable-ui
 
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
