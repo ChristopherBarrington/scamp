@@ -6,7 +6,7 @@ process mkref {
 	time '12h'
 
 	input:
-		val metadata
+		val opt
 		val tag
 		val organism
 		val assembly
@@ -16,7 +16,7 @@ process mkref {
 		path path_to_gtfs
 
 	output:
-		val metadata, emit: metadata
+		val opt, emit: opt
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path assembly, emit: path

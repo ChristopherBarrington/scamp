@@ -6,7 +6,7 @@ process count {
 	time '3d'
 
 	input:
-		val metadata
+		val opt
 		val tag
 		val id
 		val samples
@@ -14,7 +14,7 @@ process count {
 		file 'all_libraries.csv'
 
 	output:
-		val metadata, emit: metadata
+		val opt, emit: opt
     path 'task.yaml', emit: task
     path 'versions.yaml', emit: versions
 		path 'libraries.csv', emit: libraries
