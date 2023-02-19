@@ -244,6 +244,17 @@ workflow seurat {
 			.set{seurat_objects}
 
 		// -------------------------------------------------------------------------------------------------
+		// join any/all information back onto the parameters ready to emit
+		// -------------------------------------------------------------------------------------------------
+
+		expression_methods.cell_ranger_arc
+			.combine(seurat_objects)
+			.filter{check_for_matching_key_values(it, ['unique id'])}
+			.map{it.first() + it.last().subMap(['seurat'])}
+			.dump(tag:'seurat:cell_ranger_arc:final_results', pretty:true)
+			.set{final_results}
+
+		// -------------------------------------------------------------------------------------------------
 		// make summary report for cell ranger arc stage
 		// -------------------------------------------------------------------------------------------------
 
@@ -270,12 +281,8 @@ workflow seurat {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		subworkflows         = seurat_objects.count().flatMap{['cell ranger arc + seurat'].multiply(it)}
-		unique_ids           = seurat_objects.flatMap{it.get('unique id')}
-		stage_names          = seurat_objects.flatMap{it.get('stage name')}
-		dataset_names        = seurat_objects.flatMap{it.get('dataset name')}
-		seurat_paths         = seurat_objects.flatMap{it.get('seurat path')}
-		report               = channel.of('report.document')
+		result = final_results
+		report = channel.of('report.document')
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }
