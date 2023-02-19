@@ -8,7 +8,7 @@ write_yaml.sh ${task.process}:versions "cell ranger arc" "\${VERSION}" > task.ya
 
 # write parameters to a (yaml) file
 write_yaml.sh "${task.process}:$tag" \
-	output_directory "$output_directory" \
+	id "$id" \
 	samples "$samples" \
 	index_path "`realpath index_path`" \
 	complete_libraries "`realpath all_libraries.csv`" \
@@ -21,7 +21,7 @@ awk --assign FS=',' 'NR==1{print} ; \$2~/^($samples_regex)\$/{print}' all_librar
 # run cell ranger arc count
 cellranger-arc count \
 	$additional_arguments \
-	--id=$output_directory \
+	--id=$id \
 	--libraries=libraries.csv \
 	--reference=index_path \
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()}
