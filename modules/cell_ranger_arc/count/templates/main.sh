@@ -12,7 +12,6 @@ write_yaml.sh "${task.process}:$tag" \
 	samples "$samples" \
 	index_path "`realpath index_path`" \
 	complete_libraries "`realpath all_libraries.csv`" \
-	additional_arguments "$additional_arguments" \
 	task_index "${task.index}" >> task.yaml
 
 # filter the complete libraries file for the samples in this dataset
