@@ -1,7 +1,7 @@
 #! /bin/env Rscript
 
 # *************************************************************************************************
-# given a path of cell ranger formatted output, create an assay ready to use in seurat
+# given a path of formatted output, create an assay ready to use in seurat
 # *************************************************************************************************
 
 # -------------------------------------------------------------------------------------------------
