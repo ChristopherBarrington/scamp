@@ -62,7 +62,16 @@ log_message('creating atac-seq assay', level='section')
 CreateChromatinAssay(counts=atac_counts, ranges=atac_peaks,
                      genome=seqinfo, sep=c(':', '-'),
                      fragments=atac_fragments_file, annotation=annotations,
-                     min.cells=0, max.cells=NULL, min.features=0) |>
-	{\\(x) Cells(x) |> str_remove_all('-1\$') |> RenameCells(object=x)}() -> assay
+                     min.cells=0, max.cells=NULL, min.features=0) -> assay
+
+# -------------------------------------------------------------------------------------------------
+# emulate the `strip.suffix=TRUE` behaviour of Seurat::Read10X
+# -------------------------------------------------------------------------------------------------
+
+if(Cells(assay) |> endsWith('-1') |> all())
+	assay %<>%
+		Cells() |>
+		str_remove('-1\$') |>
+		RenameCells(object=assay)
 
 saveRDS(object=assay, file='assay.rds')

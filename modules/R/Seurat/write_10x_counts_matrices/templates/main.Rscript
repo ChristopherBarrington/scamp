@@ -42,7 +42,7 @@ Read10X(data.dir='barcoded_matrix',
         gene.column=gene_column,
         cell.column=1,
         unique.features=TRUE,
-        strip.suffix=FALSE) -> all_counts
+        strip.suffix=TRUE) -> all_counts
 
 saveRDS(object=all_counts, file='counts_matrices.rds')
 

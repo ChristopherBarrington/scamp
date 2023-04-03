@@ -62,14 +62,6 @@ for(i in seq_along(assay_files)) {
 }
 
 # -------------------------------------------------------------------------------------------------
-# rename cells to add the dataset tag, making them unique across datasets
-# -------------------------------------------------------------------------------------------------
-
-log_message("renaming cells to include abbreviated dataset", level='section')
-
-seurat %<>% RenameCells(add.cell.id=dataset_tag)
-
-# -------------------------------------------------------------------------------------------------
 # add useful parts of the index to the misc slot of the seurat object
 # -------------------------------------------------------------------------------------------------
 
