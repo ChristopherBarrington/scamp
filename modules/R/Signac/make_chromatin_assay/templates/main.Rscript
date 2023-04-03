@@ -68,10 +68,18 @@ CreateChromatinAssay(counts=atac_counts, ranges=atac_peaks,
 # emulate the `strip.suffix=TRUE` behaviour of Seurat::Read10X
 # -------------------------------------------------------------------------------------------------
 
+log_message('checking if cells should be renamed and have `-1` removed from barcodes', level='section')
+
 if(Cells(assay) |> endsWith('-1') |> all())
 	assay %<>%
 		Cells() |>
 		str_remove('-1\$') |>
 		RenameCells(object=assay)
+
+# -------------------------------------------------------------------------------------------------
+# save the output
+# -------------------------------------------------------------------------------------------------
+
+log_message('saving assay.rds', level='section')
 
 saveRDS(object=assay, file='assay.rds')
