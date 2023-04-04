@@ -40,20 +40,18 @@ workflow cell_ranger {
 			// .combine(index_paths)
 			// .filter{check_for_matching_key_values(it, 'genome')}
 			// .map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'dataset name', 'dataset dir', 'sample', 'fastq paths', 'index path'])}
+			.map{it.subMap(['unique id', 'sample', 'fastq paths', 'index path', 'dataset id'])}
 			.dump(tag: 'quantification:cell_ranger:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
 		tags              = datasets_to_quantify.map{it.get('unique id')}
-		names             = datasets_to_quantify.map{it.get('dataset name')}
-		ids               = datasets_to_quantify.map{it.get('dataset dir')}
 		sample            = datasets_to_quantify.map{it.get('sample')}
 		fastq_paths       = datasets_to_quantify.map{it.get('fastq paths')}
 		index_paths       = datasets_to_quantify.map{it.get('index path')}
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, names, ids, sample, fastq_paths, index_paths)
+		quantify(datasets_to_quantify, tags, sample, fastq_paths, index_paths)
 
 		// make a channel of dataset (names) and paths that contain quantified data
 		merge_process_emissions(quantify, ['opt', 'quantification_path'])

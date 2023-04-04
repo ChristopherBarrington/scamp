@@ -18,8 +18,6 @@ cellranger count \
 
 mkdir --parents output/outs
 
-ln --symbolic output/outs $id
-
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
 "${task.process}":
@@ -29,8 +27,7 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    "$id":
-        sample: $sample
-        index_path: `realpath index_path`
-        task_index: ${task.index}
+    sample: $sample
+    index_path: `realpath index_path`
+    task_index: ${task.index}
 END_TASK

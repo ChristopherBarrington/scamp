@@ -10,7 +10,6 @@ include { mkref as make_index } from '../../modules/cell_ranger_arc/mkref'
 include { check_for_matching_key_values }     from '../../modules/utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../modules/utilities/concat_workflow_emissions'
 include { get_feature_types }                 from '../../modules/utilities/get_feature_types'
-include { make_map }                          from '../../modules/utilities/make_map'
 include { merge_metadata_and_process_output } from '../../modules/utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../modules/utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../modules/utilities/rename_map_keys'
@@ -98,19 +97,18 @@ workflow cell_ranger_arc {
 			.combine(index_paths)
 			.filter{check_for_matching_key_values(it, 'genome')}
 			.map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'dataset dir', 'samples', 'index path'])}
+			.map{it.subMap(['unique id', 'samples', 'index path', 'dataset id'])}
 			.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
 		tags              = datasets_to_quantify.map{it.get('unique id')}
-		ids               = datasets_to_quantify.map{it.get('dataset dir')}
 		samples           = datasets_to_quantify.map{it.get('samples')}
 		index_paths       = datasets_to_quantify.map{it.get('index path')}
 		sample_sheet_file = make_libraries_csv.out.path
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, ids, samples, index_paths, sample_sheet_file)
+		quantify(datasets_to_quantify, tags, samples, index_paths, sample_sheet_file)
 
 		// make a channel of newly quantified datasets, each defined in a map
 		merge_process_emissions(quantify, ['opt', 'libraries', 'quantification_path'])

@@ -168,7 +168,7 @@ workflow cell_ranger_arc {
 			.filter{check_for_matching_key_values(it, 'index path')}
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
-			.map{it.subMap(['unique id', 'rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay', 'dataset tag', 'granges', 'features', 'dataset name'])}
+			.map{it.subMap(['unique id', 'rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay', 'dataset tag', 'granges', 'features', 'dataset name', 'dataset id'])}
 			.dump(tag:'seurat:cell_ranger_arc:seurat_objects_to_create', pretty:true)
 			.set{seurat_objects_to_create}
 

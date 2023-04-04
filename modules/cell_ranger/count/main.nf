@@ -8,8 +8,6 @@ process count {
 	input:
 		val opt
 		val tag
-		val name
-		val id
 		val sample
 		path 'fastq_path_?'
 		path 'index_path'
@@ -18,7 +16,7 @@ process count {
 		val opt, emit: opt
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
-		path "$id", emit: quantification_path
+		path 'output/outs', emit: quantification_path
 
 	script:
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
