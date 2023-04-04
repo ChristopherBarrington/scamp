@@ -7,19 +7,23 @@ include { get_stages_params }          from '../get_stages_params'
 include { make_string_directory_safe } from '../make_string_directory_safe'
 
 def get_complete_stage_parameters(stage_type=null) {
-  def genomes_params = get_genomes_params()
-  def shared_stage_params = get_shared_stage_params()
+	def genomes_params = get_genomes_params()
+	def shared_stage_params = get_shared_stage_params()
 
-  get_stages_params()
-    .collectEntries{stage_name, datasets -> [stage_name, datasets.collectEntries{dataset_name, parameters -> [dataset_name, ['stage name': stage_name, 'dataset name': dataset_name, 'unique id': [stage_name, dataset_name].join(' / ')] + parameters]}]}
-    .collect{k,v -> v.values()}
-    .flatten()
-    .collect{x -> ['stage dir': make_string_directory_safe(x.get('stage name')), 'dataset dir': make_string_directory_safe(x.get('dataset name'))] + x}
-    .collect{x -> add_parameter_sets(shared_stage_params.get(x.get('stage name')), x)}
-    .collect{x -> convert_map_keys_to_files(x, ['index path', 'quantification path', 'fastq_files'])}
-    .collect{x -> add_parameter_sets(x, ['genome parameters': genomes_params.get(x.get('genome'))])}
-    .collect{x -> add_parameter_sets(x, ['md5sum': x.toString().md5()])}
-    .findAll{x -> x.get('stage type')==stage_type | stage_type==null}
+	get_stages_params()
+		.collectEntries{stage_key, datasets -> [stage_key, datasets.collectEntries{dataset_key, parameters -> [dataset_key, ['stage key': stage_key, 'dataset key': dataset_key,
+		                                                                                                                     'unique id': [stage_key, dataset_key].join(' / ')] + parameters]}]}
+		.collect{k,v -> v.values()}
+		.flatten()
+		.collect{it + ['stage name': it.get('stage name', it.get('stage key')),
+		               'dataset name': it.get('dataset name', it.get('dataset key'))]}
+		.collect{it + ['stage id': make_string_directory_safe(it.get('stage id', it.get('stage name'))),
+		               'dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]}
+		.collect{x -> add_parameter_sets(shared_stage_params.get(x.get('stage key')), x)}
+		.collect{x -> convert_map_keys_to_files(x, ['index path', 'quantification path', 'fastq paths'])}
+		.collect{x -> add_parameter_sets(x, ['genome parameters': genomes_params.get(x.get('genome'))])}
+		// .collect{x -> add_parameter_sets(x, ['md5 checksum': x.toString().md5()])}
+		.findAll{x -> x.get('stage type')==stage_type | stage_type==null}
 }
 
 def add_parameter_sets(a, b) {

@@ -98,19 +98,18 @@ workflow cell_ranger_arc {
 			.combine(index_paths)
 			.filter{check_for_matching_key_values(it, 'genome')}
 			.map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'dataset dir', 'samples', 'index path'])}
+			.map{it.subMap(['unique id', 'samples', 'index path', 'dataset id'])}
 			.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
 		tags              = datasets_to_quantify.map{it.get('unique id')}
-		ids               = datasets_to_quantify.map{it.get('dataset dir')}
 		samples           = datasets_to_quantify.map{it.get('samples')}
 		index_paths       = datasets_to_quantify.map{it.get('index path')}
 		sample_sheet_file = make_libraries_csv.out.path
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, ids, samples, index_paths, sample_sheet_file)
+		quantify(datasets_to_quantify, tags, samples, index_paths, sample_sheet_file)
 
 		// make a channel of newly quantified datasets, each defined in a map
 		merge_process_emissions(quantify, ['opt', 'libraries', 'quantification_path'])

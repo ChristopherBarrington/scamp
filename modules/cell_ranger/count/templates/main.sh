@@ -15,7 +15,6 @@ cellranger count \
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
 	--disable-ui
 
-ln --symbolic output/outs $id
 
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
@@ -26,7 +25,6 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    id: $id
     sample: $sample
     index_path: `realpath index_path`
     task_index: ${task.index}
