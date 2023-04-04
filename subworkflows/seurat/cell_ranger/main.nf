@@ -144,13 +144,12 @@ workflow cell_ranger {
 		tags         = seurat_objects_to_create.map{it.get('unique id')}
 		assays       = seurat_objects_to_create.map{it.get('ordered_assays')}
 		assay_names  = seurat_objects_to_create.map{['RNA', 'RNA_alt']}
-		dataset_tags = seurat_objects_to_create.map{it.get('dataset tag')}
 		misc_files   = seurat_objects_to_create.map{it.subMap(['granges', 'features']).values()}
 		misc_names   = seurat_objects_to_create.map{['gene_models', 'features']}
 		projects     = seurat_objects_to_create.map{it.get('dataset name')}
 
 		// read the two rna assays into a seurat object and write to rds file
-		make_seurat_object(seurat_objects_to_create, tags, assays, assay_names, dataset_tags, misc_files, misc_names, projects)
+		make_seurat_object(seurat_objects_to_create, tags, assays, assay_names, misc_files, misc_names, projects)
 
 		// add the new objects into the parameters channel
 		merge_process_emissions(make_seurat_object, ['opt', 'seurat'])
