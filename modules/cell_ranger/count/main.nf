@@ -1,18 +1,24 @@
 process count {
 	tag "$tag"
 
+	cpus 16
+	memory '64GB'
+	time '3d'
+
 	input:
-		val metadata
+		val opt
 		val tag
-		val output_directory
+		val name
+		val id
+		val sample
+		path 'fastq_path_?'
 		path 'index_path'
-		val additional_arguments
 
 	output:
-		val metadata, emit: metadata
-		path 'index_path', emit: index_path
-		path "$output_directory/outs", emit: quantification_path
+		val opt, emit: opt
+		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
+		path "$id", emit: quantification_path
 
 	script:
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
