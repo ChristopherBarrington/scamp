@@ -5,6 +5,7 @@
 
 include { check_for_matching_key_values } from '../../modules/utilities/check_for_matching_key_values'
 
+include { cell_ranger } from '../../subworkflows/seurat/cell_ranger'
 include { cell_ranger_arc } from '../../subworkflows/seurat/cell_ranger_arc'
 
 // -------------------------------------------------------------------------------------------------
@@ -66,5 +67,6 @@ workflow seurat {
 		// run the subworkflows
 		// -------------------------------------------------------------------------------------------------
 
+		cell_ranger(quantification_methods.cell_ranger)
 		cell_ranger_arc(quantification_methods.cell_ranger_arc)
 }
