@@ -17,7 +17,7 @@ library(GenomeInfoDb)
 library(rtracklayer)
 library(scampr)
 
-record_package_versions()
+record_package_versions(root_name="${task.process}")
 
 log_message('making a granges from a gtf file', level='main')
 
@@ -27,7 +27,7 @@ log_message('making a granges from a gtf file', level='main')
 
 list(genome = "$genome",
      gtf_file = "$gtf",
-     fai_file = "$fai") |> assign_and_record_nextflow_properties()
+     fai_file = "$fai") |> assign_and_record_nextflow_properties(root_name="${task.process}")
 
 # -------------------------------------------------------------------------------------------------
 # make a Seqinfo object for the genome

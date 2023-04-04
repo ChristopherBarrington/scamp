@@ -14,7 +14,7 @@ library(magrittr)
 library(scampr)
 library(Seurat)
 
-record_package_versions()
+record_package_versions(root_name="${task.process}")
 
 log_message('reading a cell ranger formatted counts matrix into a list of matrices', level='main')
 
@@ -22,7 +22,7 @@ log_message('reading a cell ranger formatted counts matrix into a list of matric
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(feature_identifier = "$feature_identifier") |> assign_and_record_nextflow_properties()
+list(feature_identifier = "$feature_identifier") |> assign_and_record_nextflow_properties(root_name="${task.process}")
 
 # -------------------------------------------------------------------------------------------------
 # read cell ranger formatted barcoded counts matrix into a list of counts matrices

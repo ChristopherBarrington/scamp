@@ -15,7 +15,7 @@ library(Seurat)
 library(Signac)
 library(stringr)
 
-record_package_versions()
+record_package_versions(root_name="${task.process}")
 
 log_message('making a seurat object from a collection of assays', level='main')
 
@@ -26,7 +26,7 @@ log_message('making a seurat object from a collection of assays', level='main')
 list(assay_names = "$assay_names",
      dataset_tag = "$dataset_tag",
      misc_names = "$misc_names",
-     project = "$project") |> assign_and_record_nextflow_properties()
+     project = "$project") |> assign_and_record_nextflow_properties(root_name="${task.process}")
 
 # -------------------------------------------------------------------------------------------------
 # create a seurat object with at least one assay
