@@ -18,7 +18,6 @@ cellranger count \
 
 mkdir --parents output/outs
 
-
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
 "${task.process}":

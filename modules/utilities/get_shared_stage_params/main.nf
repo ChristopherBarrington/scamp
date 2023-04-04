@@ -8,5 +8,4 @@ def get_shared_stage_params() {
 		.get('shared parameters')
 		.subMap(get_stage_keys())
 		.collectEntries{k, v -> [k, convert_map_keys_to_files(v, ['index path', 'quantification path', 'fastq paths'])]}
-
 }
