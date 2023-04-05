@@ -19,6 +19,7 @@ process count {
 		path 'libraries.csv', emit: libraries
 		path 'output/outs', emit: quantification_path
 		path 'atac_summary.html', emit: atac_summary
+		path 'joint_summary.html', emit: joint_summary
 		path 'rna_summary.html', emit: rna_summary
 
 	script:

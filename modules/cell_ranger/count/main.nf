@@ -17,6 +17,7 @@ process count {
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
 		path 'output/outs', emit: quantification_path
+		path 'web_summary.html', emit: cell_ranger_report
 
 	script:
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'

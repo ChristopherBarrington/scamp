@@ -1,3 +1,4 @@
 #! /bin/env bash
 
-touch libraries.csv {task,versions}.yaml {atac_summary,rna_summary}.html
+mkdir --parents output/outs
+touch libraries.csv {task,versions}.yaml {atac_summary,joint_summary,rna_summary}.html output/outs/web_summary.html

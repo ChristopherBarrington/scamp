@@ -17,6 +17,8 @@ cellranger count \
 	--dry
 
 mkdir --parents output/outs
+touch output/outs/web_summary.html
+ln --symbolic output/outs/web_summary.html
 
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml

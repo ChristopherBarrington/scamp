@@ -15,6 +15,8 @@ cellranger count \
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
 	--disable-ui
 
+ln --symbolic output/outs/web_summary.html
+
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
 "${task.process}":
