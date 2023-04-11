@@ -20,7 +20,8 @@ log_message('making a connection to biomart', level='main')
 # -------------------------------------------------------------------------------------------------
 
 list(arg1 = "$arg2",
-     arg2 = "$arg2") |> assign_and_record_nextflow_properties(root_name="${task.process}")
+     arg2 = "$arg2") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
 # some informative title

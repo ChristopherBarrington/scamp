@@ -27,7 +27,8 @@ log_message('making a granges from a gtf file', level='main')
 
 list(genome = "$genome",
      gtf_file = "$gtf",
-     fai_file = "$fai") |> assign_and_record_nextflow_properties(root_name="${task.process}")
+     fai_file = "$fai") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
 # make a Seqinfo object for the genome

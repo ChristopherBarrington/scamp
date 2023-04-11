@@ -26,7 +26,8 @@ log_message('making a seqinfo from fai', level='main')
 # -------------------------------------------------------------------------------------------------
 
 list(genome_name = "$genome_name",
-     fai_file = "$fai_file") |> assign_and_record_nextflow_properties(root_name="${task.process}")
+     fai_file = "$fai_file") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
 # make a Seqinfo object for the genome

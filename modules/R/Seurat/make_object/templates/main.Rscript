@@ -25,7 +25,8 @@ log_message('making a seurat object from a collection of assays', level='main')
 
 list(assay_names = "$assay_names",
      misc_names = "$misc_names",
-     project = "$project") |> assign_and_record_nextflow_properties(root_name="${task.process}")
+     project = "$project") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
 # create a seurat object with at least one assay

@@ -25,7 +25,8 @@ log_message('making a chromatin assay using signac', level='main')
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(feature_type = "$feature_type") |> assign_and_record_nextflow_properties(root_name="${task.process}")
+list(feature_type = "$feature_type") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
 # get data to make the assay

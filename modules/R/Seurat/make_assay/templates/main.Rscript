@@ -21,7 +21,8 @@ log_message('making an assay using seurat', level='main')
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(feature_type = "$feature_type") |> assign_and_record_nextflow_properties(root_name="${task.process}")
+list(feature_type = "$feature_type") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
 # create assay from the counts
