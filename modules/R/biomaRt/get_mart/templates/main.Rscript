@@ -1,13 +1,20 @@
 #! /bin/env Rscript
 
-# -------------------------------------------------------------------------------------------------
-# these functions are used to track the software versions and nextflow properties used in the task
-# -------------------------------------------------------------------------------------------------
+# *************************************************************************************************
+# given the following parameters, this script make a connection to biomaRt
+# - `organism` (eg. 'mus musculus')
+# - `release` number from Ensembl
+# *************************************************************************************************
 
 # -------------------------------------------------------------------------------------------------
 # attach and record packages used in this Rscript
 # -------------------------------------------------------------------------------------------------
 
+library(biomaRt)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(tibble)
 library(magrittr)
 library(scampr)
 
@@ -19,20 +26,32 @@ log_message('making a connection to biomart', level='main')
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
-list(arg1 = "$arg2",
-     arg2 = "$arg2") |>
+list(organism = "$organism",
+     release = "$release") |>
 	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
 
 # -------------------------------------------------------------------------------------------------
-# some informative title
+# get the ensembl biomart url
 # -------------------------------------------------------------------------------------------------
 
-log_message('an informative status message', level='section')
+log_message('getting url for specified ensembl release', level='section')
+
+listEnsemblArchives() |>
+	select(version, url) |>
+	deframe() |>
+	pluck(release) -> archive
 
 # -------------------------------------------------------------------------------------------------
-# write any output files
+# connect to biomart and save the object
 # -------------------------------------------------------------------------------------------------
 
-log_message("writing output files", level='section')
+organism %>%
+	switch(`mus musculus`='mmusculus',
+	       str_replace(., pattern='^(.).+ (.+)\$', replacement='\\1\\2')) -> species
+dataset <- str_c(species, 'gene_ensembl', sep='_')
 
-saveRDS(object=seurat, file='seurat.rds')
+sprintf(fmt='making mart for %s using release-%s', species, release) %>% log_message(level='section')
+
+useMart(biomart='ensembl', host=archive) |>
+	useDataset(dataset=dataset) |>
+	saveRDS(file='mart.rds')

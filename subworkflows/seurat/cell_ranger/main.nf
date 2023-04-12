@@ -10,6 +10,8 @@ import java.nio.file.Paths
 
 include { convert_gtf_to_granges } from '../../../modules/R/GenomicRanges/convert_gtf_to_granges'
 
+include { get_mart } from '../../../modules/R/biomaRt/get_mart'
+
 include { make_assay as make_rna_assay }      from '../../../modules/R/Seurat/make_assay'
 include { make_object as make_seurat_object } from '../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices }         from '../../../modules/R/Seurat/write_10x_counts_matrices'
@@ -60,6 +62,30 @@ workflow cell_ranger {
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'seurat:cell_ranger:granges_files', pretty:true)
 			.set{granges_files}
+
+		// -------------------------------------------------------------------------------------------------
+		// make a biomaRt object for the genome
+		// -------------------------------------------------------------------------------------------------
+
+		// create the channels for the process to make biomaRt objects
+		stage_parameters
+			.map{it.subMap(['genome']) + it.get('genome parameters').subMap(['organism', 'ensembl release'])}
+			.unique()
+			.dump(tag:'seurat:cell_ranger:biomart_connections_to_make', pretty:true)
+			.set{biomart_connections_to_make}
+
+		tags             = biomart_connections_to_make.map{it.get('genome')}
+		organisms        = biomart_connections_to_make.map{it.get('organism')}
+		ensembl_releases = biomart_connections_to_make.map{it.get('ensembl release')}
+
+		// make the mart rds files
+		get_mart(biomart_connections_to_make, tags, organisms, ensembl_releases)
+
+		// make a channel of newly created GRanges rds files
+		merge_process_emissions(get_mart, ['opt', 'mart'])
+			.map{merge_metadata_and_process_output(it)}
+			.dump(tag:'seurat:cell_ranger:mart_files', pretty:true)
+			.set{mart_files}
 
 		// -------------------------------------------------------------------------------------------------
 		// read the 10X cell ranger matrices into an object

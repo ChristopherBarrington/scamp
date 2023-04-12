@@ -1,21 +1,21 @@
-process process_name {
+process get_mart {
 	tag "$tag"
 
 	cpus 1
-	memory '4GB'
-	time '1h'
+	memory '2GB'
+	time '10m'
 
 	input:
+		val opt
 		val tag
-
-		val channel_1
-		val channel_1
+		val organism
+		val release
 
 	output:
+		val opt, emit: opt
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
-
-		path 'output_1.rds', emit: output_1
+		path 'mart.rds', emit: mart
 
 	script:
 		template workflow.stubRun ? 'stub.sh' : 'main.Rscript'

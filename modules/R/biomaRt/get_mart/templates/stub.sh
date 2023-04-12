@@ -1,3 +1,3 @@
 #! /bin/env bash
 
-touch output_1.rds
+touch {task,versions}.yaml mart.rds
