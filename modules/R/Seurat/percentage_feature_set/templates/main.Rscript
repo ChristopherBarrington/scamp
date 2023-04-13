@@ -1,0 +1,61 @@
+#! /bin/env Rscript
+
+# *************************************************************************************************
+# given a yaml file of feature identifiers, run `Seurat::PercentageFeatureSet`
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(purrr)
+library(scampr)
+library(Seurat)
+library(yaml)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('run Seurat::PercentageFeatureSet', level='main')
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(assay = "$assay") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+# -------------------------------------------------------------------------------------------------
+# read the yaml file
+# -------------------------------------------------------------------------------------------------
+
+log_message('reading input features file', level='section')
+
+read_yaml(file='feature_sets.yaml') |>
+	lapply(head, n=1) -> feature_sets
+
+# -------------------------------------------------------------------------------------------------
+# load the seurat object
+# -------------------------------------------------------------------------------------------------
+
+log_message('reading seurat', level='section')
+
+seurat <- readRDS(file='input_seurat.rds')
+
+# -------------------------------------------------------------------------------------------------
+# run PercentageFeatureSet for each set of features
+# -------------------------------------------------------------------------------------------------
+
+log_message('calculating percentages from feature sets', level='section')
+
+feature_sets |>
+	{function(FS) Map(list_modify, .x=FS, col.name=names(FS), assay=assay)}() |>
+	lapply(function(x) x |> list_modify(object=seurat) |> do.call(what=PercentageFeatureSet) ->> seurat) |>
+	invisible()
+
+# -------------------------------------------------------------------------------------------------
+# write any output files that haven't already
+# -------------------------------------------------------------------------------------------------
+
+log_message('writing output files', level='section')
+
+saveRDS(object=seurat, file='seurat.rds')
