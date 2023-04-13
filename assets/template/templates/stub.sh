@@ -1,3 +1,3 @@
 #! /bin/env bash
 
-touch output_1.rds {versions,task}.yaml
+touch {versions,task}.yaml output_1.rds
