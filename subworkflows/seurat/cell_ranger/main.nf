@@ -15,7 +15,7 @@ include { get_mart } from '../../../modules/R/biomaRt/get_mart'
 include { make_assay as make_rna_assay }         from '../../../modules/R/Seurat/make_assay'
 include { make_object as make_seurat_object }    from '../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices }            from '../../../modules/R/Seurat/write_10x_counts_matrices'
-include { percentage_feature_set as mt_percent } from '../../../modules/R/Seurat/percentage_feature_set'
+// include { percentage_feature_set as mt_percent } from '../../../modules/R/Seurat/percentage_feature_set'
 
 include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
@@ -184,33 +184,33 @@ workflow cell_ranger {
 			.dump(tag:'seurat:cell_ranger:seurat_objects', pretty:true)
 			.set{seurat_objects}
 
-		// -------------------------------------------------------------------------------------------------
-		// add mitochondrial expression detected per cell
-		// -------------------------------------------------------------------------------------------------
-
-		// create the channels for the process to calculate mitochondrial proportions
-		stage_parameters
-			.combine(seurat_objects)
-			.filter{check_for_matching_key_values(it, ['unique id'])}
-			.map{it.first() + it.last().subMap(['seurat'])}
-			.map{it.subMap(['unique id', 'dataset id', 'seurat']) + it.get('genome parameters').subMap(['mitochondrial features'])}
-			.dump(tag:'seurat:cell_ranger:mt_percent_input', pretty:true)
-			.set{mt_percent_input}
-
-		// create the channels for the process to make a seurat object
-		tags          = mt_percent_input.map{it.get('unique id')}
-		assays        = 'RNA'
-		feature_sets  = mt_percent_input.map{it.get('mitochondrial features')}
-		input_seurats = mt_percent_input.map{it.get('seurat')}
-
-		// calculate percentages and provide paths to metadata rds files
-		mt_percent(mt_percent_input, tags, assays, feature_sets, input_seurats)
-		
-		// add the new objects into the parameters channel
-		merge_process_emissions(mt_percent, ['opt', 'seurat'])
-			.map{merge_metadata_and_process_output(it)}
-			.dump(tag:'seurat:cell_ranger:mt_percent_output', pretty:true)
-			.set{mt_percent_output}
+//		// -------------------------------------------------------------------------------------------------
+//		// add mitochondrial expression detected per cell
+//		// -------------------------------------------------------------------------------------------------
+//
+//		// create the channels for the process to calculate mitochondrial proportions
+//		stage_parameters
+//			.combine(seurat_objects)
+//			.filter{check_for_matching_key_values(it, ['unique id'])}
+//			.map{it.first() + it.last().subMap(['seurat'])}
+//			.map{it.subMap(['unique id', 'dataset id', 'seurat']) + it.get('genome parameters').subMap(['mitochondrial features'])}
+//			.dump(tag:'seurat:cell_ranger:mt_percent_input', pretty:true)
+//			.set{mt_percent_input}
+//
+//		// create the channels for the process to make a seurat object
+//		tags          = mt_percent_input.map{it.get('unique id')}
+//		assays        = 'RNA'
+//		feature_sets  = mt_percent_input.map{it.get('mitochondrial features')}
+//		input_seurats = mt_percent_input.map{it.get('seurat')}
+//
+//		// calculate percentages and provide paths to metadata rds files
+//		mt_percent(mt_percent_input, tags, assays, feature_sets, input_seurats)
+//		
+//		// add the new objects into the parameters channel
+//		merge_process_emissions(mt_percent, ['opt', 'seurat'])
+//			.map{merge_metadata_and_process_output(it)}
+//			.dump(tag:'seurat:cell_ranger:mt_percent_output', pretty:true)
+//			.set{mt_percent_output}
 
 		// -------------------------------------------------------------------------------------------------
 		// join any/all information back onto the parameters ready to emit
