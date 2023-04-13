@@ -10,5 +10,5 @@ def get_genomes_params() {
 	pluck(params, ['project', 'genomes'])
 		.collectEntries{genome_name, genome_parameters -> [genome_name, genome_parameters+['genome': genome_name, 'unique id': genome_name]]}
 		// .collectEntries{genome_name, genome_parameters -> [genome_name, genome_parameters+['md5sum': genome_parameters.toString().md5()]]}
-		.collectEntries{genome_name, genome_parameters -> [genome_name, convert_map_keys_to_files(genome_parameters, ['fasta files', 'gtf files', 'motifs'])]}
+		.collectEntries{genome_name, genome_parameters -> [genome_name, convert_map_keys_to_files(genome_parameters, ['fasta files', 'gtf files', 'motifs', 'mitochondrial features'])]}
 }
