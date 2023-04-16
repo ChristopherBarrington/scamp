@@ -34,6 +34,6 @@ log_message('an informative status message', level='section')
 # write any output files that haven't already
 # -------------------------------------------------------------------------------------------------
 
-log_message("writing output files", level='section')
+log_message('writing output files', level='section')
 
 saveRDS(object=seurat, file='seurat.rds')
