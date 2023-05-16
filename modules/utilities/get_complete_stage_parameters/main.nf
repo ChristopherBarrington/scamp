@@ -20,7 +20,7 @@ def get_complete_stage_parameters(stage_type=null) {
 		.collect{it + ['stage id': make_string_directory_safe(it.get('stage id', it.get('stage name'))),
 		               'dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]}
 		.collect{x -> add_parameter_sets(shared_stage_params.get(x.get('stage key')), x)}
-		.collect{x -> convert_map_keys_to_files(x, ['index path', 'quantification path', 'fastq paths'])}
+		.collect{x -> convert_map_keys_to_files(x, ['index path', 'quantification path', 'fastq paths', 'cell barcodes'])}
 		.collect{x -> add_parameter_sets(x, ['genome parameters': genomes_params.get(x.get('genome'))])}
 		// .collect{x -> add_parameter_sets(x, ['md5 checksum': x.toString().md5()])}
 		.findAll{x -> x.get('stage type')==stage_type | stage_type==null}
