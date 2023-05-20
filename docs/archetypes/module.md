@@ -1,5 +1,5 @@
 ---
 layout: nf-module-doc
 
-{{ os.ReadFile (getenv "README") }}
+{{ os.ReadFile (getenv "SCAMP_MODULE_DOC") }}
 ---
