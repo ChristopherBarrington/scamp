@@ -119,3 +119,7 @@ disableHugoGeneratorInject = true
   themeVariant = [ "auto", "relearn-bright", "relearn-light", "relearn-dark", "learn", "neon" ]
   themeVariantAuto = [ "relearn-light", "relearn-dark" ]
   titleSeparator = "|"
+
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^SCAMP_']
