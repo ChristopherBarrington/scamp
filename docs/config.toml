@@ -79,23 +79,25 @@ disableHugoGeneratorInject = true
 [Languages]
   [Languages.en]
     title = "scamp"
-    weight = 1
-    languageName = "English"
     landingPageName = "<i class='fas fa-home'></i> Home"
 
-  [[Languages.en.menu.shortcuts]]
+[menu]
+  [[menu.shortcuts]]
     name = "<i class='fab fa-fw fa-github'></i> GitHub repo"
-    identifier = "ds"
     url = "https://github.com/ChristopherBarrington/scamp"
     weight = 10
 
-  [[Languages.en.menu.shortcuts]]
-    name = "<i class='fas fa-fw fa-bookmark'></i> Nextflow Documentation"
-    identifier = "nextflowdoc"
+  [[menu.shortcuts]]
+    name = "<i class='fas fa-spin fa-grin-beam'></i> Nextflow Documentation"
     url = "https://nextflow.io/"
     weight = 20
 
-  [[Languages.en.menu.shortcuts]]
+  [[menu.shortcuts]]
+    name = "<i class='fas fa-swatchbook'></i> Hugo theme"
+    url = "https://github.com/McShelby/hugo-theme-relearn"
+    weight = 25
+
+  [[menu.shortcuts]]
     name = "<i class='fas fa-fw fa-tags'></i> Tags"
     url = "tags/"
     weight = 30
