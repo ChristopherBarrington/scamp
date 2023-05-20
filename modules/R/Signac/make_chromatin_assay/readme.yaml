@@ -1,4 +1,3 @@
----
 title: "Make chromatin assay"
 
 description: |
@@ -60,4 +59,3 @@ output:
 
 authors:
   - "@ChristopherBarrington"
----

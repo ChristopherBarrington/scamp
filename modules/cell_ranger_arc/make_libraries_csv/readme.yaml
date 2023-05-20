@@ -1,4 +1,3 @@
----
 title: make libraries CSV
 
 description: |
@@ -36,4 +35,3 @@ output:
 
 authors:
   - "@ChristopherBarrington"
----
