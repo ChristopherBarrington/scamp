@@ -1,3 +1,4 @@
+
 # this is a required setting for this theme to appear on https://themes.gohugo.io/
 # change this to a value appropriate for you; if your site is served from a subdirectory
 # set it like "https://example.com/mysite/"
@@ -70,7 +71,7 @@ disableHugoGeneratorInject = true
   [markup.goldmark.renderer]
     # activated for this showcase to use HTML and JavaScript; decide on your own needs;
     # if in doubt, remove this line
-    unsafe = true
+    unsafe = false
 
 # showcase of the menu shortcuts; you can use relative URLs linking
 # to your content or use fully-qualified URLs to link outside of
@@ -90,42 +91,14 @@ disableHugoGeneratorInject = true
 
   [[Languages.en.menu.shortcuts]]
     name = "<i class='fas fa-fw fa-bookmark'></i> Nextflow Documentation"
-    identifier = "hugodoc"
+    identifier = "nextflowdoc"
     url = "https://nextflow.io/"
     weight = 20
 
   [[Languages.en.menu.shortcuts]]
     name = "<i class='fas fa-fw fa-tags'></i> Tags"
     url = "tags/"
-    weight = 40
-
-# mounts are only needed in this showcase to access the publicly available screenshots;
-# remove this section if you don't need further mounts
-[module]
-  [[module.mounts]]
-    source = 'archetypes'
-    target = 'archetypes'
-  [[module.mounts]]
-    source = 'assets'
-    target = 'assets'
-  [[module.mounts]]
-    source = 'content'
-    target = 'content'
-  [[module.mounts]]
-    source = 'data'
-    target = 'data'
-  [[module.mounts]]
-    source = 'i18n'
-    target = 'i18n'
-  [[module.mounts]]
-    source = '../images'
-    target = 'content/images'
-  [[module.mounts]]
-    source = 'layouts'
-    target = 'layouts'
-  [[module.mounts]]
-    source = 'static'
-    target = 'static'
+    weight = 30
 
 # settings specific to this theme's features; choose to your liking and
 # consult this documentation for explanation
