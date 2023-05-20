@@ -2,3 +2,5 @@
 # hugo
 
 docs/.hugo_build.lock
+docs/public
+docs/resources
