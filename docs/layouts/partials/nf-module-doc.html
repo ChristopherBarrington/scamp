@@ -1,0 +1,55 @@
+
+{{ .Params.description }}
+
+{{ with .Params.input }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
+	<table>
+		<tr>
+			<th>Channel name</th>
+			<th>Description</th>
+		</tr>
+		{{ range $info := . }}
+		<tr>
+			<td><code>{{ index $info "name" }}</code> ({{ index $info "type" }})</td>
+			<td>{{ index $info "description" }}</td>
+		</tr>
+		{{ end }}
+	</table>
+{{ end }}
+
+
+
+{{ with .Params.output }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
+	<table class='module-table'>
+		<tr>
+			<th>Emission name</th>
+			<th>Description</th>
+			<th>Filename pattern</th>
+		</tr>
+		{{ range $info := . }}
+		<tr>
+			<td><code>{{ index $info "name" }}</code> ({{ index $info "type" }})</td>
+			<td>{{ index $info "description" }}</td>
+			<td>{{ with $info.pattern }}<code>{{ . }}</code>{{ end }}</td>
+		</tr>
+		{{ end }}
+	</table>
+{{ end }}
+
+
+
+{{ with .Params.tools }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "wrench") }} Tools</h2>
+	{{ range $name,$info := . }}
+		<h3>{{ print $name }}</h3>
+		<p>{{ with $info.description }}{{ . }}{{ end }}</p>
+		{{ with $info.doi }}{{ partial "shortcodes/button.html" (dict "context" $info "href" (printf "https://doi.org/%s" .) "content" "DOI") }}{{ end }}
+		{{ with $info.homepage }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Homepage") }}{{ end }}
+		{{ with $info.documentation }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Documentation") }}{{ end }}
+		{{ with $info.source }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Source") }}{{ end }}
+		{{ with $info.licence }}{{ partial "shortcodes/button.html" (dict "context" $info "content" .) }}{{ end }}
+	{{ end }}
+{{ end }}
+
+{{- .Content }}
