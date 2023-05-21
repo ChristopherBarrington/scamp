@@ -7,6 +7,7 @@ tags:
   - 10x
   - multiome
   - quantification
+  - multithreaded
 
 tools:
   cell ranger arc:

@@ -7,6 +7,7 @@ tags:
   - 10x
   - multiome
   - create index
+  - multithreaded
 
 tools:
   cell ranger arc:
