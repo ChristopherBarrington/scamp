@@ -1,5 +1,9 @@
 
-{{ .Params.description }}
+<!-- show description -->
+
+<p>{{ .Params.description }}</p>
+
+<!-- show inputs table -->
 
 {{ with .Params.input }}
 	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
@@ -17,7 +21,7 @@
 	</table>
 {{ end }}
 
-
+<!-- show outputs table -->
 
 {{ with .Params.output }}
 	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
@@ -57,5 +61,3 @@
 		{{ with $info.licence }}{{ partial "shortcodes/button.html" (dict "context" $info "content" .) }}{{ end }}
 	{{ end }}
 {{ end }}
-
-{{- .Content }}
