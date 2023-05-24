@@ -1,0 +1,28 @@
+
+.btn {
+	width: 100%;
+	text-align: center;
+}
+
+.btn > * {
+	width: 100%
+}
+
+.shepherd-button {
+	background: var(--SECONDARY-color);
+	color: var(--MAIN-BG-color);
+	width: -webkit-fill-available;
+	padding: 1%;
+}
+
+.shepherd-button:not(:disabled):hover {
+	background: var(--PRIMARY-color);
+}
+
+.shepherd-content {
+	border-radius: 5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: var(--BOX-TEXT-color);
+	padding:0
+}
