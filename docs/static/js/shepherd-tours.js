@@ -26,7 +26,7 @@ function make_default_tour(steps_json) {
 			attachTo: {
 				element: document.getElementById(params.target),
 				on: params.position || 'left' },
-			buttons: tour_steps.length == 0 ? [buttons[1]] : [buttons[0], buttons[1]] });
+			buttons: tour_steps.length == 0 ? [buttons[1]] : (tour_steps.length+1 == steps.size ? [buttons[0], buttons[2]] : [buttons[0], buttons[1]]) });
 		tour_steps.push(s);
 	}
 
