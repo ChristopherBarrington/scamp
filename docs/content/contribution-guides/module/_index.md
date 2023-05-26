@@ -15,4 +15,8 @@ Integer eleifend elementum mauris, malesuada eleifend felis tincidunt quis. Cura
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam posuere mollis risus, sit amet viverra nisl aliquet scelerisque. Maecenas vel nulla vestibulum, sodales leo in, tristique velit. Maecenas convallis quam nec nunc ultrices, at finibus nibh placerat. Etiam sollicitudin lacus vitae tincidunt hendrerit. Curabitur molestie scelerisque ullamcorper. Nulla ultrices rhoncus pulvinar. Duis tempor accumsan nisl, vel euismod est gravida at. Aenean laoreet leo vel sem malesuada, in commodo sem fermentum. Nullam in commodo ex. Quisque egestas mi quis ipsum hendrerit dignissim.
 
-{{< shepherd_tour tour="template_shell_script" lang="bash" >}}
+{{< shepherd_tour tour="template_script" lang="bash" >}}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam posuere mollis risus, sit amet viverra nisl aliquet scelerisque. Maecenas vel nulla vestibulum, sodales leo in, tristique velit. Maecenas convallis quam nec nunc ultrices, at finibus nibh placerat. Etiam sollicitudin lacus vitae tincidunt hendrerit. Curabitur molestie scelerisque ullamcorper. Nulla ultrices rhoncus pulvinar. Duis tempor accumsan nisl, vel euismod est gravida at. Aenean laoreet leo vel sem malesuada, in commodo sem fermentum. Nullam in commodo ex. Quisque egestas mi quis ipsum hendrerit dignissim.
+
+{{< shepherd_tour tour="template_stub_script" lang="bash" >}}
