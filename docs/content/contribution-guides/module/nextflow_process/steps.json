@@ -1,0 +1,21 @@
+
+// targets must start `line-`
+// these will be replaced by regex
+
+{
+	"process" : {
+		"target": "line-1",
+		"text": "The process definition"},
+	"inputs" : {
+		"target": "line-8",
+		"text": "Expected input channels"},
+	"outputs" : {
+		"target": "line-15",
+		"text": "Output channels are the files, directories, and/or variables created in this task that should be made available or published by the pipeline."},
+	"script" : {
+		"target": "line-22",
+		"text": "Any parsing/wrangling and execution of a script is here."},
+	"resources" : {
+		"target": "line-4",
+		"text": "Default resource requirements, for example <code>cpus</code> requests 8 CPU cores, requested for the process."}
+}

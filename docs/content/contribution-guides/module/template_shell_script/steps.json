@@ -1,0 +1,12 @@
+
+// targets must start `line-`
+// these will be replaced by regex for the tour name
+
+{
+	"inputs" : {
+		"target": "line-1",
+		"text": "This is line 1"},
+	"resources" : {
+		"target": "line-4",
+		"text": "This is line 4."}
+}
