@@ -1,5 +1,18 @@
-#! /bin/bash
+#! /bin/env bash
 
-ls
-cd /nemo/stp
-ls -Algh
+analysis_tool --sample $sample --database db --parameter 100 --output intermediate.file
+cat intermediate.file | parsing_tool > output.file
+
+# write software versions used in this module
+cat <<-END_VERSIONS > versions.yaml
+"${task.process}":
+    analysis tool: `analysis_tool --version`
+    parsing tool: `parsing_tool -v`
+END_VERSIONS
+
+# write parameters to a (yaml) file
+cat <<-END_TASK > task.yaml
+"${task.process}":
+    sample: $sample
+    work_dir: `pwd`
+END_TASK
