@@ -9,15 +9,13 @@ process count {
     val opt
     val tag
     val sample
-    path 'fastq_path_?'
-    path 'index_path'
+    file 'db'
 
   output:
     val opt, emit: opt
     path 'task.yaml', emit: task
     path 'versions.yaml', emit: versions
-    path 'output/outs', emit: quantification_path
-    path 'web_summary.html', emit: cell_ranger_report
+    path 'output.file', emit: output
 
   script:
     template workflow.stubRun ? 'stub.sh' : 'main.sh'
