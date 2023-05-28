@@ -1,5 +1,6 @@
 ---
 title: scamp modules
+weight: 2
 ---
 
 {{% children
