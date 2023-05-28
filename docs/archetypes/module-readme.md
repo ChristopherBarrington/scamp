@@ -10,7 +10,7 @@ tags:
 
 tools:
   name of software:
-    description: A description - pillaged from its website!
+    description: A markdown-ready description - pillaged from its website!
     homepage: url, could be github
     documentation: maybe a readthedocs
     source: url to (eg) github

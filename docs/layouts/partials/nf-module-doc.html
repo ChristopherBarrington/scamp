@@ -11,11 +11,15 @@
 		<tr>
 			<th>Channel name</th>
 			<th>Description</th>
+			<th>Type</th>
+			<th>Default</th>
 		</tr>
 		{{ range $info := . }}
 		<tr>
-			<td><code>{{ index $info "name" }}</code> ({{ index $info "type" }})</td>
-			<td>{{ index $info "description" }}</td>
+			<td><code>{{ index $info "name" }}</code></td>
+			<td>{{ index $info "description" | markdownify }}</td>
+			<td><code>{{ index $info "type" }}</code></td>
+			<td>{{ index $info "default" | markdownify }}</td>
 		</tr>
 		{{ end }}
 	</table>
@@ -29,12 +33,14 @@
 		<tr>
 			<th>Emission name</th>
 			<th>Description</th>
+			<th>Type</th>
 			<th>Filename pattern</th>
 		</tr>
 		{{ range $info := . }}
 		<tr>
-			<td><code>{{ index $info "name" }}</code> ({{ index $info "type" }})</td>
-			<td>{{ index $info "description" }}</td>
+			<td><code>{{ index $info "name" }}</code></td>
+			<td>{{ index $info "description" | markdownify }}</td>
+			<td><code>{{ index $info "type" }}</code></td>
 			<td>{{ with $info.pattern }}<code>{{ . }}</code>{{ end }}</td>
 		</tr>
 		{{ end }}
