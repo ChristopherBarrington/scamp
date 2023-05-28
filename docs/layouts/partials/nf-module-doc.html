@@ -49,16 +49,10 @@
 
 <!-- show list of tools -->
 
-
 {{ if $tools := .Params.tools }}
 	<h2>{{ partial "shortcodes/icon.html" (dict "context" $tools "icon" "wrench") }} Tools</h2>
-
-	{{ if in .Params.tags "multithreaded" }}
-		{{ partial "shortcodes/notice.html" (dict "context" .Params "style" "accent" "content" "This module contains a multithreaded tool, so may complete faster with more allocated CPUs.")}}
-	{{ end }}
-
 	{{ range $name,$info := $tools }}
-		<h3>{{ $name }}</h3>
+		<h3>{{ $name }} {{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $info "style" "primary" "content" "multithreaded") }}{{ end }}</h3>
 		<p>{{ with $info.description }}{{ . }}{{ end }}</p>
 		{{ with $info.doi }}{{ partial "shortcodes/button.html" (dict "context" $info "href" (printf "https://doi.org/%s" .) "content" "DOI") }}{{ end }}
 		{{ with $info.homepage }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Homepage") }}{{ end }}
