@@ -7,13 +7,13 @@ tags:
   - 10x
   - multiome
   - create index
-  - multithreaded
 
 tools:
   cell ranger arc:
     description: Cell Ranger ARC is a set of analysis pipelines that process Chromium Single Cell Multiome ATAC + Gene Expression sequencing data to generate a variety of analyses pertaining to gene expression (GEX), chromatin accessibility, and their linkage. Furthermore, since the ATAC and GEX measurements are on the very same cell, we are able to perform analyses that link chromatin accessibility and GEX.
     homepage: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software
     documentation: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/pipelines/latest/using/count
+    multithreaded: true
 
 input:
   - name: opt
