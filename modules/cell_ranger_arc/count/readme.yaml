@@ -7,13 +7,13 @@ tags:
   - 10x
   - multiome
   - quantification
-  - multithreaded
 
 tools:
   cell ranger arc:
     description: Cell Ranger ARC is a set of analysis pipelines that process Chromium Single Cell Multiome ATAC + Gene Expression sequencing data to generate a variety of analyses pertaining to gene expression (GEX), chromatin accessibility, and their linkage. Furthermore, since the ATAC and GEX measurements are on the very same cell, we are able to perform analyses that link chromatin accessibility and GEX.
     homepage: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software
     documentation: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/pipelines/latest/using/count
+    multithreaded: true
 
 input:
   - name: opt
@@ -27,10 +27,11 @@ input:
     description: "An array of length two: RNA and chromatin assay sample names."
   - name: index_path
     type: path
-    description: Path to the propoerly-formatted index directory.
+    description: Path to the properly-formatted index directory.
+    default: "`inputs/index`"
   - name: all_libraries.csv
     type: file
-    description: Path to the liraries sample sheet. This will be searched using grep for the relevant samples.
+    description: Path to the liraries sample sheet. This will be searched using `grep` for the relevant samples.
 
 output:
   - name: opt
@@ -50,7 +51,7 @@ output:
     pattern: libraries.csv
   - name: quantification_path
     type: path
-    description: Cell Ranger outputs directory ("outs").
+    description: Cell Ranger outputs (`outs/`) directory.
     pattern: output/outs
   - name: atac_summary
     type: file
@@ -58,7 +59,7 @@ output:
     pattern: atac_summary.html
   - name: joint_summary
     type: file
-    description: HTML summary for the join RNA- and ATAC-seq assays.
+    description: HTML summary for the joint RNA- and ATAC-seq assays.
     pattern: joint_summary.html
   - name: rna_summary
     type: file
