@@ -5,7 +5,6 @@ function make_default_tour(steps_json) {
 		useModalOverlay: true,
 		defaultStepOptions: {
 			classes: '',
-			scrollTo: true,
 			exitOnEsc: true,
 			cancelIcon: {
 				enabled: true },
@@ -16,6 +15,8 @@ function make_default_tour(steps_json) {
 	const buttons = [{text: 'Previous', action: tour.back},
 	                 {text: 'Next', action: tour.next},
 	                 {text: 'Exit', action: tour.cancel}];
+	const scrollers = [{behavior: 'smooth', block: 'center'},
+	                   {behavior: 'smooth', block: 'nearest'}]
 	let tour_steps = new Array;
 
 	for (let [id, params] of steps) {
@@ -26,7 +27,8 @@ function make_default_tour(steps_json) {
 			attachTo: {
 				element: document.getElementById(params.target),
 				on: params.position || 'left' },
-			buttons: tour_steps.length == 0 ? [buttons[1]] : (tour_steps.length+1 == steps.size ? [buttons[0], buttons[2]] : [buttons[0], buttons[1]]) });
+			buttons: tour_steps.length == 0 ? [buttons[1]] : (tour_steps.length+1 == steps.size ? [buttons[0], buttons[2]] : [buttons[0], buttons[1]]),
+			scrollTo: tour_steps.length == 0 ? scrollers[0] : scrollers[1] });
 		tour_steps.push(s);
 	}
 
