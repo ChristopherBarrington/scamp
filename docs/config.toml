@@ -57,7 +57,7 @@ disableHugoGeneratorInject = true
     lineNos = true
     lineNumbersInTable = false
     anchorLineNos = true
-    style = "github"
+    style = "github-dark"
 
   [markup.goldmark.renderer]
     unsafe = true
