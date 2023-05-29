@@ -15,7 +15,7 @@
 	padding: 1rem;
 	border-radius: 0rem;
 	border-top: solid 0.4rem var(--BOX-TEXT-color);
-	border-right: solid 0.2rem var(--BOX-TEXT-color);
+/*	border-right: solid 0.2rem var(--BOX-TEXT-color);*/
 	margin: 0rem;
 	font-weight: bold;
 }
