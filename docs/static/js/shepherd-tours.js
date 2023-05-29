@@ -2,14 +2,14 @@
 // define a generic shepherd tour
 function make_default_tour(steps_json) {
 	const tour = new Shepherd.Tour({
-		useModalOverlay: true,
+		useModalOverlay: false,
 		defaultStepOptions: {
 			classes: '',
 			exitOnEsc: true,
 			cancelIcon: {
 				enabled: true },
 			modalOverlayOpeningRadius: 4,
-			arrow: false }});
+			arrow: true }});
 
 	const steps = new Map(Object.entries(steps_json));
 	const buttons = [{text: 'Back', action: tour.back},
