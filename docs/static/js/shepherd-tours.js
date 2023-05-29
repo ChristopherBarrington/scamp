@@ -12,7 +12,7 @@ function make_default_tour(steps_json) {
 			arrow: false }});
 
 	const steps = new Map(Object.entries(steps_json));
-	const buttons = [{text: 'Previous', action: tour.back},
+	const buttons = [{text: 'Back', action: tour.back},
 	                 {text: 'Next', action: tour.next},
 	                 {text: 'Exit', action: tour.cancel}];
 	const scrollers = [{behavior: 'smooth', block: 'center'},
