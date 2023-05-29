@@ -5,10 +5,10 @@
 {
 	"program" : {
 		"target": "line-3",
-		"title": "WORKING PROGRAMS",
+		"title": "working programs",
 		"text": "The expected output file is created as an empty file."},
 	"yaml_records" : {
 		"target": "line-4",
-		"title": "VERSIONS AND PARAMETERS",
+		"title": "versions and parameters",
 		"text": "These expected files are also created."}
 }
