@@ -9,20 +9,48 @@
 }
 
 .shepherd-button {
-	background: var(--SECONDARY-color);
-	color: var(--MAIN-BG-color);
-	width: -webkit-fill-available;
-	padding: 1%;
+	background: var(--MAIN-BG-color);
+	color: var(--BOX-TEXT-color);
+	flex-grow: 1;
+	padding: 1rem;
+	border-radius: 0rem;
+	border-top: solid 0.4rem var(--BOX-TEXT-color);
+	border-right: solid 0.2rem var(--BOX-TEXT-color);
+	margin: 0rem;
+	font-weight: bold;
 }
 
 .shepherd-button:not(:disabled):hover {
-	background: var(--PRIMARY-color);
+	background: var(--SECONDARY-color);
+}
+
+.shepherd-header {
+	border-radius: 0rem;
+	background: var(--PRIMARY-color) !important;
+}
+
+.shepherd-footer {
+	border-radius: 0rem;
+	padding: 0rem;
+}
+
+.shepherd-title {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: larger;
+}
+
+.shepherd-cancel-icon {
+	color: var(--BOX-TEXT-color) !important;
+	font-weight: bold;
+	font-size: large;
 }
 
 .shepherd-content {
-	border-radius: 5px;
-	border-width: 5px;
+	border-radius: 0rem;
+	border-width: 0.2rem;
 	border-style: solid;
 	border-color: var(--BOX-TEXT-color);
-	padding:0
+	padding:0 ;
+	background: var(--MAIN-BG-color);
 }
