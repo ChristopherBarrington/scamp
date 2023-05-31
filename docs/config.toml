@@ -82,11 +82,6 @@ disableHugoGeneratorInject = true
     weight = 20
 
   [[menu.shortcuts]]
-    name = "<i class='fas fa-swatchbook'></i> Hugo Relearn theme"
-    url = "https://mcshelby.github.io/hugo-theme-relearn/index.html"
-    weight = 25
-
-  [[menu.shortcuts]]
     name = "<i class='fas fa-fw fa-tags'></i> Tags"
     url = "tags/"
     weight = 30
