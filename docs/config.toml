@@ -72,7 +72,7 @@ disableHugoGeneratorInject = true
 
 [menu]
   [[menu.shortcuts]]
-    name = "<i class='fab fa-fw fa-github'></i> GitHub repo"
+    name = "<i class='fab fa-fw fa-github'></i> scamp"
     url = "https://github.com/ChristopherBarrington/scamp"
     weight = 10
 
@@ -82,8 +82,8 @@ disableHugoGeneratorInject = true
     weight = 20
 
   [[menu.shortcuts]]
-    name = "<i class='fas fa-swatchbook'></i> Hugo theme"
-    url = "https://github.com/McShelby/hugo-theme-relearn"
+    name = "<i class='fas fa-swatchbook'></i> Hugo Relearn theme"
+    url = "https://mcshelby.github.io/hugo-theme-relearn/index.html"
     weight = 25
 
   [[menu.shortcuts]]
@@ -104,6 +104,7 @@ disableHugoGeneratorInject = true
   disableLandingPageButton = false
   disableNextPrev = true
   disableSeoHiddenPages = true
+  disableShortcutsTitle = false
   disableToc = false
   editURL = "https://github.com/ChristopherBarrington/scamp/edit/main/docs/content"
   showVisitedLinks = false
