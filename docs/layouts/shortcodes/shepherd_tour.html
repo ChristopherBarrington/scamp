@@ -6,19 +6,23 @@
 {{ $btn_msg := (default "Start the tour!" (.Get "btn_msg")) }}
 {{ $icon := (default "bullhorn" (.Get "icon")) }}
 
-<!-- make a button to start the tour -->
-{{ partial "shortcodes/button.html" (dict "context" .
-                                          "style" "primary"
-                                          "icon" $icon
-                                          "href" (printf "javascript:%s.start();" $tour)
-                                          "content" $btn_msg) }}
+{{ $steps_file := (path.Join .Page.File.Dir $tour "steps.json") }}
 
 <!-- output the code chunk -->
 {{ highlight ((path.Join .Page.File.Dir $tour "chunk") | readFile | safeHTML) $lang (printf "lineAnchors=%s" $anchor) }}
 
-<!-- get the javascript elements and replace placeholders -->
-{{ $steps_json := (path.Join .Page.File.Dir $tour "steps.json") | readFile | replaceRE "line-" (printf "%s-" $tour) | safeJS }}
-{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour $steps_json) | safeJS }}
+{{ if fileExists $steps_file }}
+	<!-- get the javascript elements and replace placeholders -->
+	{{ $steps_json := readFile $steps_file | replaceRE "line-" (printf "%s-" $tour) | safeJS }}
+	{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour $steps_json) | safeJS }}
 
-<!-- output the parsed javascript(s) -->
-<script type="text/javascript">{{ $shepherd }}</script>
+	<!-- output the parsed javascript(s) -->
+	<script type="text/javascript">{{ $shepherd }}</script>
+
+	<!-- make a button to start the tour -->
+	<p>{{ partial "shortcodes/button.html" (dict "context" .
+	                                             "style" "primary"
+	                                             "icon" $icon
+	                                             "href" (printf "javascript:%s.start();" $tour)
+	                                             "content" $btn_msg) }}</p>
+{{ end }}
