@@ -1,4 +1,4 @@
-process count {
+process complicated_analysis {
   tag "$tag"
 
   cpus 16
