@@ -1,0 +1,14 @@
+#! /bin/env Rscript
+
+library(magrittr)
+library(scampr)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('making a connection to biomart', level='main')
+
+list(nvalues = "$nvalues") |>
+    assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+data.frame(x=rnorm(n=nvalues), y=rnorm(n=nvalues)) |>
+    saveRDS(file='data.rds')
