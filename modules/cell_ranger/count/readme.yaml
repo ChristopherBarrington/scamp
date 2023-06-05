@@ -1,0 +1,53 @@
+title: count
+
+description: |
+  Quantify gene expression in a single cell RNA-seq dataset.
+
+tags:
+  - 10x
+  - rna
+  - quantification
+
+tools:
+  cell ranger:
+    description: Cell Ranger is a set of analysis pipelines that process Chromium single cell data to align reads, generate feature-barcode matrices, perform clustering and other secondary analysis, and more.
+    homepage: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger
+    documentation: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+    multithreaded: true
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: tag
+    type: string
+    description: A unique identifier to use in the tag directive.
+  - name: fastq_path_?
+    type: paths
+    description: A list of directories in which the FastQ files can be found. The symlinks to the paths will be incrementally numbered from 1 at the `?` placeholder.
+  - name: index_path
+    type: path
+    description: Path to the properly-formatted index directory.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters.
+    pattern: task.yaml
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+  - name: quantification_path
+    type: path
+    description: Cell Ranger outputs (`outs/`) directory.
+    pattern: output/outs
+  - name: cell_ranger_report
+    type: file
+    description: HTML summary report.
+
+authors:
+  - "@ChristopherBarrington"
