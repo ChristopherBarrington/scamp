@@ -41,7 +41,7 @@ The following are suggestions. This is the way that I have been writing modules.
 
 ## Nextflow process
 
-[Nextflow's process documentation {{< icon icon="external-link-alt" >}}][nf docs process]
+[{{< icon icon="external-link-alt" >}} Nextflow's process documentation][nf docs process]
 
 The process defines the context in which a processing step is executed on a set of inputs; a single process can become multiple tasks where each task has a different set of input parameters for the process.
 
@@ -65,9 +65,16 @@ Other [Nextflow directives][nf docs process directives] can be included but may 
 {{< /tab >}}
 {{< /tabs >}}
 
+```bash
+foo
+bar
+baz
+buz
+```
+
 ## Executable script
 
-[Nextflow's script documentation {{< icon icon="external-link-alt" >}}][nf docs process script]
+[{{< icon icon="external-link-alt" >}} Nextflow's script documentation][nf docs process script]
 
 Nextflow is language agnostic and so long as the interpreter is available in the task's `PATH` the script should run. These scripts can be tested outside Nextlfow with equivalent parameters passed as environment variables, for example. Containers can be used and should be included in the directives of the process.
 
@@ -80,7 +87,7 @@ The `task.yaml` and `versions.yaml` files may be used in the future so that task
 An R script could be used here too, specifying `Rscript` instead of `bash` in the shebang line. Nextlfow variables are similarly interpolated into the script though so be wary when accessing lists. Writing the `task` and `versions` can be taken care of using the {scampr} package.
 
 {{< notice style="warning" title=" " icon=" " >}}
-Nextlfow will interpolate variables using `$variable` so any scripts using `$` may have unexpected behaviour. Where possible use non-dollar alternatives or delimit the symbol.
+Nextflow will interpolate variables using `$variable` so any scripts using `$` may have unexpected behaviour. Where possible use non-dollar alternatives or delimit the symbol.
 {{< /notice >}}
 
 {{< tabs >}}
