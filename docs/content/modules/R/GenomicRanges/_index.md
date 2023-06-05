@@ -1,8 +1,5 @@
 ---
 title: GenomicRanges
-tags:
-  - r
-  - bioconductor
 ---
 
 {{% children

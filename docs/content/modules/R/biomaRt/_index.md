@@ -1,9 +1,5 @@
 ---
 title: biomaRt
-tags:
-  - r
-  - ensembl
-  - bioconductor
 ---
 
 {{% children

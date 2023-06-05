@@ -1,7 +1,5 @@
 ---
-title: "Signac"
-tags:
-  - R
+title: Signac
 ---
 
 {{% children

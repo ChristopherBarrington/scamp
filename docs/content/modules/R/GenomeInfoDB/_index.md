@@ -1,8 +1,5 @@
 ---
 title: GenomeInfoDb
-tags:
-  - r
-  - bioconductor
 ---
 
 {{% children

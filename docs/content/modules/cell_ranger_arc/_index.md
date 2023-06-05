@@ -1,7 +1,5 @@
 ---
 title: Cell Ranger ARC
-tags:
-  - 10x
 ---
 
 {{% children

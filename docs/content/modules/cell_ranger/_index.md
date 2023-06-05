@@ -1,7 +1,5 @@
 ---
 title: Cell Ranger
-tags:
-  - 10x
 ---
 
 {{% children
