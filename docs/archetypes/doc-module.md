@@ -6,7 +6,9 @@ layout: nf-module-doc
 {{ else -}}
 	{{ print "SCAMP_MODULE_DOC was not defined!" }}
 {{ end -}}
+
+title: {{.Name}}
 ---
 
-<!-- SCAMP_MODULE_DOC=scamp/modules/cell_ranger_arc/count/readme.yaml hugo new --kind module modules/cell_ranger_arc/count/_index.md -->
-<!-- find scamp/modules -name 'readme.yaml' | sed -e 's|^scamp/||' -e 's|/readme.yaml$||' | xargs -n 1 -I @ sh -c "SCAMP_MODULE_DOC=scamp/@/readme.yaml hugo new --kind doc-module --force --quiet @.md" -->
+<!-- SCAMP_MODULE_DOC=scamp/modules/cell_ranger_arc/count/readme.yaml hugo new --kind module modules/cell_ranger_arc/count.md -->
+<!-- find scamp/modules -name 'readme.yaml' | sed -e 's|^scamp/||' -e 's|/readme.yaml$||' | xargs -n 1 -I @ sh -c "SCAMP_MODULE_DOC=scamp/@/readme.yaml hugo new --kind doc-module --force @.md" -->
