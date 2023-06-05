@@ -41,7 +41,7 @@ The following are suggestions. This is the way that I have been writing modules.
 
 ## Nextflow process
 
-[{{< icon icon="external-link-alt" >}} Nextflow's process documentation][nf docs process]
+{{% linkout title="Nextflow's process documentation" url="nf docs process" %}}
 
 The process defines the context in which a processing step is executed on a set of inputs; a single process can become multiple tasks where each task has a different set of input parameters for the process.
 
@@ -67,7 +67,7 @@ Other [Nextflow directives][nf docs process directives] can be included but may 
 
 ## Executable script
 
-[{{< icon icon="external-link-alt" >}} Nextflow's script documentation][nf docs process script]
+{{% linkout title="Nextflow's script documentation" url="nf docs process script" %}}
 
 Nextflow is language agnostic and so long as the interpreter is available in the task's `PATH` the script should run. These scripts can be tested outside Nextlfow with equivalent parameters passed as environment variables, for example. Containers can be used and should be included in the directives of the process.
 
