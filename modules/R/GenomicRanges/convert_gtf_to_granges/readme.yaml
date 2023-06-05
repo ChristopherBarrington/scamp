@@ -8,6 +8,7 @@ tags:
   - convert formats
   - genomicranges
   - bioconductor
+  - genomics
 
 tools:
   R:
