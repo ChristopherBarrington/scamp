@@ -1,0 +1,62 @@
+title: Convert GTF to GRanges
+
+description: |
+  Reads a GTF file into a GRanges object and saves the object as an RDS file.
+
+tags:
+  - r
+  - format conversion
+  - genomicranges
+
+tools:
+  R:
+    description: R is a free software environment for statistical computing and graphics.
+    homepage: https://www.r-project.org/
+    documentation: https://cran.r-project.org/manuals.html
+    licence: "GPL-2 | GPL-3"
+  GenomicRanges:
+    description: The GenomicRanges package defines general purpose containers for storing and manipulating genomic intervals and variables defined along a genome.
+    homepage: https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html
+    documentation: https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.html
+    source: https://github.com/Bioconductor/GenomicRanges
+    licence: Artistic-2.0
+    doi: doi:10.1371/journal.pcbi.1003118
+
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: tag
+    type: string
+    description: A unique identifier to use in the tag directive.
+  - name: genome
+    type: string
+    description: Name of the genome, eg "mm10 + GFP". This is used to create the `Seqinfo` object.
+  - name: gtf
+    type: file
+    description: Path to the GTF file.
+  - name: fai
+    type: file
+    description: Path to a FastA index file for the genome that the GTF is relevant to. This is used to create the `Seqinfo` object.
+
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters.
+    pattern: task.yaml
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+  - name: granges
+    type: file
+    description: RDS obejct of a GRanges object.
+    pattern: granges.rds
+
+authors:
+  - "@ChristopherBarrington"
