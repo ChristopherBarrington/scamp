@@ -12,14 +12,12 @@
 			<th>Channel name</th>
 			<th>Description</th>
 			<th>Type</th>
-			<th>Default</th>
 		</tr>
 		{{ range $info := . }}
 		<tr>
 			<td><code>{{ index $info "name" }}</code></td>
 			<td>{{ index $info "description" | markdownify }}</td>
 			<td><code>{{ index $info "type" }}</code></td>
-			<td>{{ index $info "default" | markdownify }}</td>
 		</tr>
 		{{ end }}
 	</table>

@@ -28,7 +28,6 @@ input:
   - name: index_path
     type: path
     description: Path to the properly-formatted index directory.
-    default: "`inputs/index`"
   - name: all_libraries.csv
     type: file
     description: Path to the liraries sample sheet. This will be searched using `grep` for the relevant samples.
