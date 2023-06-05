@@ -20,3 +20,10 @@ pre .copy-to-clipboard-button:hover {
 .highlight:hover > pre .copy-to-clipboard-button{
 	visibility: visible;
 }
+
+/* remove border and padding from code chunks */
+
+.tab-content pre.pre-code {
+    padding: 0rem;
+    border-style: none;
+}
