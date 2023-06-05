@@ -65,13 +65,6 @@ Other [Nextflow directives][nf docs process directives] can be included but may 
 {{< /tab >}}
 {{< /tabs >}}
 
-```bash
-foo
-bar
-baz
-buz
-```
-
 ## Executable script
 
 [{{< icon icon="external-link-alt" >}} Nextflow's script documentation][nf docs process script]
@@ -86,9 +79,9 @@ The `task.yaml` and `versions.yaml` files may be used in the future so that task
 
 An R script could be used here too, specifying `Rscript` instead of `bash` in the shebang line. Nextlfow variables are similarly interpolated into the script though so be wary when accessing lists. Writing the `task` and `versions` can be taken care of using the {scampr} package.
 
-{{< notice style="warning" title=" " icon=" " >}}
+{{% notice style="warning" title=" " icon=" " %}}
 Nextflow will interpolate variables using `$variable` so any scripts using `$` may have unexpected behaviour. Where possible use non-dollar alternatives or delimit the symbol.
-{{< /notice >}}
+{{% /notice %}}
 
 {{< tabs >}}
 {{< tab name="main.sh" >}}
