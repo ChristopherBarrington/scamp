@@ -2,7 +2,7 @@
 title: GenomicRanges
 tags:
   - r
-  - ensembl
+  - bioconductor
 ---
 
 {{% children

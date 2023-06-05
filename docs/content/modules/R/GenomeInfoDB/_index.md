@@ -1,8 +1,7 @@
 ---
-title: biomaRt
+title: GenomeInfoDb
 tags:
   - r
-  - ensembl
   - bioconductor
 ---
 
