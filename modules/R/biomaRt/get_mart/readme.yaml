@@ -7,6 +7,7 @@ tags:
   - r
   - ensembl
   - biomart
+  - bioconductor
 
 tools:
   R:
