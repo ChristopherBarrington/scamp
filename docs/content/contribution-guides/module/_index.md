@@ -59,11 +59,9 @@ The [`script` stanza][nf docs process script] defines what analysis actually hap
 
 Other [Nextflow directives][nf docs process directives] can be included but may not be completely relevant in the context of a module. For example, using `publishDir` should be the choice of the pipeline creator so may not be sensible to include here. Directives included here can be overridden by a suitable configuration file, however. In this case we include some resource requests - `cpus`, `memory` and `time` - but no execution method (eg `SLURM`) which should be defined at execution by the user.
 
-{{< tabs >}}
 {{< tab name="main.nf" >}}
 {{< shepherd_tour tour="nextflow_process" lang="groovy" btn_msg="Take the Nextflow process tour" >}}
 {{< /tab >}}
-{{< /tabs >}}
 
 ## Executable script
 
@@ -98,18 +96,14 @@ The optional `stub.sh` is an alternative script that can be executed when the us
 
 The example below simply uses `touch` to create output files with no content.
 
-{{< tabs >}}
 {{< tab name="stub.sh" >}}
 {{< shepherd_tour tour="template_stub" lang="bash" btn_msg="Take the stub script tour" >}}
 {{< /tab >}}
-{{< /tabs >}}
 
 ## Documentation
 
 Each module should be documented using the `readme.yaml` file. This file will be used to populate the [module documentation][docs scamp modules] on this website.
 
-{{< tabs >}}
 {{< tab name="readme.yaml" >}}
 {{< shepherd_tour tour="readme" lang="yaml" >}}
 {{< /tab >}}
-{{< /tabs >}}
