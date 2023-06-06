@@ -22,5 +22,5 @@
 	"resources" : {
 		"target": "line-4",
 		"title": "default resource requests",
-		"text": "When used with suitable executors these define the resource required by a process. They can be overridden in a <code>config</code> file though."}
+		"text": "When used with appropriate executors these define the resource required by a process. They can be overridden in a <code>config</code> file though."}
 }
