@@ -7,7 +7,7 @@
 		"target": "line-1",
 		"title": "the ricky martin line",
 		"text": "Any interpreter can be used, as long as it would work as <code>./script.sh</code>. The interpreter must be available on the command line, whether that be by a module, environment or parent shell."},
-	"nfvalues" :{
+	"nfvalues" : {
 		"target": "line-10",
 		"title": "Nextflow input parameters",
 		"text": "This list of parameters will be exported to the global environment and written to `task.yaml`. This functionality is exported from {scampr}."},
