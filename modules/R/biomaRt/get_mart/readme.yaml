@@ -1,4 +1,4 @@
-title: get mart
+name: get mart
 
 description: |
   Make a connection to the release-matched Ensembl database and saves the object as an RDS file.

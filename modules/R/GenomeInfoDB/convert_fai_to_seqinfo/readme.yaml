@@ -1,4 +1,4 @@
-title: Convert FastA index to Seqinfo
+name: Convert FastA index to Seqinfo
 
 description: |
   Converts a FastA index (`fai`) to a {GenomeInfoDb} `Seqinfo` object and saves the object to an RDS file.

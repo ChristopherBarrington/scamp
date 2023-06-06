@@ -1,4 +1,4 @@
-title: Make chromatin assay
+name: Make chromatin assay
 
 description: |
   Create a chromatin assay using Signac and a counts matrix.

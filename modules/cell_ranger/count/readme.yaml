@@ -1,4 +1,4 @@
-title: count
+name: count
 
 description: |
   Quantify gene expression in a single cell RNA-seq dataset.

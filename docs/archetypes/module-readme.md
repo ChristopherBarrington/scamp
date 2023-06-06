@@ -1,4 +1,4 @@
-title: a readable name
+name: a readable name
 
 description: |
   A short description of the module's function.

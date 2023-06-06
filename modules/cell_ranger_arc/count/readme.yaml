@@ -1,4 +1,4 @@
-title: count
+name: count
 
 description: |
   Aligns and quantifies FastQ files from a 10X scRNA-seq experiment against a reference genome. Output matrices are provided in triplet and h5 formats.

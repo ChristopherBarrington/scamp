@@ -1,4 +1,4 @@
-title: mkref
+name: mkref
 
 description: |
   Creates an index for use with Cell Ranger ARC. It can produce custom genomes if provided with the relevant (and correctly formatted) FastA and GTF files.

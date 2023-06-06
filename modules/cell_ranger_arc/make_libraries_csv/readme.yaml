@@ -1,4 +1,4 @@
-title: make libraries CSV
+name: make libraries CSV
 
 description: |
   Creates a sample sheet for a whole project, listing the sample names, assay types and paths to FastQ files. It can be subset to produce a sample sheet for a sample.

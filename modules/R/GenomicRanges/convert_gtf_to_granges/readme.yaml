@@ -1,4 +1,4 @@
-title: Convert GTF to GRanges
+name: Convert GTF to GRanges
 
 description: |
   Reads a GTF file into a GRanges object and saves the object as an RDS file.
