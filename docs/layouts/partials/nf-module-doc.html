@@ -1,7 +1,7 @@
 
 <!-- show description -->
 
-<p>{{ .Params.description }}</p>
+<p>{{ .Params.description | markdownify | safeHTML }}</p>
 
 <!-- show inputs table -->
 
