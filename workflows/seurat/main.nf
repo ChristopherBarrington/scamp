@@ -5,8 +5,8 @@
 
 include { check_for_matching_key_values } from '../../modules/utilities/check_for_matching_key_values'
 
-include { cell_ranger } from '../../subworkflows/seurat/cell_ranger'
-include { cell_ranger_arc } from '../../subworkflows/seurat/cell_ranger_arc'
+include { cell_ranger } from '../../subworkflows/seurat/prepare/cell_ranger'
+include { cell_ranger_arc } from '../../subworkflows/seurat/prepare/cell_ranger_arc'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
