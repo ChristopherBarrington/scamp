@@ -14,15 +14,15 @@ include { cell_ranger_arc } from '../../subworkflows/cell_ranger_arc'
 
 workflow quantification {
 	take:
-		complete_stage_parameters
+		complete_analysis_parameters
 
 	main:
 		// -------------------------------------------------------------------------------------------------
 		// define parameter sets for each subworkflow
 		// -------------------------------------------------------------------------------------------------
 
-		cell_ranger_params     = complete_stage_parameters.findAll{it.get('stage type').equals('cell ranger')}
 		cell_ranger_arc_params = complete_stage_parameters.findAll{it.get('stage type').equals('cell ranger arc')}
+		cell_ranger_params     = complete_analysis_parameters.findAll{it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').matches('quantification/cell_ranger')}.any()}
 
 		// -------------------------------------------------------------------------------------------------
 		// run the subworkflows

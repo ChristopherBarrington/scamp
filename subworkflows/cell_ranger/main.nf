@@ -21,9 +21,26 @@ include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_y
 workflow cell_ranger {
 
 	take:
-		filtered_stage_parameters
+		parameters
 
 	main:
+
+		// -------------------------------------------------------------------------------------------------
+		// separate input parameters according to quantification requirement
+		// -------------------------------------------------------------------------------------------------
+
+		// branch parameters into two channels: {provided,required} according to presence of the 'quantification path' key
+		channel
+			.fromList(parameters)
+			.branch{
+				def quantification_provided = it.containsKey('quantification path')
+				provided: quantification_provided == true
+				required: quantification_provided == false}
+			.set{dataset_quantification}
+
+		dataset_quantification.required.dump(tag:'quantification:cell_ranger_arc:dataset_quantification.required', pretty:true)
+		dataset_quantification.provided.dump(tag:'quantification:cell_ranger_arc:dataset_quantification.provided', pretty:true)
+
 		// -------------------------------------------------------------------------------------------------
 		// create missing cell ranger indexes
 		// -------------------------------------------------------------------------------------------------
@@ -35,23 +52,18 @@ workflow cell_ranger {
 		// -------------------------------------------------------------------------------------------------
 
 		// make a channel containing all information for the quantification process
-		channel
-			.fromList(filtered_stage_parameters)
-			// .combine(index_paths)
-			// .filter{check_for_matching_key_values(it, 'genome')}
-			// .map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'sample', 'fastq paths', 'index path', 'dataset id'])}
-			.dump(tag: 'quantification:cell_ranger:datasets_to_quantify', pretty: true)
+		dataset_quantification.required
+			.map{it.subMap(['unique id', 'limsid', 'fastq paths', 'index path', 'dataset id', 'quantification path'])}
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
-		tags              = datasets_to_quantify.map{it.get('unique id')}
-		sample            = datasets_to_quantify.map{it.get('sample')}
-		fastq_paths       = datasets_to_quantify.map{it.get('fastq paths')}
-		index_paths       = datasets_to_quantify.map{it.get('index path')}
+		tags        = datasets_to_quantify.map{it.get('unique id')}
+		limsids     = datasets_to_quantify.map{it.get('limsid')}
+		fastq_paths = datasets_to_quantify.map{it.get('fastq paths')}
+		index_paths = datasets_to_quantify.map{it.get('index path')}
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, sample, fastq_paths, index_paths)
+		quantify(datasets_to_quantify, tags, limsids, fastq_paths, index_paths)
 
 		// make a channel of dataset (names) and paths that contain quantified data
 		merge_process_emissions(quantify, ['opt', 'quantification_path'])
@@ -64,12 +76,11 @@ workflow cell_ranger {
 		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
-		channel
-			.fromList(filtered_stage_parameters)
+		dataset_quantification.required
 			.combine(quantified_datasets)
-			.dump(tag:'working', pretty:true)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + it.last().subMap(['index path', 'quantification path'])}
+			.concat(dataset_quantification.provided)
 			.dump(tag:'quantification:cell_ranger:final_results', pretty:true)
 			.set{final_results}
 
