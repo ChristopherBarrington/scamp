@@ -8,23 +8,23 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { convert_gtf_to_granges } from '../../../modules/R/GenomicRanges/convert_gtf_to_granges'
+include { convert_gtf_to_granges } from '../../../../modules/R/GenomicRanges/convert_gtf_to_granges'
 
-include { make_assay as make_rna_assay }      from '../../../modules/R/Seurat/make_assay'
-include { make_object as make_seurat_object } from '../../../modules/R/Seurat/make_object'
-include { write_10x_counts_matrices }         from '../../../modules/R/Seurat/write_10x_counts_matrices'
+include { make_assay as make_rna_assay }      from '../../../../modules/R/Seurat/make_assay'
+include { make_object as make_seurat_object } from '../../../../modules/R/Seurat/make_object'
+include { write_10x_counts_matrices }         from '../../../../modules/R/Seurat/write_10x_counts_matrices'
 
-include { make_chromatin_assay } from '../../../modules/R/Signac/make_chromatin_assay'
+include { make_chromatin_assay } from '../../../../modules/R/Signac/make_chromatin_assay'
 
-include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
-include { concatenate_maps_list }             from '../../../modules/utilities/concatenate_maps_list'
-include { merge_metadata_and_process_output } from '../../../modules/utilities/merge_metadata_and_process_output'
-include { merge_process_emissions }           from '../../../modules/utilities/merge_process_emissions'
-include { rename_map_keys }                   from '../../../modules/utilities/rename_map_keys'
+include { check_for_matching_key_values }     from '../../../../modules/utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../../../modules/utilities/concat_workflow_emissions'
+include { concatenate_maps_list }             from '../../../../modules/utilities/concatenate_maps_list'
+include { merge_metadata_and_process_output } from '../../../../modules/utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../../../modules/utilities/merge_process_emissions'
+include { rename_map_keys }                   from '../../../../modules/utilities/rename_map_keys'
 
-include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
-include { merge_yaml as merge_task_properties }   from '../../../modules/yq/merge_yaml'
+include { merge_yaml as merge_software_versions } from '../../../../modules/yq/merge_yaml'
+include { merge_yaml as merge_task_properties }   from '../../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
