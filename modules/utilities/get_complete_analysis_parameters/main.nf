@@ -28,8 +28,8 @@ def get_complete_analysis_parameters(stage=null) {
 		// add default analysis and dataset names
 		// - use key if not provided
 		// - may be superfluous
-		// .collect{it + ['analysis name': it.get('analysis name', it.get('analysis key'))]}
-		// .collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}
+		.collect{it + ['analysis name': it.get('analysis name', it.get('analysis key'))]}
+		.collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}
 
 		// add default analysis and dataset id
 		// - if missing, these are directory-safe versions of the names
