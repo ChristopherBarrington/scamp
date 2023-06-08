@@ -21,8 +21,8 @@ workflow quantification {
 		// define parameter sets for each subworkflow
 		// -------------------------------------------------------------------------------------------------
 
-		cell_ranger_arc_params = complete_stage_parameters.findAll{it.get('stage type').equals('cell ranger arc')}
 		cell_ranger_params     = complete_analysis_parameters.findAll{it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').matches('quantification/cell_ranger')}.any()}
+		cell_ranger_arc_params = complete_analysis_parameters.findAll{it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').matches('quantification/cell_ranger_arc')}.any()}
 
 		// -------------------------------------------------------------------------------------------------
 		// run the subworkflows
