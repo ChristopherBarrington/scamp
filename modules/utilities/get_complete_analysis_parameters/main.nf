@@ -6,7 +6,7 @@ include { remove_keys_from_map }       from '../remove_keys_from_map'
 
 // get a complete set of parameters for every parameter set, filling in genomes, shared and default parameters
 
-def get_complete_stage_parameters(stage=null) {
+def get_complete_analysis_parameters(stage=null) {
 	def genomes_params = get_genomes_params()
 	def default_dataset_params = get_default_dataset_params()
 	def possible_file_keys = get_possible_file_keys()
