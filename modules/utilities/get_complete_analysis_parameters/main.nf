@@ -2,9 +2,7 @@
 include { convert_map_keys_to_files }  from '../convert_map_keys_to_files'
 include { make_string_directory_safe } from '../make_string_directory_safe'
 include { pluck }                      from '../pluck'
-
-include { print_as_json as paj } from '../print_as_json'
-include { remove_keys_from_map } from '../remove_keys_from_map'
+include { remove_keys_from_map }       from '../remove_keys_from_map'
 
 // get a complete set of parameters for every parameter set, filling in genomes, shared and default parameters
 
