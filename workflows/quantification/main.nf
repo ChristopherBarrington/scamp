@@ -13,23 +13,34 @@ include { cell_ranger_arc } from '../../subworkflows/cell_ranger_arc'
 // -------------------------------------------------------------------------------------------------
 
 workflow quantification {
+
 	take:
-		complete_analysis_parameters
+		parameters
 
 	main:
 		// -------------------------------------------------------------------------------------------------
-		// define parameter sets for each subworkflow
+		// branch the parameters by quantification method
 		// -------------------------------------------------------------------------------------------------
 
-		cell_ranger_params     = complete_analysis_parameters.findAll{it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').matches('quantification/cell_ranger')}.any()}
-		cell_ranger_arc_params = complete_analysis_parameters.findAll{it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').matches('quantification/cell_ranger_arc')}.any()}
+		// branch parameters into multiple channels according to the 'quantification method' key
+		parameters
+			.branch{
+				def stages = it.get('stages')
+				cell_ranger: stages.contains('quantification:cell_ranger')
+				cell_ranger_arc: stages.contains('quantification:cell_ranger_arc')
+				kallisto: stages.contains('quantification:kallisto')}
+			.set{quantification}
+
+		quantification.cell_ranger.dump(tag: 'quantification:quantification.cell_ranger', pretty: true)
+		quantification.cell_ranger_arc.dump(tag: 'quantification:quantification.cell_ranger_arc', pretty: true)
+		quantification.kallisto.dump(tag: 'quantification:quantification.kallisto', pretty: true)
 
 		// -------------------------------------------------------------------------------------------------
 		// run the subworkflows
 		// -------------------------------------------------------------------------------------------------
 
-		cell_ranger(cell_ranger_params)
-		cell_ranger_arc(cell_ranger_arc_params)
+		cell_ranger(quantification.cell_ranger)
+		cell_ranger_arc(quantification.cell_ranger_arc)
 
 		// -------------------------------------------------------------------------------------------------
 		// make channels of all outputs from the subworkflows

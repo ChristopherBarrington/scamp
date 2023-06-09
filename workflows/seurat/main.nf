@@ -14,7 +14,7 @@ include { cell_ranger_arc } from '../../subworkflows/seurat/prepare/cell_ranger_
 
 workflow seurat {
 	take:
-		complete_stage_parameters
+		parameters
 		quantification_results
 
 	main:
@@ -24,7 +24,7 @@ workflow seurat {
 
 		// split the seurat analyses into those that are already quantified and those that were quantified here
 		channel
-			.fromList(complete_stage_parameters.findAll{x -> x.get('stage type').equals('seurat')})
+			.fromList(parameters.findAll{x -> x.get('stage type').equals('seurat')})
 			.branch({
 				def quantification_path_provided = it.containsKey('quantification path')
 				internal: quantification_path_provided == false

@@ -19,7 +19,7 @@ print_pipeline_title()
 // -------------------------------------------------------------------------------------------------
 
 workflow {
-	
+
 	main:
 		// -------------------------------------------------------------------------------------------------
 		// collect a list of parameter maps for every analysis in the parameters file
@@ -34,9 +34,26 @@ workflow {
 		// run quantification workflows
 		// -------------------------------------------------------------------------------------------------
 
-		quantification(complete_analysis_parameters)
+		// branch parameters into two channels: {provided,required} according to presence of the 'quantification path' key
+		channel
+			.fromList(complete_analysis_parameters)
+			.branch{
+				def quantification_provided = it.containsKey('quantification path')
+				provided: quantification_provided == true
+				required: quantification_provided == false}
+			.set{dataset_quantification}
+
+		dataset_quantification.required.dump(tag: 'scamp:dataset_quantification.required', pretty: true)
+		dataset_quantification.provided.dump(tag: 'scamp:dataset_quantification.provided', pretty: true)
+
+		// quantify datasets that do not have a `quantification path` using some method
+		// these should return with `quantification path` and `quantification method` now included
+		quantification(dataset_quantification.required)
+
+		// concatenate the result of quantification and the datasets that are pre-quantified
 		quantification.out.result
-			.dump(tag: 'quantification_results', pretty: true)
+			.concat(dataset_quantification.provided)
+			.dump(tag: 'scamp:quantification_results', pretty: true)
 			.set{quantification_results}
 
 		// -------------------------------------------------------------------------------------------------

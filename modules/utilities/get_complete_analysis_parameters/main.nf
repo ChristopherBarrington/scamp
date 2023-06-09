@@ -46,6 +46,9 @@ def get_complete_analysis_parameters(stage=null) {
 		// add in the genome parameters for each dataset
 		.collect{it + ['genome parameters': genomes_params.get(it.get('genome'))]}
 
+		// reformat the stages collection to lower-case, non-space
+		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}
+
 		// filter for datasets that contain a specific processing stage
 		.findAll{it.get('stages', []).contains(stage) | stage==null}
 }

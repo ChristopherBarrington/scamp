@@ -27,27 +27,11 @@ workflow cell_ranger_arc {
 
 	main:
 		// -------------------------------------------------------------------------------------------------
-		// separate input parameters according to quantification requirement
-		// -------------------------------------------------------------------------------------------------
-
-		// branch parameters into two channels: {provided,required} according to presence of the 'quantification path' key
-		channel
-			.fromList(parameters)
-			.branch{
-				def quantification_provided = it.containsKey('quantification path')
-				provided: quantification_provided == true
-				required: quantification_provided == false}
-			.set{dataset_quantification}
-
-		dataset_quantification.required.dump(tag:'quantification:cell_ranger_arc:dataset_quantification.required', pretty:true)
-		dataset_quantification.provided.dump(tag:'quantification:cell_ranger_arc:dataset_quantification.provided', pretty:true)
-
-		// -------------------------------------------------------------------------------------------------
 		// create missing cell ranger arc indexes
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into two channels: {missing,provided} according to the presence of the 'index path' key
-		dataset_quantification.required
+		parameters
 			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta files', 'gtf files']) + it.subMap('index path')}
 			.unique()
 			.branch{
@@ -56,8 +40,8 @@ workflow cell_ranger_arc {
 				missing: index_provided == false}
 			.set{genome_indexes}
 
-		genome_indexes.missing.dump(tag:'quantification:cell_ranger_arc:genome_indexes.missing', pretty:true)
-		genome_indexes.provided.dump(tag:'quantification:cell_ranger_arc:genome_indexes.provided', pretty:true)
+		genome_indexes.missing.dump(tag: 'quantification:cell_ranger_arc:genome_indexes.missing', pretty: true)
+		genome_indexes.provided.dump(tag: 'quantification:cell_ranger_arc:genome_indexes.provided', pretty: true)
 
 		// make channels of parameters for genomes that need indexes to be created
 		tags                = genome_indexes.missing.map{it.get('genome')}
@@ -84,12 +68,12 @@ workflow cell_ranger_arc {
 		// -------------------------------------------------------------------------------------------------
 
 		// when there is at least one dataset to quantify, prepare a channel to create the sample sheet
-		dataset_quantification.required
-			.first()
-			.map{get_feature_types()}
-			.map{it + [fastq_paths:parameters.collect{it.get('fastq paths')}.flatten().unique()]}
-			.map{it + [fastq_files_regex:'(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
-			.dump(tag: 'quantification:cell_ranger_arc:feature_type_params', pretty:true)
+		parameters
+			.flatMap{it.get('fastq paths')}
+			.unique()
+			.toList()
+			.map{[fastq_paths: it, fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz'] + get_feature_types()}
+			.dump(tag: 'quantification:cell_ranger_arc:feature_type_params', pretty: true)
 			.set{feature_type_params}
 
 		// make channels to create the libraries csv file that cell ranger arc count expects
@@ -106,7 +90,7 @@ workflow cell_ranger_arc {
 		// -------------------------------------------------------------------------------------------------
 
 		// make a channel containing all information for the quantification process
-		dataset_quantification.required
+		parameters
 			.combine(index_paths)
 			.filter{it.first().get('genome') == it.last().get('key')}
 			.map{it.first() + it.last().subMap('index path')}
@@ -127,19 +111,19 @@ workflow cell_ranger_arc {
 		merge_process_emissions(quantify, ['opt', 'libraries', 'quantification_path'])
 			.map{rename_map_keys(it, ['libraries', 'quantification_path'], ['libraries_csv', 'quantification path'])}
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag:'quantification:cell_ranger_arc:quantified_datasets', pretty:true)
+			.dump(tag: 'quantification:cell_ranger_arc:quantified_datasets', pretty: true)
 			.set{quantified_datasets}
 
 		// -------------------------------------------------------------------------------------------------
 		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
-		dataset_quantification.required
+		parameters
 			.combine(quantified_datasets)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + it.last().subMap(['index path', 'libraries_csv', 'quantification path'])}
-			.concat(dataset_quantification.provided)
-			.dump(tag:'quantification:cell_ranger_arc:final_results', pretty:true)
+			.map{it + ['quantification method': 'cell_ranger_arc']}
+			.dump(tag: 'quantification:cell_ranger_arc:final_results', pretty: true)
 			.set{final_results}
 
 		// -------------------------------------------------------------------------------------------------
