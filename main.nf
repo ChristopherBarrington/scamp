@@ -38,9 +38,10 @@ workflow {
 		channel
 			.fromList(complete_analysis_parameters)
 			.branch{
+				def has_a_quantification_stage = it.get('stages').collect{it.startsWith('quantification:')}.any()
 				def quantification_provided = it.containsKey('quantification path')
 				provided: quantification_provided == true
-				required: quantification_provided == false}
+				required: has_a_quantification_stage == true && quantification_provided == false}
 			.set{dataset_quantification}
 
 		dataset_quantification.required.dump(tag: 'scamp:dataset_quantification.required', pretty: true)
@@ -53,12 +54,31 @@ workflow {
 		// concatenate the result of quantification and the datasets that are pre-quantified
 		quantification.out.result
 			.concat(dataset_quantification.provided)
-			.dump(tag: 'scamp:quantification_results', pretty: true)
-			.set{quantification_results}
+			.dump(tag: 'scamp:post_quantification_results', pretty: true)
+			.set{post_quantification_results}
 
 		// -------------------------------------------------------------------------------------------------
-		// run seurat workflow
+		// run seurat workflows
 		// -------------------------------------------------------------------------------------------------
 
-		seurat(complete_analysis_parameters, quantification_results)		
+		// branch parameters into two channels: {yes,no} according to a seurat-based stage
+		post_quantification_results
+			.branch{
+				def has_a_seurat_stage = it.get('stages').collect{it.startsWith('seurat:')}.any()
+				yes: has_a_seurat_stage == true
+				no: has_a_seurat_stage == false
+			}
+			.set{seurat_subworkflow_datasets}
+
+		seurat_subworkflow_datasets.yes.dump(tag: 'scamp:seurat_subworkflow_datasets.yes', pretty: true)
+		seurat_subworkflow_datasets.no.dump(tag: 'scamp:seurat_subworkflow_datasets.no', pretty: true)
+
+		// process datasets that contain a `seurat` analysis stage
+		seurat(seurat_subworkflow_datasets.yes)
+
+		// concatenate the result of the seurat subworkflow and the non-seurat datasets
+//		seurat.out.result
+//			.concat(seurat_subworkflow_datasets.no)
+//			.dump(tag: 'scamp:post_seurat_results', pretty: true)
+//			.set{post_seurat_results}
 }
