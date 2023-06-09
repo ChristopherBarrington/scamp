@@ -49,6 +49,9 @@ def get_complete_analysis_parameters(stage=null) {
 		// reformat the stages collection to lower-case, non-space
 		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}
 
+		// if `quantification method` is provided, make it safe
+		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])}
+
 		// filter for datasets that contain a specific processing stage
 		.findAll{it.get('stages', []).contains(stage) | stage==null}
 }
@@ -64,7 +67,6 @@ def get_genomes_params() {
 		.collectEntries{key, parameters -> [key, parameters + ['key': key]]}
 		.collectEntries{key, parameters -> [key, parameters + ['id': make_string_directory_safe(parameters.get('id', parameters.get('key')))]]}
 		.collectEntries{key, parameters -> [key, parameters + ['unique id': parameters.get('unique id', parameters.get('key'))]]}
-
 }
 
 // get a hash of default parameters to use in dataset stanzas
