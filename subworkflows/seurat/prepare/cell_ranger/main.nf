@@ -72,10 +72,12 @@ workflow cell_ranger {
 		// -------------------------------------------------------------------------------------------------
 
 		// create the channels for the process to make biomaRt objects
-		stage_parameters
+		parameters
 			.map{it.subMap(['genome']) + it.get('genome parameters').subMap(['organism', 'ensembl release'])}
+			.map{it.values().join('###')}
 			.unique()
-			.dump(tag:'seurat:cell_ranger:biomart_connections_to_make', pretty:true)
+			.map{make_map(it.split('###'), ['genome', 'organism', 'ensembl release'])}
+			.dump(tag:'seurat:prepare:cell_ranger:biomart_connections_to_make', pretty:true)
 			.set{biomart_connections_to_make}
 
 		tags             = biomart_connections_to_make.map{it.get('genome')}
@@ -88,7 +90,7 @@ workflow cell_ranger {
 		// make a channel of newly created GRanges rds files
 		merge_process_emissions(get_mart, ['opt', 'mart'])
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag:'seurat:cell_ranger:mart_files', pretty:true)
+			.dump(tag:'seurat:prepare:cell_ranger:mart_files', pretty:true)
 			.set{mart_files}
 
 //		// -------------------------------------------------------------------------------------------------
