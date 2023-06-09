@@ -20,6 +20,7 @@ include { write_10x_counts_matrices }            from '../../../../modules/R/Seu
 include { check_for_matching_key_values }     from '../../../../modules/utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../../modules/utilities/concat_workflow_emissions'
 include { concatenate_maps_list }             from '../../../../modules/utilities/concatenate_maps_list'
+include { make_map }                          from '../../../../modules/utilities/make_map'
 include { merge_metadata_and_process_output } from '../../../../modules/utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../../modules/utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../../modules/utilities/rename_map_keys'
@@ -34,7 +35,7 @@ include { merge_yaml as merge_task_properties }   from '../../../../modules/yq/m
 workflow cell_ranger {
 
 	take:
-		stage_parameters
+		parameters
 
 	main:
 		// -------------------------------------------------------------------------------------------------
@@ -42,12 +43,14 @@ workflow cell_ranger {
 		// -------------------------------------------------------------------------------------------------
 
 		// create the channels for the process to make GRanges objects using Cell Ranger indexes
-		stage_parameters
+		parameters
 			.map{it.subMap(['genome', 'index path'])}
+			.map{it.values().join('###')}
 			.unique()
+			.map{make_map(it.split('###'), ['genome', 'index path'])}
 			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf')]}
 			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
-			.dump(tag:'seurat:cell_ranger:gtf_files_to_convert_to_granges', pretty:true)
+			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty: true)
 			.set{gtf_files_to_convert_to_granges}
 
 		tags      = gtf_files_to_convert_to_granges.map{it.get('genome')}
@@ -61,7 +64,7 @@ workflow cell_ranger {
 		// make a channel of newly created GRanges rds files
 		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag:'seurat:cell_ranger:granges_files', pretty:true)
+			.dump(tag:'seurat:prepare:cell_ranger:granges_files', pretty:true)
 			.set{granges_files}
 
 		// -------------------------------------------------------------------------------------------------
