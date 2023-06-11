@@ -5,8 +5,8 @@
 
 include { concat_workflow_emissions } from '../../modules/utilities/concat_workflow_emissions'
 
-include { cell_ranger }     from '../../subworkflows/cell_ranger'
-include { cell_ranger_arc } from '../../subworkflows/cell_ranger_arc'
+include { cell_ranger }     from './cell_ranger'
+include { cell_ranger_arc } from './cell_ranger_arc'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow

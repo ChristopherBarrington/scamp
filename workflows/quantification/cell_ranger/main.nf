@@ -4,15 +4,15 @@
 // -------------------------------------------------------------------------------------------------
 
 // include { mkref } from '../../modules/cell_ranger/mkref'
-include { count as quantify } from '../../modules/cell_ranger/count'
+include { count as quantify } from '../../../modules/cell_ranger/count'
 
-include { check_for_matching_key_values }     from '../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }         from '../../modules/utilities/concat_workflow_emissions'
-include { merge_metadata_and_process_output } from '../../modules/utilities/merge_metadata_and_process_output'
-include { merge_process_emissions }           from '../../modules/utilities/merge_process_emissions'
-include { rename_map_keys }                   from '../../modules/utilities/rename_map_keys'
+include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
+include { merge_metadata_and_process_output } from '../../../modules/utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../../modules/utilities/merge_process_emissions'
+include { rename_map_keys }                   from '../../../modules/utilities/rename_map_keys'
 
-include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
+include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
