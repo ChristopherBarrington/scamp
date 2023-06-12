@@ -16,6 +16,7 @@ tools:
     doi: doi
     licence: eg MIT or GPL-3
     multithreaded: true
+    ext: name of ext
 
 input:
   - name: opt
