@@ -1,4 +1,9 @@
 
+# nextflow
+.nextflow*
+work
+results
+
 # hugo
 docs/.hugo_build.lock
 docs/public

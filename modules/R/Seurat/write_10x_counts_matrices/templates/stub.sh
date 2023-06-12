@@ -1,3 +1,3 @@
-#! /bin/env bash
+#! bash
 
 touch {counts_matrices,features}.rds {versions,task}.yaml

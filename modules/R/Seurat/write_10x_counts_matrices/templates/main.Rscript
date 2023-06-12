@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # creates a list of counts matrices from a cell ranger formatted output directory
@@ -32,18 +32,18 @@ list(feature_identifier = "$feature_identifier") |>
 log_message('reading barcoded counts matrix', level='section')
 
 switch(feature_identifier,
-	accession=1,
-	name=2,
-	0) -> gene_column
+       accession=1,
+       name=2,
+       0) -> gene_column
 
 Sys.readlink('barcoded_matrix') |> sprintf(fmt='input barcoded counts matrix: %s') |> log_message()
 sprintf(fmt='using `%s` (column %s) as gene identifiers', feature_identifier, gene_column) |> log_message()
 
 Read10X(data.dir='barcoded_matrix',
-	gene.column=gene_column,
-	cell.column=1,
-	unique.features=TRUE,
-	strip.suffix=TRUE) -> all_counts
+        gene.column=gene_column,
+        cell.column=1,
+        unique.features=TRUE,
+        strip.suffix=TRUE) -> all_counts
 
 saveRDS(object=all_counts, file='counts_matrices.rds')
 

@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # given a path of cell ranger formatted output, create an assay ready to use in seurat
@@ -63,7 +63,8 @@ log_message('creating atac-seq assay', level='section')
 CreateChromatinAssay(counts=atac_counts, ranges=atac_peaks,
                      genome=seqinfo, sep=c(':', '-'),
                      fragments=atac_fragments_file, annotation=annotations,
-                     min.cells=0, max.cells=NULL, min.features=0) -> assay
+                     min.cells=0, max.cells=NULL, min.features=0,
+                     validate.fragments=FALSE) -> assay
 
 # -------------------------------------------------------------------------------------------------
 # emulate the `strip.suffix=TRUE` behaviour of Seurat::Read10X

@@ -1,7 +1,11 @@
 // collapse strings into a unique key
 
 def format_unique_key(values) {
+  format_unique_key(values, ' / ')
+}
+
+def format_unique_key(values, sep) {
   if(values instanceof java.util.LinkedHashMap)
     values = values.values()
-  values.join(' / ')
+  values.join(sep)
 }

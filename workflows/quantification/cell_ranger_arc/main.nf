@@ -3,18 +3,18 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { count as quantify }   from '../../modules/cell_ranger_arc/count'
-include { make_libraries_csv }  from '../../modules/cell_ranger_arc/make_libraries_csv'
-include { mkref as make_index } from '../../modules/cell_ranger_arc/mkref'
+include { count as quantify }   from '../../../modules/cell_ranger_arc/count'
+include { make_libraries_csv }  from '../../../modules/cell_ranger_arc/make_libraries_csv'
+include { mkref as make_index } from '../../../modules/cell_ranger_arc/mkref'
 
-include { check_for_matching_key_values }     from '../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }         from '../../modules/utilities/concat_workflow_emissions'
-include { get_feature_types }                 from '../../modules/utilities/get_feature_types'
-include { merge_metadata_and_process_output } from '../../modules/utilities/merge_metadata_and_process_output'
-include { merge_process_emissions }           from '../../modules/utilities/merge_process_emissions'
-include { rename_map_keys }                   from '../../modules/utilities/rename_map_keys'
+include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
+include { get_feature_types }                 from '../../../modules/utilities/get_feature_types'
+include { merge_metadata_and_process_output } from '../../../modules/utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../../modules/utilities/merge_process_emissions'
+include { rename_map_keys }                   from '../../../modules/utilities/rename_map_keys'
 
-include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
+include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -23,7 +23,7 @@ include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_y
 workflow cell_ranger_arc {
 
 	take:
-		filtered_stage_parameters
+		parameters
 
 	main:
 		// -------------------------------------------------------------------------------------------------
@@ -31,9 +31,8 @@ workflow cell_ranger_arc {
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into two channels: {missing,provided} according to the presence of the 'index path' key
-		channel
-			.fromList(filtered_stage_parameters)
-			.map{it.get('genome parameters').subMap(['genome', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta files', 'gtf files']) + it.subMap('index path')}
+		parameters
+			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta files', 'gtf files']) + it.subMap('index path')}
 			.unique()
 			.branch{
 				def index_provided = it.containsKey('index path')
@@ -41,8 +40,8 @@ workflow cell_ranger_arc {
 				missing: index_provided == false}
 			.set{genome_indexes}
 
-		genome_indexes.missing.dump(tag:'quantification:cell_ranger_arc:genome_indexes.missing', pretty:true)
-		genome_indexes.provided.dump(tag:'quantification:cell_ranger_arc:genome_indexes.provided', pretty:true)
+		genome_indexes.missing.dump(tag: 'quantification:cell_ranger_arc:genome_indexes.missing', pretty: true)
+		genome_indexes.provided.dump(tag: 'quantification:cell_ranger_arc:genome_indexes.provided', pretty: true)
 
 		// make channels of parameters for genomes that need indexes to be created
 		tags                = genome_indexes.missing.map{it.get('genome')}
@@ -69,13 +68,12 @@ workflow cell_ranger_arc {
 		// -------------------------------------------------------------------------------------------------
 
 		// when there is at least one dataset to quantify, prepare a channel to create the sample sheet
-		channel
-			.fromList(filtered_stage_parameters)
-			.first()
-			.map{get_feature_types()}
-			.map{it + [fastq_paths:filtered_stage_parameters.collect{it.get('fastq paths')}.flatten().unique()]}
-			.map{it + [fastq_files_regex:'(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
-			.dump(tag:'feature_type_params', pretty:true)
+		parameters
+			.flatMap{it.get('fastq paths')}
+			.unique()
+			.collect()
+			.map{[fastq_paths: it, fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz'] + get_feature_types()}
+			.dump(tag: 'quantification:cell_ranger_arc:feature_type_params', pretty: true)
 			.set{feature_type_params}
 
 		// make channels to create the libraries csv file that cell ranger arc count expects
@@ -92,41 +90,40 @@ workflow cell_ranger_arc {
 		// -------------------------------------------------------------------------------------------------
 
 		// make a channel containing all information for the quantification process
-		channel
-			.fromList(filtered_stage_parameters)
+		parameters
 			.combine(index_paths)
-			.filter{check_for_matching_key_values(it, 'genome')}
+			.filter{it.first().get('genome') == it.last().get('key')}
 			.map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'samples', 'index path', 'dataset id'])}
+			.map{it.subMap(['unique id', 'limsid', 'index path', 'dataset id'])}
 			.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
 		tags              = datasets_to_quantify.map{it.get('unique id')}
-		samples           = datasets_to_quantify.map{it.get('samples')}
+		limsids           = datasets_to_quantify.map{it.get('limsid')}
 		index_paths       = datasets_to_quantify.map{it.get('index path')}
 		sample_sheet_file = make_libraries_csv.out.path
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, samples, index_paths, sample_sheet_file)
+		quantify(datasets_to_quantify, tags, limsids, index_paths, sample_sheet_file)
 
 		// make a channel of newly quantified datasets, each defined in a map
 		merge_process_emissions(quantify, ['opt', 'libraries', 'quantification_path'])
 			.map{rename_map_keys(it, ['libraries', 'quantification_path'], ['libraries_csv', 'quantification path'])}
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag:'quantification:cell_ranger_arc:quantified_datasets', pretty:true)
+			.dump(tag: 'quantification:cell_ranger_arc:quantified_datasets', pretty: true)
 			.set{quantified_datasets}
 
 		// -------------------------------------------------------------------------------------------------
 		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
-		channel
-			.fromList(filtered_stage_parameters)
+		parameters
 			.combine(quantified_datasets)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + it.last().subMap(['index path', 'libraries_csv', 'quantification path'])}
-			.dump(tag:'quantification:cell_ranger_arc:final_results', pretty:true)
+			.map{it + ['quantification method': 'cell_ranger_arc']}
+			.dump(tag: 'quantification:cell_ranger_arc:final_results', pretty: true)
 			.set{final_results}
 
 		// -------------------------------------------------------------------------------------------------
