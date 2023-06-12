@@ -20,5 +20,6 @@ process count {
 		path 'web_summary.html', emit: cell_ranger_report
 
 	script:
+		def count_args = task.ext.count ?: ''
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }

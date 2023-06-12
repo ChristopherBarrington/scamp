@@ -13,7 +13,7 @@ cellranger count \
 	--fastqs=\${FASTQ_PATHS} \
 	--sample=$sample \
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
-	--disable-ui
+	--disable-ui $count_args
 
 ln --symbolic output/outs/web_summary.html
 
@@ -29,5 +29,7 @@ cat <<-END_TASK > task.yaml
     sample: $sample
     index_path: `realpath index_path`
     task_index: ${task.index}
+    ext:
+    	count: ${count_args}
     work_dir: `pwd`
 END_TASK
