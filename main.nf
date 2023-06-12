@@ -58,23 +58,23 @@ workflow {
 			.set{post_quantification_results}
 
 		// -------------------------------------------------------------------------------------------------
-		// run seurat workflows
+		// run analysis workflows
 		// -------------------------------------------------------------------------------------------------
 
-		// branch parameters into two channels: {yes,no} according to a seurat-based stage
+		// branch parameters into channels according to the analysis workflow
 		post_quantification_results
 			.branch{
 				def has_a_seurat_stage = it.get('stages').collect{it.startsWith('seurat:')}.any()
-				yes: has_a_seurat_stage == true
-				no: has_a_seurat_stage == false
+				seurat: has_a_seurat_stage == true
+				other: true
 			}
-			.set{seurat_subworkflow_datasets}
+			.set{analysis_workflows}
 
-		seurat_subworkflow_datasets.yes.dump(tag: 'scamp:seurat_subworkflow_datasets.yes', pretty: true)
-		seurat_subworkflow_datasets.no.dump(tag: 'scamp:seurat_subworkflow_datasets.no', pretty: true)
+		analysis_workflows.seurat.dump(tag: 'scamp:analysis_workflows.seurat', pretty: true)
+		analysis_workflows.other.dump(tag: 'scamp:analysis_workflows.other', pretty: true)
 
 		// process datasets that contain a `seurat` analysis stage
-		seurat(seurat_subworkflow_datasets.yes)
+		// seurat(analysis_workflows.seurat)
 
 		// concatenate the result of the seurat subworkflow and the non-seurat datasets
 //		seurat.out.result
