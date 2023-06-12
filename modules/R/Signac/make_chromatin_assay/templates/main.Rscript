@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # given a path of cell ranger formatted output, create an assay ready to use in seurat

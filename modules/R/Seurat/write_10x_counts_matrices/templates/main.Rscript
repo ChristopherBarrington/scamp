@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # creates a list of counts matrices from a cell ranger formatted output directory

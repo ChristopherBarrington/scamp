@@ -1,3 +1,3 @@
-#! /bin/env bash
+#! bash
 
 touch {versions,task}.yaml seurat.rds

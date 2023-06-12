@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! bash
 
 # get comma-separated list of input directories to find fastq files
 FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*_R1_*.fastq.gz" -printf '%h\\n' | \

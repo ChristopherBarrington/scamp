@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # given the path to gtf and fai files, this script:

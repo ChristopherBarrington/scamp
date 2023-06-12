@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! bash
 
 # get software version(s)
 VERSION=`cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc-//'`

@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # given the following parameters, this script make a connection to biomaRt
