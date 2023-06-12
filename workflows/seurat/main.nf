@@ -71,18 +71,18 @@ workflow seurat {
 				cell_ranger: quantification_method == 'cell_ranger'
 				cell_ranger_arc: quantification_method == 'cell_ranger_arc'
 				kallisto_bustools: quantification_method == 'kallisto|bustools'
-				other: true}
-			.set{quantification_methods}
+				unknown: true}
+			.set{quantified_by}
 
-		quantification_methods.cell_ranger.dump(tag: 'seurat:quantification_methods.cell_ranger', pretty: true)
-		quantification_methods.cell_ranger_arc.dump(tag: 'seurat:quantification_methods.cell_ranger_arc', pretty: true)
-		quantification_methods.kallisto_bustools.dump(tag: 'seurat:quantification_methods.kallisto_bustools', pretty: true)
-		quantification_methods.allevin.dump(tag: 'seurat:quantification_methods.allevin', pretty: true)
+		quantified_by.cell_ranger.dump(tag: 'seurat:quantified_by.cell_ranger', pretty: true)
+		quantified_by.cell_ranger_arc.dump(tag: 'seurat:quantified_by.cell_ranger_arc', pretty: true)
+		quantified_by.kallisto_bustools.dump(tag: 'seurat:quantified_by.kallisto_bustools', pretty: true)
+		quantified_by.allevin.dump(tag: 'seurat:quantified_by.allevin', pretty: true)
 
 		// -------------------------------------------------------------------------------------------------
 		// run the subworkflows
 		// -------------------------------------------------------------------------------------------------
 
-		prepare_cell_ranger(quantification_methods.cell_ranger)
-		// cell_ranger_arc(quantification_methods.cell_ranger_arc)
+		prepare_cell_ranger(quantified_by.cell_ranger)
+		// cell_ranger_arc(quantified_by.cell_ranger_arc)
 }
