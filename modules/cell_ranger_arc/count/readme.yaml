@@ -14,6 +14,7 @@ tools:
     homepage: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software
     documentation: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/pipelines/latest/using/count
     multithreaded: true
+    ext: count
 
 input:
   - name: opt
