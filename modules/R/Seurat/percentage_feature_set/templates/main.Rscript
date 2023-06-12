@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 # *************************************************************************************************
 # given a yaml file of feature identifiers, run `Seurat::PercentageFeatureSet`

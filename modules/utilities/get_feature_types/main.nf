@@ -4,7 +4,7 @@
 include { pluck } from '../pluck'
 
 def get_feature_types() {
-	def feature_types = pluck(params, ['project', 'feature types'])
+	def feature_types = pluck(params, ['_project', 'feature types'])
 	['sample_names':feature_types.collect{it.getValue()}.flatten(),
  	 'feature_types':feature_types.keySet().collect{[it]*feature_types.get(it).size()}.flatten()]
 }

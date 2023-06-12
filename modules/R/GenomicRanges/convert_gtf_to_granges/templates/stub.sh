@@ -1,3 +1,3 @@
-#! /bin/env bash
+#! bash
 
 touch granges.rds {task,versions}.yaml

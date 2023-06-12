@@ -4,69 +4,70 @@
 // -------------------------------------------------------------------------------------------------
 
 include { check_for_matching_key_values } from '../../modules/utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }     from '../../modules/utilities/concat_workflow_emissions'
 
-include { cell_ranger } from '../../subworkflows/seurat/cell_ranger'
-include { cell_ranger_arc } from '../../subworkflows/seurat/cell_ranger_arc'
+include { cell_ranger as prepare_cell_ranger }         from './prepare/cell_ranger'
+include { cell_ranger_arc as prepare_cell_ranger_arc } from './prepare/cell_ranger_arc'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
 // -------------------------------------------------------------------------------------------------
 
 workflow seurat {
+
 	take:
-		complete_stage_parameters
-		quantification_results
+		parameters
 
 	main:
 		// -------------------------------------------------------------------------------------------------
-		// get the seurat parameters in order, collecting quantification paths as required
+		// split parameters if a seurat object is already prepared
 		// -------------------------------------------------------------------------------------------------
 
-		// split the seurat analyses into those that are already quantified and those that were quantified here
-		channel
-			.fromList(complete_stage_parameters.findAll{x -> x.get('stage type').equals('seurat')})
-			.branch({
-				def quantification_path_provided = it.containsKey('quantification path')
-				internal: quantification_path_provided == false
-				external: quantification_path_provided == true})
-			.set{quantification_sources}
+		parameters
+			.branch{
+				def seurat_provided = it.containsKey('seurat file')
+				provided: seurat_provided == true
+				required: seurat_provided == false}
+			.set{objects}
 
-		quantification_sources.internal.dump(tag:'seurat:quantification_sources.internal', pretty:true)
-		quantification_sources.external.dump(tag:'seurat:quantification_sources.external', pretty:true)
-
-		// get the quantification paths for the internal quantified datasets and join the remainder back on
-		quantification_sources.internal
-			.combine(quantification_results)
-			.filter{it.first().get('quantification stage') == it.last().get('stage name')}
-			.filter{check_for_matching_key_values(it, 'dataset name')}
-			.map{it.first() + it.last().subMap(['quantification path', 'index path']) + ['quantification type': it.last().get('stage type')]}
-			.concat(quantification_sources.external)
-			.dump(tag:'seurat:stage_parameters', pretty:true)
-			.set{stage_parameters}
+		objects.required.dump(tag: 'seurat:objects.required', pretty: true)
+		objects.provided.dump(tag: 'seurat:objects.provided', pretty: true)
 
 		// -------------------------------------------------------------------------------------------------
-		// split quantified datasets into quantification method channels
+		// prepare objects based on quantification methods
 		// -------------------------------------------------------------------------------------------------
 
 		// branch the datasets based on how they were quantified; a different module for each method will be used
-		stage_parameters
-			.branch({
-				quantification_method = it.get('quantification type')
-				cell_ranger: quantification_method == 'cell ranger'
-				cell_ranger_arc: quantification_method == 'cell ranger arc'
+		objects.required
+			.branch{
+				def quantification_method = it.get('quantification method')
+				allevin: quantification_method == 'alevin'
+				cell_ranger: quantification_method == 'cell_ranger'
+				cell_ranger_arc: quantification_method == 'cell_ranger_arc'
 				kallisto_bustools: quantification_method == 'kallisto|bustools'
-				allevin: quantification_method == 'alevin'})
-			.set{quantification_methods}
+				unknown: true}
+			.set{quantified_by}
 
-		quantification_methods.cell_ranger.dump(tag:'seurat:quantification_methods.cell_ranger', pretty:true)
-		quantification_methods.cell_ranger_arc.dump(tag:'seurat:quantification_methods.cell_ranger_arc', pretty:true)
-		quantification_methods.kallisto_bustools.dump(tag:'seurat:quantification_methods.kallisto_bustools', pretty:true)
-		quantification_methods.allevin.dump(tag:'seurat:quantification_methods.allevin', pretty:true)
+		quantified_by.allevin.dump(tag: 'seurat:quantified_by.allevin', pretty: true)
+		quantified_by.cell_ranger.dump(tag: 'seurat:quantified_by.cell_ranger', pretty: true)
+		quantified_by.cell_ranger_arc.dump(tag: 'seurat:quantified_by.cell_ranger_arc', pretty: true)
+		quantified_by.kallisto_bustools.dump(tag: 'seurat:quantified_by.kallisto_bustools', pretty: true)
+		quantified_by.unknown.dump(tag: 'seurat:quantified_by.unknown', pretty: true)
+
+		// run the analysis workflows
+		prepare_cell_ranger(quantified_by.cell_ranger)
+		prepare_cell_ranger_arc(quantified_by.cell_ranger_arc)
 
 		// -------------------------------------------------------------------------------------------------
-		// run the subworkflows
+		// concatenate the results of all workflows
 		// -------------------------------------------------------------------------------------------------
 
-		cell_ranger(quantification_methods.cell_ranger)
-		cell_ranger_arc(quantification_methods.cell_ranger_arc)
+		all_workflows = [prepare_cell_ranger, prepare_cell_ranger_arc]
+		concat_workflow_emissions(all_workflows, 'result')
+			.concat(quantified_by.unknown)
+			.dump(tag: 'seurat:final_results', pretty: true)
+			.set{final_results}
+
+	emit:
+		result = final_results
 }

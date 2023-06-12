@@ -4,15 +4,15 @@
 // -------------------------------------------------------------------------------------------------
 
 // include { mkref } from '../../modules/cell_ranger/mkref'
-include { count as quantify } from '../../modules/cell_ranger/count'
+include { count as quantify } from '../../../modules/cell_ranger/count'
 
-include { check_for_matching_key_values }     from '../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }         from '../../modules/utilities/concat_workflow_emissions'
-include { merge_metadata_and_process_output } from '../../modules/utilities/merge_metadata_and_process_output'
-include { merge_process_emissions }           from '../../modules/utilities/merge_process_emissions'
-include { rename_map_keys }                   from '../../modules/utilities/rename_map_keys'
+include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
+include { merge_metadata_and_process_output } from '../../../modules/utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../../modules/utilities/merge_process_emissions'
+include { rename_map_keys }                   from '../../../modules/utilities/rename_map_keys'
 
-include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_yaml'
+include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -21,7 +21,7 @@ include { merge_yaml as merge_software_versions } from '../../modules/yq/merge_y
 workflow cell_ranger {
 
 	take:
-		filtered_stage_parameters
+		parameters
 
 	main:
 		// -------------------------------------------------------------------------------------------------
@@ -35,23 +35,18 @@ workflow cell_ranger {
 		// -------------------------------------------------------------------------------------------------
 
 		// make a channel containing all information for the quantification process
-		channel
-			.fromList(filtered_stage_parameters)
-			// .combine(index_paths)
-			// .filter{check_for_matching_key_values(it, 'genome')}
-			// .map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'sample', 'fastq paths', 'index path', 'dataset id'])}
-			.dump(tag: 'quantification:cell_ranger:datasets_to_quantify', pretty: true)
+		parameters
+			.map{it.subMap(['unique id', 'limsid', 'fastq paths', 'index path', 'dataset id', 'quantification path'])}
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
-		tags              = datasets_to_quantify.map{it.get('unique id')}
-		sample            = datasets_to_quantify.map{it.get('sample')}
-		fastq_paths       = datasets_to_quantify.map{it.get('fastq paths')}
-		index_paths       = datasets_to_quantify.map{it.get('index path')}
+		tags        = datasets_to_quantify.map{it.get('unique id')}
+		limsids     = datasets_to_quantify.map{it.get('limsid')}
+		fastq_paths = datasets_to_quantify.map{it.get('fastq paths')}
+		index_paths = datasets_to_quantify.map{it.get('index path')}
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, sample, fastq_paths, index_paths)
+		quantify(datasets_to_quantify, tags, limsids, fastq_paths, index_paths)
 
 		// make a channel of dataset (names) and paths that contain quantified data
 		merge_process_emissions(quantify, ['opt', 'quantification_path'])
@@ -64,12 +59,11 @@ workflow cell_ranger {
 		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
-		channel
-			.fromList(filtered_stage_parameters)
+		parameters
 			.combine(quantified_datasets)
-			.dump(tag:'working', pretty:true)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + it.last().subMap(['index path', 'quantification path'])}
+			.map{it + ['quantification method': 'cell_ranger']}
 			.dump(tag:'quantification:cell_ranger:final_results', pretty:true)
 			.set{final_results}
 

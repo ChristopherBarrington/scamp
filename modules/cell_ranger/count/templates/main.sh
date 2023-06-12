@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! bash
 
 # get comma-separated list of input directories to find fastq files
 FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*_R1_*.fastq.gz" -printf '%h\\n' | \
@@ -13,7 +13,7 @@ cellranger count \
 	--fastqs=\${FASTQ_PATHS} \
 	--sample=$sample \
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
-	--disable-ui
+	--disable-ui $count_args
 
 ln --symbolic output/outs/web_summary.html
 
@@ -29,5 +29,7 @@ cat <<-END_TASK > task.yaml
     sample: $sample
     index_path: `realpath index_path`
     task_index: ${task.index}
+    ext:
+    	count: ${count_args}
     work_dir: `pwd`
 END_TASK
