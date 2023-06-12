@@ -23,7 +23,7 @@ process count {
 		path 'rna_summary.html', emit: rna_summary
 
 	script:
-		def count_args = task.ext.count ?: ''
-		def samples_regex = samples.join('|')
+		count_args = task.ext.count ?: ''
+		samples_regex = samples.join('|')
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }

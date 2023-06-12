@@ -32,5 +32,7 @@ cat <<-END_TASK > task.yaml
     sample: $sample
     index_path: `realpath index_path`
     task_index: ${task.index}
+    ext:
+        count: $count_args
     work_dir: `pwd`
 END_TASK

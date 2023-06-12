@@ -31,6 +31,6 @@ cat <<-END_TASK > task.yaml
 	complete_libraries `realpath all_libraries.csv`
     task_index: ${task.index}
     ext:
-    	count: ${count_args}
+        count: ${count_args}
     work_dir: `pwd`
 END_TASK
