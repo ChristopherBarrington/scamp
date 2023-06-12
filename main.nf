@@ -8,6 +8,7 @@ include { seurat }         from './workflows/seurat'
 
 include { print_as_json } from './modules/utilities/print_as_json'
 
+include { concat_workflow_emissions }        from './modules/utilities/concat_workflow_emissions'
 include { get_complete_analysis_parameters } from './modules/utilities/get_complete_analysis_parameters'
 include { make_map }                         from './modules/utilities/make_map'
 include { print_pipeline_title }             from './modules/utilities/print_pipeline_title'
@@ -54,31 +55,32 @@ workflow {
 		// concatenate the result of quantification and the datasets that are pre-quantified
 		quantification.out.result
 			.concat(dataset_quantification.provided)
-			.dump(tag: 'scamp:post_quantification_results', pretty: true)
-			.set{post_quantification_results}
+			.dump(tag: 'scamp:quantification_results', pretty: true)
+			.set{quantification_results}
 
 		// -------------------------------------------------------------------------------------------------
 		// run analysis workflows
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into channels according to the analysis workflow
-		post_quantification_results
+		quantification_results
 			.branch{
 				def has_a_seurat_stage = it.get('stages').collect{it.startsWith('seurat:')}.any()
 				seurat: has_a_seurat_stage == true
-				other: true
+				unknown: true
 			}
 			.set{analysis_workflows}
 
 		analysis_workflows.seurat.dump(tag: 'scamp:analysis_workflows.seurat', pretty: true)
-		analysis_workflows.other.dump(tag: 'scamp:analysis_workflows.other', pretty: true)
+		analysis_workflows.unknown.dump(tag: 'scamp:analysis_workflows.unknown', pretty: true)
 
-		// process datasets that contain a `seurat` analysis stage
-		// seurat(analysis_workflows.seurat)
+		// process datasets with the indicated analysis workflow
+		seurat(analysis_workflows.seurat)
 
-		// concatenate the result of the seurat subworkflow and the non-seurat datasets
-//		seurat.out.result
-//			.concat(seurat_subworkflow_datasets.no)
-//			.dump(tag: 'scamp:post_seurat_results', pretty: true)
-//			.set{post_seurat_results}
+		// concatenate the results of analysis workflows
+		all_workflows = [seurat]
+		concat_workflow_emissions(all_workflows, 'result')
+			.concat(analysis_workflows.unknown)
+			.dump(tag: 'scamp:analysis_results', pretty: true)
+			.set{analysis_results}
 }
