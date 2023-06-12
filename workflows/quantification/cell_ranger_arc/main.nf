@@ -71,7 +71,7 @@ workflow cell_ranger_arc {
 		parameters
 			.flatMap{it.get('fastq paths')}
 			.unique()
-			.toList()
+			.collect()
 			.map{[fastq_paths: it, fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz'] + get_feature_types()}
 			.dump(tag: 'quantification:cell_ranger_arc:feature_type_params', pretty: true)
 			.set{feature_type_params}
