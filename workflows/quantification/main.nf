@@ -28,12 +28,12 @@ workflow quantification {
 				def stages = it.get('stages')
 				cell_ranger: stages.contains('quantification:cell_ranger')
 				cell_ranger_arc: stages.contains('quantification:cell_ranger_arc')
-				kallisto: stages.contains('quantification:kallisto')}
+				unknown: true}
 			.set{quantification}
 
 		quantification.cell_ranger.dump(tag: 'quantification:quantification.cell_ranger', pretty: true)
 		quantification.cell_ranger_arc.dump(tag: 'quantification:quantification.cell_ranger_arc', pretty: true)
-		quantification.kallisto.dump(tag: 'quantification:quantification.kallisto', pretty: true)
+		quantification.unknown.dump(tag: 'quantification:quantification.unknown', pretty: true)
 
 		// -------------------------------------------------------------------------------------------------
 		// run the subworkflows
@@ -50,7 +50,9 @@ workflow quantification {
 		all_quantifications = [cell_ranger, cell_ranger_arc]
 
 		// concatenate output channels from each subworkflow
-		all_results = concat_workflow_emissions(all_quantifications, 'result')
+		concat_workflow_emissions(all_quantifications, 'result')
+			.concat(quantification.unknown)
+			.set{all_results}
 
 	emit:
 		result = all_results
