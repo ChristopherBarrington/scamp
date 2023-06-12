@@ -1,0 +1,60 @@
+name: Calculate percentage feature expression
+
+description: |
+  A short description of the module's function.
+
+tags:
+  - r
+  - seurat
+  - in development
+
+tools:
+  R:
+    description: R is a free software environment for statistical computing and graphics.
+    homepage: https://www.r-project.org/
+    documentation: https://cran.r-project.org/manuals.html
+    licence: "GPL-2 | GPL-3"
+  Seurat:
+    description: Seurat is an R package designed for QC, analysis, and exploration of single-cell RNA-seq data. Seurat aims to enable users to identify and interpret sources of heterogeneity from single-cell transcriptomic measurements, and to integrate diverse types of single-cell data.
+    homepage: https://satijalab.org/seurat
+    documentation: https://satijalab.org/seurat/articles
+    source: https://github.com/satijalab/seurat
+    doi: 10.1016/j.cell.2021.04.048
+    licence: MIT + file LICENSE
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: tag
+    type: string
+    description: A unique identifier to use in the tag directive.
+  - name: assay
+    type: string
+    description: The name of the assay from which percentages should be calculated.
+  - name: feature_sets.yaml
+    type: file
+    description: YAML-formatted file of gene feature(s) or regular expression(s) where the YAML key dictates output column name.
+  - name: seurat.rds
+    type: file
+    description: A Seurat object that contains features listed in `feature_sets.yaml`.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters.
+    pattern: task.yaml
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+  - name: seurat
+    type: file
+    description: A Seurat object written to RDS file with additional metadata varaibles for feature(s) listed in `feature_sets.yaml`. ***This may change to provide a data frame that can be collated with other similar results.*** 
+    pattern: seurat.rds
+
+authors:
+  - "@ChristopherBarrington"

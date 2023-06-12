@@ -1,0 +1,56 @@
+name: Make an assay
+
+description: |
+  Writes assay objects as RDS files for a specified assay type.
+
+tags:
+  - r
+  - seurat
+
+tools:
+  R:
+    description: R is a free software environment for statistical computing and graphics.
+    homepage: https://www.r-project.org/
+    documentation: https://cran.r-project.org/manuals.html
+    licence: "GPL-2 | GPL-3"
+  Seurat:
+    description: Seurat is an R package designed for QC, analysis, and exploration of single-cell RNA-seq data. Seurat aims to enable users to identify and interpret sources of heterogeneity from single-cell transcriptomic measurements, and to integrate diverse types of single-cell data.
+    homepage: https://satijalab.org/seurat
+    documentation: https://satijalab.org/seurat/articles
+    source: https://github.com/satijalab/seurat
+    doi: 10.1016/j.cell.2021.04.048
+    licence: MIT + file LICENSE
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: tag
+    type: string
+    description: A unique identifier to use in the tag directive.
+  - name: feature_type
+    type: string
+    description: Type of feature in the counts matrices from which an assay should be created. This should be one of the feature types in the `features.tsv.gz` file (column 3), for example "Gene Expresssion", "Peaks", etc.
+  - name: counts_matrices.rds
+    type: file
+    description: The RDS object that contains a list of the counts matrices for the dataset.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters.
+    pattern: task.yaml
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+  - name: assay
+    type: file
+    description: RDS file of the assay object created from the counts matrix for the feature type.
+    pattern: assay.rds
+
+authors:
+  - "@ChristopherBarrington"

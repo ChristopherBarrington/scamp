@@ -1,0 +1,26 @@
+
+// targets must start `line-`
+// these will be replaced by regex
+
+{
+	"process" : {
+		"target": "line-1",
+		"title": "process definition",
+		"text": "The name of the <code>process</code> in the module is defined here and is used in the (sub)workflow to identify which process(es) from module file to include. In a pipeline, this process may be renamed to something more descriptive in the context of the pipeline."},
+	"inputs" : {
+		"target": "line-8",
+		"title": "process inputs",
+		"text": "An ordered set of channels that are expected to be provided by the pipeline. If there are too many or too few, Nextflow will complain. Be careful here with the distinction between value and queue channel types."},
+	"outputs" : {
+		"target": "line-14",
+		"title": "process outputs",
+		"text": "Output channels are the files, directories, and/or variables created in this task that should be made available or published by the pipeline."},
+	"script" : {
+		"target": "line-20",
+		"title": "the process' script",
+		"text": "The script that actually does the cool stuff that the module is designed to do. I favour the <code>script</code> and <code>template</code> approach but there are <a target='blank' href='https://www.nextflow.io/docs/latest/process.html#script'>alternatives</a>. The template can be any language - <code>bash</code>, <code>R</code>, <code>python</code> etc. - as long as the shebang line is correctly formatted."},
+	"resources" : {
+		"target": "line-4",
+		"title": "default resource requests",
+		"text": "When used with appropriate executors these define the resource required by a process. They can be overridden in a <code>config</code> file though."}
+}

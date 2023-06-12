@@ -1,0 +1,61 @@
+
+<!-- show description -->
+
+<p>{{ .Params.description | markdownify | safeHTML }}</p>
+
+<!-- show inputs table -->
+
+{{ with .Params.input }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
+	<table>
+		<tr>
+			<th>Channel name</th>
+			<th>Description</th>
+			<th>Type</th>
+		</tr>
+		{{ range $info := . }}
+		<tr>
+			<td><code>{{ index $info "name" }}</code></td>
+			<td>{{ index $info "description" | markdownify }}</td>
+			<td><code>{{ index $info "type" }}</code></td>
+		</tr>
+		{{ end }}
+	</table>
+{{ end }}
+
+<!-- show outputs table -->
+
+{{ with .Params.output }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
+	<table class='module-table'>
+		<tr>
+			<th>Emission name</th>
+			<th>Description</th>
+			<th>Type</th>
+			<th>Filename pattern</th>
+		</tr>
+		{{ range $info := . }}
+		<tr>
+			<td><code>{{ index $info "name" }}</code></td>
+			<td>{{ index $info "description" | markdownify }}</td>
+			<td><code>{{ index $info "type" }}</code></td>
+			<td>{{ with $info.pattern }}<code>{{ . }}</code>{{ end }}</td>
+		</tr>
+		{{ end }}
+	</table>
+{{ end }}
+
+<!-- show list of tools -->
+
+{{ if $tools := .Params.tools }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" $tools "icon" "wrench") }} Tools</h2>
+	{{ range $name,$info := $tools }}
+		<h3>{{ $name }} {{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $info "style" "primary" "content" "multithreaded") }}{{ end }}</h3>
+		<p>{{ with $info.description }}{{ . }}{{ end }}</p>
+		{{ with $info.doi }}{{ partial "shortcodes/button.html" (dict "context" $info "href" (printf "https://doi.org/%s" .) "content" "DOI") }}{{ end }}
+		{{ with $info.homepage }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Homepage") }}{{ end }}
+		{{ with $info.documentation }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Documentation") }}{{ end }}
+		{{ with $info.source }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Source") }}{{ end }}
+		{{ with $info.licence }}{{ partial "shortcodes/button.html" (dict "context" $info "content" .) }}{{ end }}
+	{{ end }}
+{{ end }}
