@@ -1,0 +1,77 @@
+
+// targets must start `line-`
+// these will be replaced by regex for the tour name
+
+{
+	"project" : {
+		"target": "line-1",
+		"title": "project description",
+		"text": "Parameters that define the project as a whole."},
+	"project_defaults" : {
+		"target": "line-18",
+		"title": "project defaults",
+		"text": "A set of parameters that are the same for <i>all</i> datasets in <i>all</i> analyses."},
+	"analysis" : {
+		"target": "line-26",
+		"title": "an analysis",
+		"text": "One or more analysis groups are defined. Each analysis can contain multiple datasets. These cannot start with underscores!"},
+
+
+	"people" : {
+		"target": "line-2",
+		"title": "project people",
+		"text": "The lab and scientist involved in the project."},
+	"project_ids" : {
+		"target": "line-4",
+		"title": "project IDs",
+		"text": "Identifiers that can be used for the project."},
+	"feature_types" : {
+		"target": "line-6",
+		"title": "assay types",
+		"text": "A list of LIMS IDs for each curated type of data. The <code>feature_types</code> keys depend on the data type and application. For example, Cell Ranger ARC expects <code>Gene Expression</code> and <code>Chromatin Accessibility</code> feature types."},
+	"genomes" : {
+		"target": "line-12",
+		"title": "genomes in the project",
+		"text": "A list of genomes used in the project, a dataset is linked to one of the <code>genomes</code> by the <code>genome</code> key of a dataset."},
+
+	"fastq_paths" : {
+		"target": "line-19",
+		"title": "paths to FastQ files",
+		"text": "A list of paths that can be searched that may have a FastQ (<code>*.fastq.gz</code> file for one or more of the datasets."},
+	"feature_identifiers" : {
+		"target": "line-24",
+		"title": "identifiers",
+		"text": "Which feature identifier should be used as the default: probably <code>name</code> or <code>accession</code>."},
+
+	"analysis_defaults" : {
+		"target": "line-27",
+		"title": "analysis defaults",
+		"text": "As with project defaults, these parameters are applied to all datasets <emph>within this analysis</emph>."},
+	"dataset" : {
+		"target": "line-34",
+		"title": "a dataset",
+		"text": "The first (of four) datasets. Each dataset is specified in separate stanzas of the analysis. Dataset names should not start with underscores!"},
+
+
+	"stages" : {
+		"target": "line-28",
+		"title": "analysis stages",
+		"text": "A list of workflows that should be applied to a dataset. In this example, these two workflows will be applied to all four datasets in the analysis."},
+	"index" : {
+		"target": "line-31",
+		"title": "genome index",
+		"text": "The index against which the dataset(s) were quantified. This can be used by modules to get paths to GTF, FastA and FastA index files, for example."},
+	"genome" : {
+		"target": "line-32",
+		"title": "genome",
+		"text": "The key that was used in <code>genomes</code> to identify a set of genome parameters. Multiple genomes can be used in the same project, but are likely best separated into different analyses."},
+
+	"limsid" : {
+		"target": "line-35",
+		"title": "LIMS ID",
+		"text": "The name(s) of libraries used to describe the dataset. In snRNA+ATAC for example, this would be an array of two libraries: one for the RNA-seq and another for the ATAC-seq."},
+	"dataset_tag" : {
+		"target": "line-36",
+		"title": "dataset tag",
+		"text": "A short tag to describe a dataset that can be appended to cell barcodes to quickly discriminate originating dataset and uniquely identify cells in integrated objects."}
+}
