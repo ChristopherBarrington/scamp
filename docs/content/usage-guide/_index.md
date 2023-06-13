@@ -9,7 +9,10 @@ headingPre: |
   <link rel="stylesheet" href="/css/shepherd.css"/>
 ---
 
-These notes illustrate how to setup an analysis using {scamp}. The structure of the parameters file and the command line usage is described. Detailed descriptions of the parameters can be found in the modules or workflows documentation.
+[module docs]: {{< ref "/modules" >}}
+[workflow docs]: {{< ref "/modules" >}}
+
+These notes illustrate how to setup an analysis using {scamp}. The structure of the parameters file and the command line usage is described. Detailed descriptions of the parameters can be found in the [modules][module docs] or [workflows][workflow docs] documentation.
 
 <!--more-->
 
