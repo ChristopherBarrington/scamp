@@ -2,7 +2,7 @@
 {{ $page_context := .Page }} <!-- not sure how this works, needed for the badges in the for loop... -->
 {{ $commit_id := getenv "SCAMP_COMMIT" }}
 {{ $viewURL := .Site.Params.viewURL }}
-{{ $pagePath := .Page.Path }}
+{{ $pagePath := replace .Page.File.Path ".md" "" }}
 
 <!-- show description -->
 
