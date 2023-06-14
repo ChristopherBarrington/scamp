@@ -10,7 +10,7 @@ tags:
 
 steps:
   - name: Create missing indexes
-    description: For datasets that do not have an `index path` an index is created using the information in the `genome` stanza. The unique set of required indexes are created.
+    description: For datasets that do not have an `index path`, an index is created using the information in the `genome` stanza. The unique set of required indexes are created.
     anchor: 30
     parameters:
       - key: genome
