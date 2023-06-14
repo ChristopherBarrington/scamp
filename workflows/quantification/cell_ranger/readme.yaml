@@ -11,6 +11,7 @@ tags:
 steps:
   - name: Quantify expression
     description: Run `cellranger count` to align and quantify gene expression using the FastQ files and a genome index.
+    anchor: 34
     parameters:
       - key: unique id
         description: For the `tags` channel, to output in the Nextflow log.
