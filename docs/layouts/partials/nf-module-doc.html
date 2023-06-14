@@ -8,7 +8,7 @@
 <!-- show inputs table -->
 
 {{ with .Params.input }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
+	<h2 id="inputs">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
 	<table>
 		<tr>
 			<th>Channel name</th>
@@ -28,7 +28,7 @@
 <!-- show outputs table -->
 
 {{ with .Params.output }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
+	<h2 id="outputs">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
 	<table class='module-table'>
 		<tr>
 			<th>Emission name</th>
@@ -50,11 +50,13 @@
 <!-- show list of tools -->
 
 {{ if $tools := .Params.tools }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" $tools "icon" "wrench") }} Tools</h2>
+	<h2 id="tools">{{ partial "shortcodes/icon.html" (dict "context" $tools "icon" "wrench") }} Tools</h2>
 	{{ range $name,$info := $tools }}
-		<h3>{{ $name }}
-		    {{ with $info.ext }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "blue" "title" "ext" "content" .) }}{{ end }}
-		    {{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "primary" "content" "multithreaded") }}{{ end }}</h3>
+		<h3 id="{{ anchorize $name }}">
+			{{ $name }}
+			{{ with $info.ext }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "blue" "title" "ext" "content" .) }}{{ end }}
+			{{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "primary" "content" "multithreaded") }}{{ end }}
+		</h3>
 
 		<p>{{ with $info.description }}{{ . }}{{ end }}</p>
 		
