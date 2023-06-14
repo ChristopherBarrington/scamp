@@ -1,0 +1,56 @@
+_project:
+    lab: guillemotf
+    scientist: sara.ahmeddeprado
+    lims id: SC22051
+    babs id: sa145
+    feature types:
+        Gene Expression:
+            - AHM4688A1
+            - AHM4688A2
+            - AHM4688A3
+        Chromatin Accessibility:
+            - AHM4688A4
+            - AHM4688A5
+            - AHM4688A6
+    genomes:
+        mm10_mcherry:
+            organism: mus musculus
+            assembly: mm10
+            ensembl release: 98
+            non-nuclear contigs:
+                - chrM
+            fasta files: inputs/fasta
+            gtf files: inputs/gtf
+
+_defaults:
+    fastq paths:
+        - inputs/primary_data/220406_A01366_0169_AHC3HVDMXY/fastq
+        - inputs/primary_data/220407_A01366_0171_AH3W3LDRX2/fastq
+        - inputs/primary_data/220420_A01366_0179_BH72WWDMXY/fastq
+        - inputs/primary_data/220422_A01366_0180_BHJLLNDSX3/fastq
+    feature identifiers: name
+
+cell ranger arc and seurat:
+    _defaults:
+        stages:
+            - quantification/cell ranger arc
+            - seurat/prepare/cell ranger arc
+        genome: mm10_mcherry
+
+    8 weeks sample1:
+        limsid:
+            - AHM4688A1
+            - AHM4688A4
+        dataset tag: 8WS1
+
+    8 weeks sample2:
+        limsid:
+            - AHM4688A2
+            - AHM4688A5
+        dataset tag: 8WS2
+
+    8 weeks sample3:
+        limsid:
+            - AHM4688A3
+            - AHM4688A6
+        dataset tag: 8WS3

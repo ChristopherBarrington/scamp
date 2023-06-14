@@ -28,9 +28,15 @@ The structure of `parameters.yaml` allows aspects of a project to be recorded al
 
 In this example for a scRNA-seq project, there are four datasets that will be quantified against mouse using the Cell Ranger mm10 reference from which Seurat objects will be prepared. To keep the file clear I tend to use symlinks in an `inputs` directory to other parts of the filesystem. The `inputs/primary_data` is a symlink to the ASF's outputs for this project and `inputs/10x_indexes` is a symlink to the communal 10X indexes resource.
 
-{{< tab name="parameters.yaml" >}}
-{{< shepherd_tour tour="params" lang="yaml" btn_msg="Take the input parameters tour" >}}
+{{< tabs title="hello." >}}
+{{< tab name="scRNA-seq parameters.yaml" >}}
+{{< shepherd_tour tour="scrna" lang="yaml" btn_msg="Take the input parameters tour" >}}
 {{< /tab >}}
+
+{{< tab name="snRNA+ATAC-seq parameters.yaml" >}}
+{{< shepherd_tour tour="multiome" lang="yaml" btn_msg="Take the input parameters tour" >}}
+{{< /tab >}}
+{{< /tabs >}}
 
 ### Project description
 
