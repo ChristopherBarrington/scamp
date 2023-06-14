@@ -1,0 +1,59 @@
+
+{{ $page_context := .Page }} <!-- not sure how this works, needed for the badges in the for loop... -->
+
+<!-- show description -->
+
+<p>{{ .Params.description | markdownify | safeHTML }}</p>
+
+<!-- show steps table -->
+
+{{ with .Params.steps }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "tasks") }} Steps</h2>
+	{{ range $step := . }}
+		<h3>{{ index $step "name" | markdownify }}</h3>
+		{{ with $step.modules }}{{ range $module := .}}
+			{{ partial "shortcodes/button.html" (dict
+			           "context" $page_context
+			           "href" (ref $page_context (printf "modules/%s" $module))
+			           "style" "tip"
+			           "icon" "cogs"
+			           "content" $module)}}
+		{{ end }}{{ end }}
+		<p>{{ index $step "description" | markdownify }}</p>
+		<table>
+			<tr>
+				<th>Key</th>
+				<th>Description</th>
+				<th>Type</th>
+			</tr>
+
+			{{ with $step.parameters }}{{ range $info := . }}
+				<tr>
+					<td><code>{{ index $info "key" }}</code></td>
+					<td>{{ index $info "description" | markdownify }}</td>
+					<td><code>{{ index $info "type" }}</code></td>
+				</tr>
+			{{ end }}{{ end }}
+		</table>
+	{{ end }}
+{{ end }}
+
+<!-- show outputs table -->
+
+{{ with .Params.output }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
+	<table>
+		<tr>
+			<th>Emission name</th>
+			<th>Description</th>
+			<th>Type</th>
+		</tr>
+		{{ range $info := . }}
+		<tr>
+			<td><code>{{ index $info "name" }}</code></td>
+			<td>{{ index $info "description" | markdownify }}</td>
+			<td><code>{{ index $info "type" }}</code></td>
+		</tr>
+		{{ end }}
+	</table>
+{{ end }}
