@@ -8,6 +8,14 @@
 
 <p>{{ .Params.description | markdownify | safeHTML }}</p>
 
+{{ partial "shortcodes/button.html" (dict
+           "context" $page_context
+           "href" (printf "%s/%s/%s" $viewURL $commit_id $pagePath)
+           "target" "_blank"
+           "style" "transparent"
+           "icon" "fab fa-github"
+           "content" "workflow") }}
+
 <!-- show steps table -->
 
 {{ if $steps := .Params.steps }}
@@ -22,7 +30,7 @@
 			           "target" "_blank"
 			           "style" "transparent"
 			           "icon" "fab fa-github"
-			           "content" "GitHub") }}
+			           "content" (printf "workflow:L%d" $anchor)) }}
 		{{ end }}
 		{{ if $modules := $step.modules }}
 			{{ range $module := $modules}}
