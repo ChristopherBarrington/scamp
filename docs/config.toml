@@ -102,6 +102,7 @@ disableHugoGeneratorInject = true
   disableShortcutsTitle = false
   disableToc = false
   editURL = "https://github.com/ChristopherBarrington/scamp/edit/main/docs/content"
+  viewURL = "https://github.com/ChristopherBarrington/scamp/blob"
   showVisitedLinks = false
   themeVariant = [ "auto", "relearn-bright", "relearn-light", "relearn-dark", "learn", "neon" ]
   themeVariantAuto = [ "relearn-light", "relearn-dark" ]
