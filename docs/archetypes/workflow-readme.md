@@ -10,6 +10,7 @@ tags:
 steps:
   - name: a name of the step
     description: a short description of what this step does
+    anchor: line number of main.nf to link
     parameters:
       - key: name of parameters key sought
         description: Short description of what this parameter is used for
