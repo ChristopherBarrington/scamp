@@ -1,4 +1,4 @@
 {{ $title := .title | default "unspecified title!" }}
-{{ $url := .url | default "unspecified url!" }}
+{{ $href := .href | default "unspecified href!" }}
 
-<a target=1 href="{{ $url }}">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "external-link-alt") }} {{ $title }}</a>
+<a target=1 href="{{ $href }}">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "external-link-alt") }} {{ $title }}</a>
