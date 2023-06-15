@@ -77,7 +77,7 @@ disableHugoGeneratorInject = true
     weight = 10
 
   [[menu.shortcuts]]
-    name = "<i class='fas fa-spin fa-grin-beam'></i> Nextflow Documentation"
+    name = "<i class='fas fa-spin fa-grin-beam'></i> Nextflow documentation"
     url = "https://nextflow.io/"
     weight = 20
 
