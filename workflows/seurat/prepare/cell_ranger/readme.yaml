@@ -17,7 +17,7 @@ steps:
         description: The name of the genome used for the dataset.
         type: string
       - key: index path
-        description: Path to the index that against which the dataset was quantified. If not provided in the parameters, it should have been created by the `quantification/cell_ranger` workflow.
+        description: Path to the index that against which the dataset was quantified, which provides the genes GTF file and genome FastA index. If not provided in the parameters, it should have been created by the `quantification/cell_ranger` workflow.
         optional: true
     modules:
       - R/GenomicRanges/convert_gtf_to_granges
