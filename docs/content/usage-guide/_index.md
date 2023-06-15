@@ -10,7 +10,7 @@ headingPre: |
 ---
 
 [module docs]: {{< ref "/modules" >}}
-[workflow docs]: {{< ref "/modules" >}}
+[workflow docs]: {{< ref "/workflows" >}}
 
 These notes illustrate how to setup an analysis using {scamp}. The structure of the parameters file and the command line usage is described. Detailed descriptions of the parameters can be found in the [modules][module docs] or [workflows][workflow docs] documentation.
 
