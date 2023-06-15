@@ -68,7 +68,8 @@ disableHugoGeneratorInject = true
 [Languages]
   [Languages.en]
     title = "scamp"
-    landingPageName = "<i class='fas fa-home'></i> Home"
+    [Languages.en.params]
+      landingPageName = "<i class='fas fa-home'></i> Home"
 
 [menu]
   [[menu.shortcuts]]
