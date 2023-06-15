@@ -1,5 +1,5 @@
 ---
-title: module
+title: modules
 weight: 1
 
 headingPre: |
@@ -107,3 +107,22 @@ Each module should be documented using the `readme.yaml` file. This file will be
 {{< tab name="readme.yaml" >}}
 {{< shepherd_tour tour="readme" lang="yaml" >}}
 {{< /tab >}}
+
+A template module documentation file can be created using `hugo`:
+
+{{< tabs >}}
+{{% tab name="Nemo" %}}
+{{< highlight bash "linenos=false" >}}
+MODULE_PATH=cell_ranger/count
+hugo new --kind module-readme --contentDir scamp modules/${MODULE_PATH}/readme.md && rename --remove-extension --append .yaml scamp/$_
+{{< /highlight >}}
+{{% /tab %}}
+
+{{% tab name="mac os" %}}
+{{< highlight bash "linenos=false" >}}
+MODULE_PATH=cell_ranger/count
+hugo new --kind module-readme --contentDir scamp modules/${MODULE_PATH}/readme.md && rename --remove-extension --append .yaml scamp/$_
+{{< /highlight >}}
+{{% /tab %}}
+{{< /tabs >}}
+
