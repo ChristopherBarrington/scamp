@@ -3,7 +3,11 @@ title: "contribution guides"
 weight: 2
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam posuere mollis risus, sit amet viverra nisl aliquet scelerisque. Maecenas vel nulla vestibulum, sodales leo in, tristique velit. Maecenas convallis quam nec nunc ultrices, at finibus nibh placerat. Etiam sollicitudin lacus vitae tincidunt hendrerit. Curabitur molestie scelerisque ullamcorper. Nulla ultrices rhoncus pulvinar. Duis tempor accumsan nisl, vel euismod est gravida at. Aenean laoreet leo vel sem malesuada, in commodo sem fermentum. Nullam in commodo ex. Quisque egestas mi quis ipsum hendrerit dignissim.
+These guides will hopefully help you to add features into {scamp}. New features can be added by writing modules, these are the basic building blocks around which a workflow is written. A workflow consists of several processes that are used in concert to achieve something. Workflows may be though of as independent pipelines, in {scamp} we can chain multiple pipelines together to provide flexibility for the analysis.
+
+Writing a module requires a script (of any language) to be written alongside a simple Nextflow process definition. Together these define how the input data is processed and what is produced as output. Each module is documented and so it is a self-contained unit.
+
+A workflow can include multiple modules and is where the management of parameters occurs. In the workflow, user parameters are manipulated and augmented with the output of processes so that successive processes can be managed to complete an analysis. Workflows could be nested into related topics, with workflows being able to initiate subworkflows (etc). Each workflow is documented alongside its Nextflow file.
 
 {{% children
 	containerstyle="ul"
