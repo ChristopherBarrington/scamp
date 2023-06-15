@@ -36,7 +36,7 @@
 			{{ range $module := $modules}}
 				{{ partial "shortcodes/button.html" (dict
 				           "context" $page_context
-				           "href" (printf "/modules/%s" $module)
+				           "href" (ref $page_context (printf "/modules/%s" $module))
 				           "target" "1"
 				           "style" "transparent"
 				           "icon" "cogs"
