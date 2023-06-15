@@ -44,26 +44,32 @@
 			{{ end }}
 		{{ end }}
 		<p>{{ index $step "description" | markdownify }}</p>
-		<table>
+		<table class="parameters-table">
 			<tr>
 				<th>Parameters key</th>
 				<th>Description</th>
 				<th>Type</th>
+				<th></th>
 			</tr>
 
 			{{ if $parameters := $step.parameters }}
 				{{ range $info := $parameters }}
 					<tr>
-						<td>
-							<code>{{ index $info "key" }}</code>
-							{{ with $info.optional }}
-								{{ partial "shortcodes/badge.html" (dict
-								           "context" $page_context
-								           "style" "secondary"
-								           "content" "optional")}}{{ end }}
-						</td>
+						<td><code>{{ index $info "key" }}</code></td>
 						<td>{{ index $info "description" | markdownify }}</td>
 						<td><code>{{ index $info "type" }}</code></td>
+						<td>
+							{{ if $info.optional }}
+								{{ partial "shortcodes/badge.html" (dict
+								           "context" $page_context
+								           "style" "tip" "title" " " "icon" " "
+								           "content" "optional")}}
+							{{ else }}
+								{{ partial "shortcodes/badge.html" (dict
+								           "context" $page_context
+								           "style" "warning" "title" " " "icon" " "
+								           "content" "required")}}{{ end }}
+						</td>
 					</tr>
 				{{ end }}
 			{{ end }}
