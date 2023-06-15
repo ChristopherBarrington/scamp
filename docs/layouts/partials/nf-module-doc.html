@@ -9,7 +9,7 @@
 
 {{ with .Params.input }}
 	<h2 id="inputs">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
-	<table>
+	<table class="parameters-table">
 		<tr>
 			<th>Channel name</th>
 			<th>Description</th>
@@ -29,7 +29,7 @@
 
 {{ with .Params.output }}
 	<h2 id="outputs">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
-	<table class='module-table'>
+	<table class="parameters-table">
 		<tr>
 			<th>Emission name</th>
 			<th>Description</th>
