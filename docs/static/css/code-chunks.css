@@ -23,7 +23,7 @@ pre .copy-to-clipboard-button:hover {
 
 /* remove border and padding from code chunks */
 
-.tab-content pre.pre-code {
+.shepherd-highlight pre.pre-code {
     padding: 0rem;
     border-style: none;
 }
