@@ -1,5 +1,5 @@
 ---
-title: workflow
+title: workflows
 weight: 2
 ---
 
