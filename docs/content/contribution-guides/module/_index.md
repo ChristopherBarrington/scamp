@@ -59,7 +59,7 @@ The [`script` stanza][nf docs process script] defines what analysis actually hap
 
 Other [Nextflow directives][nf docs process directives] can be included but may not be completely relevant in the context of a module. For example, using `publishDir` should be the choice of the pipeline creator so may not be sensible to include here. Directives included here can be overridden by a suitable configuration file, however. In this case we include some resource requests - `cpus`, `memory` and `time` - but no execution method (eg `SLURM`) which should be defined at execution by the user.
 
-{{< tab name="main.nf" >}}
+{{< tab title="main.nf" >}}
 {{< shepherd_tour tour="nextflow_process" lang="groovy" btn_msg="Take the Nextflow process tour" >}}
 {{< /tab >}}
 
@@ -82,10 +82,10 @@ Nextflow will interpolate variables using `$variable` so any scripts using `$` m
 {{% /notice %}}
 
 {{< tabs >}}
-{{< tab name="main.sh" >}}
+{{< tab title="main.sh" >}}
 {{< shepherd_tour tour="template_bash" lang="bash" btn_msg="Take the bash script tour" >}}
 {{< /tab >}}
-{{< tab name="main.Rscript" >}}
+{{< tab title="main.Rscript" >}}
 {{< shepherd_tour tour="template_rscript" lang="r" btn_msg="Take the R script tour" >}}
 {{< /tab >}}
 {{< /tabs >}}
@@ -96,7 +96,7 @@ The optional `stub.sh` is an alternative script that can be executed when the us
 
 The example below simply uses `touch` to create output files with no content.
 
-{{< tab name="stub.sh" >}}
+{{< tab title="stub.sh" >}}
 {{< shepherd_tour tour="template_stub" lang="bash" btn_msg="Take the stub script tour" >}}
 {{< /tab >}}
 
@@ -104,21 +104,21 @@ The example below simply uses `touch` to create output files with no content.
 
 Each module should be documented using the `readme.yaml` file. This file will be used to populate the [module documentation][docs scamp modules] on this website.
 
-{{< tab name="readme.yaml" >}}
+{{< tab title="readme.yaml" >}}
 {{< shepherd_tour tour="readme" lang="yaml" >}}
 {{< /tab >}}
 
 A template module documentation file can be created using `hugo`:
 
 {{< tabs >}}
-{{% tab name="Nemo" %}}
+{{% tab title="Nemo" %}}
 {{< highlight bash "linenos=false" >}}
 MODULE_PATH=cell_ranger/count
 hugo new --kind module-readme --contentDir scamp modules/${MODULE_PATH}/readme.md && rename --remove-extension --append .yaml scamp/$_
 {{< /highlight >}}
 {{% /tab %}}
 
-{{% tab name="mac os" %}}
+{{% tab title="mac os" %}}
 {{< highlight bash "linenos=false" >}}
 MODULE_PATH=cell_ranger/count
 hugo new --kind module-readme --contentDir scamp modules/${MODULE_PATH}/readme.md && rename --remove-extension --append .yaml scamp/$_

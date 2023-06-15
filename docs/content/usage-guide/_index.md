@@ -28,12 +28,12 @@ The structure of `parameters.yaml` allows aspects of a project to be recorded al
 
 In this example for a scRNA-seq project, there are four datasets that will be quantified against mouse using the Cell Ranger mm10 reference from which Seurat objects will be prepared. To keep the file clear I tend to use symlinks in an `inputs` directory to other parts of the filesystem. The `inputs/primary_data` is a symlink to the ASF's outputs for this project and `inputs/10x_indexes` is a symlink to the communal 10X indexes resource.
 
-{{< tabs title="hello." >}}
-{{< tab name="scRNA-seq parameters.yaml" >}}
+{{< tabs title="Example parameters" >}}
+{{< tab title="scRNA-seq" >}}
 {{< shepherd_tour tour="scrna" lang="yaml" btn_msg="Take the input parameters tour" >}}
 {{< /tab >}}
 
-{{< tab name="snRNA+ATAC-seq parameters.yaml" >}}
+{{< tab title="snRNA+ATAC-seq" >}}
 {{< shepherd_tour tour="multiome" lang="yaml" btn_msg="Take the input parameters tour" >}}
 {{< /tab >}}
 {{< /tabs >}}
@@ -73,7 +73,7 @@ A set of datasets are defined with unique names. The parameters defined here are
 {{% notice style="warning" title=" " icon=" " %}}
 For now, the processes are __not__ containerised. All software, packages and libraries __must__ be available from the shell. The {scamp} conda environment provides Nextflow, R and all R packages.
 
-{{< highlight bash "linenos=false" >}}
+{{< highlight bash "linenos=true" >}}
 module load CellRanger-ARC/2.0.1
 module load CellRanger/7.1.0
 conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
