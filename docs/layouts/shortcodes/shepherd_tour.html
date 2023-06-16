@@ -9,7 +9,7 @@
 {{ $steps_file := (path.Join .Page.File.Dir $tour "steps.json") }}
 
 <!-- output the code chunk -->
-<div class="shepherd-highlight">{{ highlight ((path.Join .Page.File.Dir $tour "chunk") | readFile | safeHTML) $lang (printf "lineAnchors=%s" $anchor) }}</div>
+<div class="shepherd-highlight">{{ highlight ((path.Join .Page.File.Dir $tour "chunk") | readFile | safeHTML) $lang (printf "linenos=true,lineAnchors=%s" $anchor) }}</div>
 
 {{ if fileExists $steps_file }}
 	<!-- get the javascript elements and replace placeholders -->
