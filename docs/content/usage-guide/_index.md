@@ -40,10 +40,6 @@ In this example for a scRNA-seq project, there are four datasets that will be qu
 
 ### Project description
 
-{{% notice style="warning" %}}
-feature types should be moved to be an analysis/dataset-level parameter
-{{% /notice %}}
-
 `_project` includes information about the project rather than parameters that should be applied to datasets.
 
 Most of the information in this stanza can be extracted a path on Nemo and/or the LIMS.

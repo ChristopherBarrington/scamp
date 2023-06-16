@@ -3,12 +3,6 @@ _project:
     scientist: christopher.cooke
     lims id: SC22034
     babs id: nm322
-    feature types:
-        Gene Expression:
-            - COO4671A1
-            - COO4671A2
-            - COO4671A3
-            - COO4671A4
     genomes:
         mm10:
             organism: mus musculus
@@ -21,6 +15,12 @@ _defaults:
         - inputs/primary_data/220310_A01366_0156_AH5YTYDMXY/fastq
         - inputs/primary_data/220818_A01366_0266_BHCJK7DMXY/fastq
         - inputs/primary_data/230221_A01366_0353_AHNH37DSX5/fastq
+    feature types:
+        Gene Expression:
+            - COO4671A1
+            - COO4671A2
+            - COO4671A3
+            - COO4671A4
     feature identifiers: name
 
 cell ranger and seurat:

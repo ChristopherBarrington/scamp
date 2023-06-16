@@ -3,15 +3,6 @@ _project:
     scientist: sara.ahmeddeprado
     lims id: SC22051
     babs id: sa145
-    feature types:
-        Gene Expression:
-            - AHM4688A1
-            - AHM4688A2
-            - AHM4688A3
-        Chromatin Accessibility:
-            - AHM4688A4
-            - AHM4688A5
-            - AHM4688A6
     genomes:
         mm10_mcherry:
             organism: mus musculus
@@ -28,6 +19,15 @@ _defaults:
         - inputs/primary_data/220407_A01366_0171_AH3W3LDRX2/fastq
         - inputs/primary_data/220420_A01366_0179_BH72WWDMXY/fastq
         - inputs/primary_data/220422_A01366_0180_BHJLLNDSX3/fastq
+    feature types:
+        Gene Expression:
+            - AHM4688A1
+            - AHM4688A2
+            - AHM4688A3
+        Chromatin Accessibility:
+            - AHM4688A4
+            - AHM4688A5
+            - AHM4688A6
     feature identifiers: name
 
 cell ranger arc and seurat:
