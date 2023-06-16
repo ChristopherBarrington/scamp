@@ -77,3 +77,10 @@
   display: inline-block;
   visibility: show;
 }
+
+/* line numbers in code chunks */
+
+.shepherd-highlight a.highlight {
+	width: 0;
+	visibility: hidden;
+}
