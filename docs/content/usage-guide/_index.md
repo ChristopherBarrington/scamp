@@ -73,7 +73,7 @@ A set of datasets are defined with unique names. The parameters defined here are
 {{% notice style="warning" title=" " icon=" " %}}
 For now, the processes are __not__ containerised. All software, packages and libraries __must__ be available from the shell. The {scamp} conda environment provides Nextflow, R and all R packages.
 
-{{< highlight bash "linenos=true" >}}
+{{< highlight bash "linenos=false" >}}
 module load CellRanger-ARC/2.0.1
 module load CellRanger/7.1.0
 conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
@@ -82,14 +82,17 @@ conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
 
 Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched:
 
-{{< highlight bash "linenos=false" >}}
-nextflow run ChristopherBarrington/scamp -r <release> -params-file inputs/parameters.yaml
+{{< highlight bash >}}
+nextflow run ChristopherBarrington/scamp -revision <release> \
+  -params-file inputs/parameters.yaml
 {{< /highlight >}}
 
 If you want to test you configuration file without running any real analysis, you can use:
 
-{{< highlight bash "linenos=false" >}}
-nextflow run ChristopherBarrington/scamp -r <release> -params-file inputs/parameters.yaml -stub-run -profile stub_run
+{{< highlight bash >}}
+nextflow run ChristopherBarrington/scamp -revision <release> \
+  -params-file inputs/parameters.yaml \
+  -stub-run -profile stub_run
 {{< /highlight >}}
 
 This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though!
