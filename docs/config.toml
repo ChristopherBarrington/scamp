@@ -54,7 +54,7 @@ disableHugoGeneratorInject = true
 [markup]
   [markup.highlight]
     guessSyntax = false
-    lineNos = true
+    lineNos = false
     lineNumbersInTable = false
     anchorLineNos = true
     style = "github"
