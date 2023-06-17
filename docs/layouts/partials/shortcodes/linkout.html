@@ -1,4 +1,0 @@
-{{ $title := .title | default "unspecified title!" }}
-{{ $href := .href | default "unspecified href!" }}
-
-<a target=1 href="{{ $href }}">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "external-link-alt") }} {{ $title }}</a>
