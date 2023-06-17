@@ -1,6 +1,6 @@
 {{ $title := (default "unspecified linkout title!" (.Get "title")) }}
 {{ $url := (default "unspecified linkout url!" (.Get "url")) }}
 
-{{ $md_formatted_link := cond (urlize $url | eq $url) (printf "(%s)" $url) (printf "[%s]" $url) }}
+{{ $md_formatted_link := cond (hasPrefix $url "http") (printf "(%s)" $url) (printf "[%s]" $url) }}
 
 [{{ partial "shortcodes/icon.html" (dict "context" . "icon" "external-link-alt") }} {{ $title }}]{{ $md_formatted_link }}
