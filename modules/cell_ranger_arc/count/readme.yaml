@@ -1,7 +1,7 @@
 name: count
 
 description: |
-  Aligns and quantifies FastQ files from a 10X scRNA-seq experiment against a reference genome. Output matrices are provided in triplet and h5 formats.
+  Aligns and quantifies FastQ files from a 10X snRNA+ATAC-seq experiment against a reference genome. Output matrices are provided in triplet and h5 formats.
 
 tags:
   - 10x
@@ -14,6 +14,7 @@ tools:
     homepage: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software
     documentation: https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/pipelines/latest/using/count
     multithreaded: true
+    ext: count
 
 input:
   - name: opt

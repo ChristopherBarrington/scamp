@@ -1,0 +1,72 @@
+name: Prepare Seurat from Cell Ranger ARC
+
+description: |
+  Using the filtered single nucleus expression and accessibility matrices, written by Cell Ranger ARC, a Seurat object is prepared that contains RNA and chromatin accessibility assays with little modification.
+
+tags:
+  - 10x
+  - seurat
+  - multiome
+
+steps:
+  - name: Make GRanges object
+    description: A GRanges object is created for each genome in the project using the GTF file in the `index path`. This will be saved into the Seurat object's `misc` slot later in the workflow. 
+    anchor: 42
+    parameters:
+      - key: genome
+        description: The name of the genome used for the dataset. This is used as the task's tag and in the `cellranger-arc mkref` configuration file.
+        type: string
+      - key: index path
+        description: Path to the index that against which the dataset was quantified, which provides the genes GTF file and genome FastA index. If not provided in the parameters, it should have been created by the `quantification/cell_ranger_arc` workflow.
+        type: path
+        optional: true
+    modules:
+      - R/GenomicRanges/convert_gtf_to_granges
+
+  - name: Read Cell Ranger ARC output into assays
+    description: "Read the Cell Ranger ARC `filtered_feature_bc_matrix` and save the result, ready to create assay(s). Two RNA assays are created for each dataset: one using features indexed by accession and another by feature name. An additional chromatin accessibility assay is created, for which accession and name are the same since they are genomic intervals."
+    anchor: 71
+    parameters:
+      - key: unique id
+        description: An identifier for the analysis and dataset that is used as the task's tag.
+        type: string
+        optional: true
+      - key: index path
+        description: Path to the index that against which the dataset was quantified. If not provided in the parameters, it should have been created by the `quantification/cell_ranger` workflow.
+        type: path
+        optional: true
+      - key: quantification path
+        description: Path to the Cell Ranger `outs` directory under which `filtered_feature_bc_matrix` can be found. If not provided in the parameters, this sould be provided by the `quantification/cell_ranger` workflow.
+        type: path
+        optional: true
+    modules:
+      - R/Seurat/write_10x_counts_matrices
+      - R/Seurat/make_assay
+      - R/Signac/make_chromatin_assay
+
+  - name: Create Seurat object
+    description: Collect the miscellaneous data and assays and create a Seurat object, saved as an RDS file.
+    anchor: 161
+    parameters:
+      - key: feature identifiers
+        description: Whether to use `accession` or `name` as the RNA feature index. The non-selected identifier is saved into an `RNA_alt` assay in the object.
+        type: string
+        optional: true
+      - key: dataset name
+        description: A human-readable name for the dataset that will be used as the Seurat `Project`. If not provided in the parameters, the dataset key will be used.
+        type: string
+        optional: true
+      - key: dataset id
+        description: A filesystem-safe dataset name. {scamp} will try to convert the dataset name if not provided.
+        type: string
+        optional: true
+    modules:
+      - R/Seurat/make_object
+
+output:
+  - name: result
+    type: channel
+    description: A channel of maps that are the same as the input parameters sets but now include a `seurat path` parameter.
+
+authors:
+  - "@ChristopherBarrington"

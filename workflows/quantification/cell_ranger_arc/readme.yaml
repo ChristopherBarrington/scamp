@@ -1,0 +1,75 @@
+name: Quantify single nucleus multiome assays using Cell Ranger ARC
+
+description: |
+  Using `cellranger-arc` software, libraries for snRNA-seq and cell-matched snATAC-seq assays are quantified against an index, which can be optionally created.
+
+tags:
+  - 10x
+  - quantification
+  - multiome
+
+steps:
+  - name: Create missing indexes
+    description: For datasets that do not have an `index path`, an index is created using the information in the `genome` stanza. The unique set of required indexes are created.
+    anchor: 30
+    parameters:
+      - key: genome
+        description: Name of the genome, used for the task's tag.
+        type: string
+      - key: organism
+        description: Name of the organism, for example "mus musculus".
+        type: string
+      - key: assembly
+        description: Name of the genome assembly, for example "mm10".
+        type: string
+      - key: non-nuclear contigs
+        description: Collection of chromosomes in the FastA files that are not located in the nucleus, for example "chrM".
+        type: strings
+      - key: motifs
+        description: File of transcription factor motifs in [JASPAR](https://jaspar.genereg.net/downloads/) format.
+        type: file
+      - key: fasta files
+        description: Paths to FastA files that will be concatenated together into a single genome file.
+        type: paths
+      - key: gtf files
+        description: Paths to well-formatted GTF files describing gene models which will be concatenated together into a single GTF file.
+        type: files
+    modules:
+      - cell_ranger_arc/mkref
+  - name: Create project sample sheet
+    description: Write a formatted configuration file that includes all libraries in this project which will be subset for libraries in a dataset.
+    anchor: 67
+    parameters:
+      - key: fastq paths
+        description: Directories containing FastQ files for this project that will match `(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz`.
+        type: paths
+      - key: feature types
+        description: A map of feature types and LIMS IDs.
+        type: map
+    modules:
+      - cell_ranger_arc/make_libraries_csv
+
+  - name: Quantify assays
+    description: Use the FastQ files to quantify RNA expression and chromatin accessibility in single cells.
+    anchor: 89
+    parameters:
+      - key: unique id
+        description: Identifier used for the task's tag.
+        type: string
+      - key: limsid
+        description: Collection of LIMS IDs relevant to a dataset.
+        type: strings
+      - key: index path
+        description: Path to the Cell Ranger ARC index. If missing, this will be added by the workflow using the genome information, as [described above](#create-missing-indexes).
+        type: path
+        optional: true
+    modules:
+      - cell_ranger_arc/count
+
+output:
+  - name: result
+    type: channel
+    description: A channel of maps that are the same as the input parameters sets but now include `index path` _and_ `quantification path` parameters.
+
+authors:
+  - "@ChristopherBarrington"

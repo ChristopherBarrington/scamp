@@ -5,3 +5,17 @@ table code {
     background-color: transparent;
     border-color: transparent;
 }
+
+/* remove internal column lines from parameters tables */
+
+.parameters-table tr {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba( 134, 134, 134, .333 );
+
+}
+
+.parameters-table table, th, td {
+    border: 0;
+}
+

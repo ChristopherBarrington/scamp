@@ -1,6 +1,6 @@
 ---
-title: workflows
-weight: 2
+title: scamp
+archetype: home
 ---
 
 {{< notice style="code" >}}

@@ -1,6 +1,0 @@
-{{ $file := .Get 0 }}
-{{ if hasPrefix $file "/" }}
-	{{ readFile $file | safeHTML }}
-{{ else }}
-	{{ (printf "%s%s" .Page.File.Dir $file) | os.ReadFile | safeHTML }}
-{{ end }}

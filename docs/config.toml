@@ -54,7 +54,7 @@ disableHugoGeneratorInject = true
 [markup]
   [markup.highlight]
     guessSyntax = false
-    lineNos = true
+    lineNos = false
     lineNumbersInTable = false
     anchorLineNos = true
     style = "github"
@@ -62,29 +62,33 @@ disableHugoGeneratorInject = true
   [markup.goldmark.renderer]
     unsafe = true
 
-# showcase of the menu shortcuts; you can use relative URLs linking
-# to your content or use fully-qualified URLs to link outside of
-# your project
+# menu shortcuts
 [Languages]
   [Languages.en]
     title = "scamp"
-    landingPageName = "<i class='fas fa-home'></i> Home"
+    [Languages.en.params]
+      landingPageName = "<i class='fas fa-home'></i> Home"
 
 [menu]
   [[menu.shortcuts]]
+    name = "<i class='fas fa-fw fa-tags'></i> tags"
+    url = "tags/"
+    weight = 1
+
+  [[menu.shortcuts]]
     name = "<i class='fab fa-fw fa-github'></i> scamp"
     url = "https://github.com/ChristopherBarrington/scamp"
-    weight = 10
+    weight = 2
 
   [[menu.shortcuts]]
-    name = "<i class='fas fa-spin fa-grin-beam'></i> Nextflow Documentation"
-    url = "https://nextflow.io/"
-    weight = 20
+    name = "<i class='fas fa-random'></i> nextflow.io"
+    url = "https://nextflow.io"
+    weight = 3
 
   [[menu.shortcuts]]
-    name = "<i class='fas fa-fw fa-tags'></i> Tags"
-    url = "tags/"
-    weight = 30
+    name = "<i class='fas fa-cog fa-spin'></i> nextflow docs"
+    url = "https://nextflow.io/docs/latest"
+    weight = 4
 
 # settings specific to this theme's features; choose to your liking and
 # consult this documentation for explanation
@@ -106,6 +110,7 @@ disableHugoGeneratorInject = true
   themeVariant = [ "auto", "relearn-bright", "relearn-light", "relearn-dark", "learn", "neon" ]
   themeVariantAuto = [ "relearn-light", "relearn-dark" ]
   titleSeparator = "|"
+  viewURL = "https://github.com/ChristopherBarrington/scamp/blob"
 
 [security]
   [security.funcs]

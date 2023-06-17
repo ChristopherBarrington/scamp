@@ -1,4 +1,6 @@
 
+/* shepherd box */
+
 .btn {
 	width: 100%;
 	text-align: center;
@@ -71,7 +73,14 @@
 }
 
 .shepherd-element .shepherd-arrow:before {
-  content: url('/img/arrow.svg');
+  content: url('/images/arrow.svg');
   display: inline-block;
   visibility: show;
+}
+
+/* line numbers in code chunks */
+
+.shepherd-highlight a.highlight {
+	width: 0;
+	visibility: hidden;
 }

@@ -1,4 +1,6 @@
 
+{{ $page_context := .Page }} <!-- not sure how this works, needed for the badges in the for loop... -->
+
 <!-- show description -->
 
 <p>{{ .Params.description | markdownify | safeHTML }}</p>
@@ -6,8 +8,8 @@
 <!-- show inputs table -->
 
 {{ with .Params.input }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
-	<table>
+	<h2 id="inputs">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-in-alt") }} Inputs</h2>
+	<table class="parameters-table">
 		<tr>
 			<th>Channel name</th>
 			<th>Description</th>
@@ -26,8 +28,8 @@
 <!-- show outputs table -->
 
 {{ with .Params.output }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
-	<table class='module-table'>
+	<h2 id="outputs">{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Outputs</h2>
+	<table class="parameters-table">
 		<tr>
 			<th>Emission name</th>
 			<th>Description</th>
@@ -48,14 +50,20 @@
 <!-- show list of tools -->
 
 {{ if $tools := .Params.tools }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" $tools "icon" "wrench") }} Tools</h2>
+	<h2 id="tools">{{ partial "shortcodes/icon.html" (dict "context" $tools "icon" "wrench") }} Tools</h2>
 	{{ range $name,$info := $tools }}
-		<h3>{{ $name }} {{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $info "style" "primary" "content" "multithreaded") }}{{ end }}</h3>
+		<h3 id="{{ anchorize $name }}">
+			{{ $name }}
+			{{ with $info.ext }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "blue" "title" "ext" "content" .) }}{{ end }}
+			{{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "primary" "content" "multithreaded") }}{{ end }}
+		</h3>
+
 		<p>{{ with $info.description }}{{ . }}{{ end }}</p>
-		{{ with $info.doi }}{{ partial "shortcodes/button.html" (dict "context" $info "href" (printf "https://doi.org/%s" .) "content" "DOI") }}{{ end }}
-		{{ with $info.homepage }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Homepage") }}{{ end }}
-		{{ with $info.documentation }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Documentation") }}{{ end }}
-		{{ with $info.source }}{{ partial "shortcodes/button.html" (dict "context" $info "href" . "content" "Source") }}{{ end }}
-		{{ with $info.licence }}{{ partial "shortcodes/button.html" (dict "context" $info "content" .) }}{{ end }}
+		
+		{{ with $info.doi }}{{ partial "shortcodes/button.html" (dict "context" $page_context "href" (printf "https://doi.org/%s" .) "content" "DOI") }}{{ end }}
+		{{ with $info.homepage }}{{ partial "shortcodes/button.html" (dict "context" $page_context "href" . "content" "Homepage") }}{{ end }}
+		{{ with $info.documentation }}{{ partial "shortcodes/button.html" (dict "context" $page_context "href" . "content" "Documentation") }}{{ end }}
+		{{ with $info.source }}{{ partial "shortcodes/button.html" (dict "context" $page_context "href" . "content" "Source") }}{{ end }}
+		{{ with $info.licence }}{{ partial "shortcodes/button.html" (dict "context" $page_context "content" .) }}{{ end }}
 	{{ end }}
 {{ end }}

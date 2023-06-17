@@ -9,7 +9,6 @@ include { mkref as make_index } from '../../../modules/cell_ranger_arc/mkref'
 
 include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
-include { get_feature_types }                 from '../../../modules/utilities/get_feature_types'
 include { merge_metadata_and_process_output } from '../../../modules/utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../modules/utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../modules/utilities/rename_map_keys'
@@ -69,10 +68,12 @@ workflow cell_ranger_arc {
 
 		// when there is at least one dataset to quantify, prepare a channel to create the sample sheet
 		parameters
-			.flatMap{it.get('fastq paths')}
+			.map{it.subMap(['fastq paths', 'feature types'])}
 			.unique()
-			.collect()
-			.map{[fastq_paths: it, fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz'] + get_feature_types()}
+			.map{it + ['sample names': it.get('feature types').values().flatten()]}
+			.map{it + ['feature_types': it.get('feature types').collect{k,v -> [k]*v.size()}.flatten()]}
+			.map{it + [fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
+			.map{it.findAll{it.key!='feature types'}}
 			.dump(tag: 'quantification:cell_ranger_arc:feature_type_params', pretty: true)
 			.set{feature_type_params}
 

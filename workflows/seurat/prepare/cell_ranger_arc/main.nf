@@ -171,13 +171,16 @@ workflow cell_ranger_arc {
 			.filter{check_for_matching_key_values(it, 'index path')}
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
-			.map{it.subMap(['unique id', 'rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay', 'granges', 'features', 'dataset name', 'dataset id'])}
+			.map{it + [ordered_assays: it.subMap('rna_assay_by_accession', 'rna_assay_by_name').values().toList()]}
+			.map{if(it.get('feature identifiers') == 'name') {it.ordered_assays = it.get('ordered_assays').reverse()} ; it}
+			.map{it + [ordered_assays: it.get('ordered_assays') + ['chromatin_assay']]}
+			.map{it.subMap(['unique id', 'ordered_assays', 'dataset tag', 'granges', 'features', 'dataset name', 'dataset id'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:objects_to_create', pretty: true)
 			.set{objects_to_create}
 
 		// create the channels for the process to make a seurat object
 		tags        = objects_to_create.map{it.get('unique id')}
-		assays      = objects_to_create.map{it.subMap(['rna_assay_by_accession', 'rna_assay_by_name', 'chromatin_assay']).values()}
+		assays      = objects_to_create.map{it.get('orede')}
 		assay_names = objects_to_create.map{['RNA', 'RNA_alt', 'ATAC']}
 		misc_files  = objects_to_create.map{it.subMap(['granges', 'features']).values()}
 		misc_names  = objects_to_create.map{['gene_models', 'features']}
@@ -199,7 +202,7 @@ workflow cell_ranger_arc {
 		parameters
 			.combine(seurat_objects)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
-			.map{it.first() + it.last().subMap(['seurat'])}
+			.map{it.first() + ['seurat path': it.last().subMap(['seurat'])]}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:final_results', pretty: true)
 			.set{final_results}
 

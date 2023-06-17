@@ -1,0 +1,98 @@
+
+{{ $page_context := .Page }} <!-- not sure how this works, needed for the badges in the for loop... -->
+{{ $commit_id := getenv "SCAMP_COMMIT" }}
+{{ $viewURL := .Site.Params.viewURL }}
+{{ $pagePath := replace .File.Path ".md" "" }}
+
+<!-- show description -->
+
+<p>{{ .Params.description | markdownify | safeHTML }}</p>
+
+{{ partial "shortcodes/button.html" (dict
+           "context" $page_context
+           "href" (printf "%s/%s/%s" $viewURL $commit_id $pagePath)
+           "target" "_blank"
+           "style" "transparent"
+           "icon" "fab fa-github"
+           "content" "workflow") }}
+
+<!-- show steps table -->
+
+{{ if $steps := .Params.steps }}
+	<h2 id="steps">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "tasks") }} Steps</h2>
+	{{ range $step := $steps }}
+		{{ $name := index $step "name" }}
+		<h3 id="{{ anchorize $name }}">{{ markdownify $name }}</h3>
+		{{ if $anchor := $step.anchor }}
+			{{ partial "shortcodes/button.html" (dict
+			           "context" $page_context
+			           "href" (printf "%s/%s/%s/main.nf#L%d" $viewURL $commit_id $pagePath $anchor)
+			           "target" "_blank"
+			           "style" "transparent"
+			           "icon" "fab fa-github"
+			           "content" (printf "workflow:L%d" $anchor)) }}
+		{{ end }}
+		{{ if $modules := $step.modules }}
+			{{ range $module := $modules}}
+				{{ partial "shortcodes/button.html" (dict
+				           "context" $page_context
+				           "href" (ref $page_context (printf "/modules/%s" $module))
+				           "target" "1"
+				           "style" "transparent"
+				           "icon" "cogs"
+				           "content" $module) }}
+			{{ end }}
+		{{ end }}
+		<p>{{ index $step "description" | markdownify }}</p>
+		<table class="parameters-table">
+			<tr>
+				<th>Parameters key</th>
+				<th>Description</th>
+				<th>Type</th>
+				<th></th>
+			</tr>
+
+			{{ if $parameters := $step.parameters }}
+				{{ range $info := $parameters }}
+					<tr>
+						<td><code>{{ index $info "key" }}</code></td>
+						<td>{{ index $info "description" | markdownify }}</td>
+						<td><code>{{ index $info "type" }}</code></td>
+						<td>
+							{{ if $info.optional }}
+								{{ partial "shortcodes/badge.html" (dict
+								           "context" $page_context
+								           "style" "tip" "title" " " "icon" " "
+								           "content" "optional")}}
+							{{ else }}
+								{{ partial "shortcodes/badge.html" (dict
+								           "context" $page_context
+								           "style" "warning" "title" " " "icon" " "
+								           "content" "required")}}{{ end }}
+						</td>
+					</tr>
+				{{ end }}
+			{{ end }}
+		</table>
+	{{ end }}
+{{ end }}
+
+<!-- show outputs table -->
+
+{{ with .Params.output }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Emitted objects</h2>
+	<table>
+		<tr>
+			<th>Emission name</th>
+			<th>Description</th>
+			<th>Type</th>
+		</tr>
+		{{ range $info := . }}
+		<tr>
+			<td><code>{{ index $info "name" }}</code></td>
+			<td>{{ index $info "description" | markdownify }}</td>
+			<td><code>{{ index $info "type" }}</code></td>
+		</tr>
+		{{ end }}
+	</table>
+{{ end }}
