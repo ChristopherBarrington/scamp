@@ -54,8 +54,14 @@
 	{{ range $name,$info := $tools }}
 		<h3 id="{{ anchorize $name }}">
 			{{ $name }}
-			{{ with $info.ext }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "blue" "title" "ext" "content" .) }}{{ end }}
-			{{ with $info.multithreaded }}{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "primary" "content" "multithreaded") }}{{ end }}
+			{{ if $ext := $info.ext }}
+				{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "blue" "title" "ext" "content" $ext) }}
+			{{ end }}
+			{{ if $features := $info.features }}
+				{{ range $feature := $features }}
+					{{ partial "shortcodes/badge.html" (dict "context" $page_context "style" "primary" "content" $feature) }}
+				{{ end }}
+			{{ end }}
 		</h3>
 
 		<p>{{ with $info.description }}{{ . }}{{ end }}</p>

@@ -15,7 +15,11 @@ tools:
     source: url to (eg) github
     doi: doi
     licence: eg MIT or GPL-3
-    multithreaded: true
+    ext: extra arguments identifier
+    multithreaded:
+      - list of features
+      - eg "multithreaded"
+      - that appear in module documentation
 
 input:
   - name: opt

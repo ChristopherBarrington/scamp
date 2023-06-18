@@ -15,8 +15,9 @@ tools:
     source: url to (eg) github
     doi: doi
     licence: eg MIT or GPL-3
-    multithreaded: true
-    ext: name of ext
+    ext: extra arguments identifier
+    features:
+      - list of features
 
 input:
   - name: opt
