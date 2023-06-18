@@ -8,6 +8,7 @@ process count {
 	input:
 		val opt
 		val tag
+		val id
 		val sample
 		path 'fastq_path_?'
 		path 'index_path'
@@ -16,7 +17,7 @@ process count {
 		val opt, emit: opt
 		path 'task.yaml', emit: task
 		path 'versions.yaml', emit: versions
-		path 'output/outs', emit: quantification_path
+		path "$id/outs", emit: quantification_path
 		path 'web_summary.html', emit: cell_ranger_report
 
 	script:

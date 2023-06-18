@@ -8,14 +8,14 @@ FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*
 
 # run cell ranger count
 cellranger count \\
-	--id=output \\
+	--id=$id \\
 	--transcriptome=`realpath index_path` \\
 	--fastqs=\${FASTQ_PATHS} \\
 	--sample=$sample \\
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
 	--disable-ui $count_args
 
-ln --symbolic output/outs/web_summary.html
+ln --symbolic $id/outs/web_summary.html
 
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
@@ -26,10 +26,11 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
+    id: $id
     sample: $sample
     index_path: `realpath index_path`
     task_index: ${task.index}
     ext:
-    	count: ${count_args}
+        count: ${count_args}
     work_dir: `pwd`
 END_TASK

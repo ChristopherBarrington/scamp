@@ -20,13 +20,19 @@ tools:
 input:
   - name: opt
     type: map
-    description: A map of task-specific variables.
+    description: Map of task-specific variables.
   - name: tag
     type: string
-    description: A unique identifier to use in the tag directive.
+    description: Unique identifier to use in the tag directive.
+  - name: id
+    type: string
+    description: Directory-safe name for the output directory.
+  - name: sample
+    type: string
+    description: Name of sample used in FastQ file name.
   - name: fastq_path_?
     type: paths
-    description: A list of directories in which the FastQ files can be found. The symlinks to the paths will be incrementally numbered from 1 at the `?` placeholder.
+    description: List of directories in which the FastQ files can be found. The symlinks to the paths will be incrementally numbered from 1 at the `?` placeholder.
   - name: index_path
     type: path
     description: Path to the properly-formatted index directory.
@@ -34,7 +40,7 @@ input:
 output:
   - name: opt
     type: map
-    description: A map of task-specific variables.
+    description: Map of task-specific variables.
   - name: task
     type: file
     description: YAML-formatted file of task parameters.
@@ -46,7 +52,7 @@ output:
   - name: quantification_path
     type: path
     description: Cell Ranger outputs (`outs/`) directory.
-    pattern: output/outs
+    pattern: <sample>/outs
   - name: cell_ranger_report
     type: file
     description: HTML summary report.
