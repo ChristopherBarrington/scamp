@@ -173,14 +173,14 @@ workflow cell_ranger_arc {
 			.map{concatenate_maps_list(it)}
 			.map{it + [ordered_assays: it.subMap('rna_assay_by_accession', 'rna_assay_by_name').values().toList()]}
 			.map{if(it.get('feature identifiers') == 'name') {it.ordered_assays = it.get('ordered_assays').reverse()} ; it}
-			.map{it + [ordered_assays: it.get('ordered_assays') + ['chromatin_assay']]}
+			.map{it + [ordered_assays: it.get('ordered_assays') + [it.get('chromatin_assay')]]}
 			.map{it.subMap(['unique id', 'ordered_assays', 'dataset tag', 'granges', 'features', 'dataset name', 'dataset id'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:objects_to_create', pretty: true)
 			.set{objects_to_create}
 
 		// create the channels for the process to make a seurat object
 		tags        = objects_to_create.map{it.get('unique id')}
-		assays      = objects_to_create.map{it.get('orede')}
+		assays      = objects_to_create.map{it.get('ordered_assays')}
 		assay_names = objects_to_create.map{['RNA', 'RNA_alt', 'ATAC']}
 		misc_files  = objects_to_create.map{it.subMap(['granges', 'features']).values()}
 		misc_names  = objects_to_create.map{['gene_models', 'features']}
