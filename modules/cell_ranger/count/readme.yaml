@@ -13,8 +13,9 @@ tools:
     description: Cell Ranger is a set of analysis pipelines that process Chromium single cell data to align reads, generate feature-barcode matrices, perform clustering and other secondary analysis, and more.
     homepage: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger
     documentation: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
-    multithreaded: true
     ext: count
+    features:
+      - multithreaded
 
 input:
   - name: opt
