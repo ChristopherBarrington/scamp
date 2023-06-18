@@ -36,18 +36,18 @@ workflow cell_ranger {
 
 		// make a channel containing all information for the quantification process
 		parameters
-			.map{it.subMap(['unique id', 'limsid', 'fastq paths', 'index path', 'dataset id', 'quantification path'])}
+			.map{it.subMap(['unique id', 'dataset id', 'limsid', 'fastq paths', 'index path'])}
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
 		tags        = datasets_to_quantify.map{it.get('unique id')}
-		samples     = datasets_to_quantify.map{it.get('dataset id')}
+		ids         = datasets_to_quantify.map{it.get('dataset id')}
 		limsids     = datasets_to_quantify.map{it.get('limsid')}
 		fastq_paths = datasets_to_quantify.map{it.get('fastq paths')}
 		index_paths = datasets_to_quantify.map{it.get('index path')}
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, samples, limsids, fastq_paths, index_paths)
+		quantify(datasets_to_quantify, tags, ids, limsids, fastq_paths, index_paths)
 
 		// make a channel of dataset (names) and paths that contain quantified data
 		merge_process_emissions(quantify, ['opt', 'quantification_path'])
