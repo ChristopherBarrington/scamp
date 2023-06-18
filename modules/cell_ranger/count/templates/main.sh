@@ -7,12 +7,12 @@ FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*
 	awk '{printf "%s%s", sep, \$1 ; sep=","} END{print ""}'`
 
 # run cell ranger count
-cellranger count \
-	--id=output \
-	--transcriptome=`realpath index_path` \
-	--fastqs=\${FASTQ_PATHS} \
-	--sample=$sample \
-	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
+cellranger count \\
+	--id=output \\
+	--transcriptome=`realpath index_path` \\
+	--fastqs=\${FASTQ_PATHS} \\
+	--sample=$sample \\
+	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
 	--disable-ui $count_args
 
 ln --symbolic output/outs/web_summary.html

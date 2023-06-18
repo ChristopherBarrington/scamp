@@ -26,10 +26,10 @@ echo \"\"\"{
 }\"\"\" > config
 
 # create the index
-cellranger-arc mkref \
-	--config config \
-	--nthreads ${task.cpus} \
-	--memgb ${task.memory.toGiga()} \
+cellranger-arc mkref \\
+	--config config \\
+	--nthreads ${task.cpus} \\
+	--memgb ${task.memory.toGiga()} \\
 	--ref-version \${VERSION}
 
 # write software versions used in this module

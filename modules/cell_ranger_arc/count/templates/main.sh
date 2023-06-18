@@ -4,12 +4,12 @@
 awk --assign FS=',' 'NR==1{print} ; \$2~/^($samples_regex)\$/{print}' all_libraries.csv > libraries.csv
 
 # run cell ranger arc count
-cellranger-arc count \
-	$additional_arguments \
-	--id=output \
-	--libraries=libraries.csv \
-	--reference=index_path \
-	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \
+cellranger-arc count \\
+	$additional_arguments \\
+	--id=output \\
+	--libraries=libraries.csv \\
+	--reference=index_path \\
+	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
 	--disable-ui $count_args
 
 # make links to summary reports
