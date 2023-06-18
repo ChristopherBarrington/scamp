@@ -24,6 +24,9 @@ input:
   - name: tag
     type: string
     description: An identifier to use in the tag directive.
+  - name: id
+    type: string
+    description: Directory-safe name for the output directory.
   - name: samples
     type: string array
     description: "An array of length two: RNA and chromatin assay sample names."
@@ -53,7 +56,7 @@ output:
   - name: quantification_path
     type: path
     description: Cell Ranger outputs (`outs/`) directory.
-    pattern: output/outs
+    pattern: <id>/outs
   - name: atac_summary
     type: file
     description: HTML summary for the ATAC-seq assay.

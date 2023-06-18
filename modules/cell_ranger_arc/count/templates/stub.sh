@@ -1,4 +1,6 @@
 #! bash
 
-mkdir --parents output/outs
-touch libraries.csv {task,versions}.yaml {atac_summary,joint_summary,rna_summary}.html output/outs/web_summary.html
+mkdir --parents $id/outs
+touch libraries.csv $id/outs/web_summary.html
+touch {task,versions}.yaml
+touch {atac_summary,joint_summary,rna_summary}.html
