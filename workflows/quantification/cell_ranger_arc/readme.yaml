@@ -56,6 +56,9 @@ steps:
       - key: unique id
         description: Identifier used for the task's tag.
         type: string
+      - key: id
+        description: Output directory name
+        type: string
       - key: limsid
         description: Collection of LIMS IDs relevant to a dataset.
         type: strings

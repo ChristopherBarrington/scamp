@@ -16,6 +16,9 @@ steps:
       - key: unique id
         description: For the `tags` channel, to output in the Nextflow log.
         type: string
+      - key: id
+        description: Output directory name
+        type: string
       - key: limsid
         description: Sample name, used in the module to search `fastq paths` for the relevant FastQ files.
         type: string
