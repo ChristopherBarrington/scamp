@@ -52,7 +52,7 @@ output:
   - name: quantification_path
     type: path
     description: Cell Ranger outputs (`outs/`) directory.
-    pattern: <sample>/outs
+    pattern: <id>/outs
   - name: cell_ranger_report
     type: file
     description: HTML summary report.
