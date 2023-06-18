@@ -1,9 +1,9 @@
 #! bash
 
 # get comma-separated list of input directories to find fastq files
-FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*_R1_*.fastq.gz" -printf '%h\\n' | \
-	sort | \
-	uniq | \
+FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*_R1_*.fastq.gz" -printf '%h\\n' |
+	sort |
+	uniq |
 	awk '{printf "%s%s", sep, \$1 ; sep=","} END{print ""}'`
 
 # run cell ranger count
