@@ -24,6 +24,7 @@ log_message('making a seurat object from a collection of assays', level='main')
 # -------------------------------------------------------------------------------------------------
 
 list(assay_names = "$assay_names",
+	remove_barcode_suffix = $remove_barcode_suffix,
      misc_names = "$misc_names",
      project = "$project") |>
 	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
@@ -59,6 +60,20 @@ for(i in seq_along(assay_files)) {
 	} else {
 		seurat[[assay_name]] <- readRDS(assay_file)
 	}
+}
+
+# -------------------------------------------------------------------------------------------------
+# remove trailing numeric identifiers from barcodes, if requested
+# -------------------------------------------------------------------------------------------------
+
+log_message('checking if cells should be renamed and have `-1` removed from barcodes', level='section')
+
+if(remove_barcode_suffix) {
+	seurat %>%
+		Cells() |>
+		str_remove('pecam1_120h_rep2_') |>
+		str_remove('-\\\\d+\$') -> cell_ids
+	seurat %<>% RenameCells(new.names=cell_ids)
 }
 
 # -------------------------------------------------------------------------------------------------

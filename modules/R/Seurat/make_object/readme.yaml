@@ -28,6 +28,9 @@ input:
   - name: tag
     type: string
     description: A unique identifier to use in the tag directive.
+  - name: remove barcode suffix
+    type: string
+    description: Whether to remove numeric suffix from barcode (usually "-1"). This should be "TRUE" or "FALSE".
   - name: assays
     type: files
     description: A list of files that contain assays to include in the object.

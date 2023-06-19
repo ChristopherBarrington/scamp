@@ -8,6 +8,7 @@ process make_object {
 	input:
 		val opt
 		val tag
+		val remove_barcode_suffix
 		path 'assays/?.rds'
 		val assay_names
 		path 'misc/?.rds'
