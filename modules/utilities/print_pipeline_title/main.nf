@@ -1,7 +1,4 @@
-
-// def print_pipeline_title(filename='pipeline.txt') {
-//   file([projectDir, 'assets', filename].join('/')).eachLine{println(it)}
-// }
+// print a text file to the screen
 
 def print_pipeline_title(dirname='pipeline_logos', padh=10, padv=1) {
 	println('\n'.multiply(padv))
