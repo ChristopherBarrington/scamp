@@ -1,0 +1,21 @@
+name: merge outputs of a process
+
+description: |
+  Iteratively merges output channels of a process into a single channel.
+
+tags:
+  - utility
+
+arguments:
+  - name: process
+    type: channel
+    description: Output of a process that emits output named in `keys`.
+  - name: keys
+    type: strings
+    description: Collection of strings that list which emitted channels in `process` are merged.
+
+value:
+  description: A channel that emits the values of `process`'s `keys` in a `map`.
+
+authors:
+  - "@ChristopherBarrington"
