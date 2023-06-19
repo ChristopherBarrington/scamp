@@ -1,0 +1,23 @@
+name: rename map keys
+
+description: Given a `map` of key/value pairs, a subset of keys can be renamed.
+
+tags:
+  - utility
+
+arguments:
+  - name: map
+    type: map
+    description: A map!
+  - name: from
+    type: strings
+    description: Keys in `map` that will be renamed.
+  - name: to
+    type: strings
+    description: New names of keys in `from`, order of `from` and `to` matters.
+
+value:
+  description: The input `map` with `from` keys renamed as `to`.
+
+authors:
+  - "@ChristopherBarrington"

@@ -1,0 +1,23 @@
+name: remove keys from map
+
+description: Given a map, remove one or more keys and return the result.
+
+tags:
+  - utility
+
+arguments:
+  - name: x
+    type: map
+    description: Map that includes all of `keys`.
+  - name: key
+    type: string
+    description: Remove this one key from `x`. Cannot be used with `keys`.
+  - name: keys
+    type: strings
+    description: Remove this collection of keys from `x`. Cannot be used with `key`.
+
+value:
+  description: The input map `x` with `key`/`keys` removed.
+
+authors:
+  - "@ChristopherBarrington"
