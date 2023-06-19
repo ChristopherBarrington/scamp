@@ -1,0 +1,18 @@
+name: print as JSON
+
+description: |
+  Print a data structure in JSON format so it is more-easily readable.
+
+tags:
+  - utility
+
+arguments:
+  - name: inmap
+    type: any
+    description: The variable that sound be printed.
+
+value:
+  description: None.
+
+authors:
+  - "@ChristopherBarrington"
