@@ -18,34 +18,34 @@ _project:
 _defaults:
     genome: mm10_mcherry
     fastq paths:
-        - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY
-        - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2
-        - inputs/data_sa154/220420_A01366_0179_BH72WWDMXY
-        - inputs/data_sa154/220422_A01366_0180_BHJLLNDSX3
-        - inputs/data_sa154/220425_A01366_0182_BH7HJ3DMXY
-        - inputs/data_sa154/220428_A01366_0187_BHCFHLDMXY
-        - inputs/data_sa154/220505_A01366_0193_BHKC3MDSX3
-        - inputs/data_sa154/220526_A01366_0207_BHCGLCDMXY
-        - inputs/data_sa154/220531_A01366_0211_AHCGNYDMXY
-        - inputs/data_sa154/220615_A01366_0219_AHK7WHDSX3
-        - inputs/data_sa154/220726_A01366_0242_BHN3GKDSX3
-        - inputs/data_sa154/220726_A01366_0243_AH5KL2DRX2
-        - inputs/data_sa154/220823_A01366_0268_AH5HJJDRX2
-        - inputs/data_sa154/220826_A01366_0270_BHGFMVDMXY
-        - inputs/data_sa154/220907_A01366_0275_AHGFV2DMXY
-        - inputs/data_sa154/220920_A01366_0282_AHCMHFDRX2
-        - inputs/data_sa154/220922_A01366_0283_AHF7FYDMXY
-        - inputs/data_sa154/221117_A01366_0317_BHGG3KDMXY
-        - inputs/data_sa154/221118_A01366_0319_AH7GYHDRX2
-        - inputs/data_sa154/221215_A01366_0329_AH7VKTDSX5
-        - inputs/data_sa154/221215_A01366_0330_BHNGLVDRX2
-        - inputs/data_sa154/221222_A01366_0333_AHGMKHDMXY
-        - inputs/data_sa154/230105_A01366_0334_BHJJ5VDSX5
-        - inputs/data_sa154/230106_A01366_0336_AHKFGJDSX5
-        - inputs/data_sa154/230201_A01366_0347_AHVLN5DRX2
-        - inputs/data_sa154/230420_A01366_0377_AHNFLGDRX2
-        - inputs/data_sa154/230511_A01366_0386_AHKC5TDMXY
-        - inputs/data_sa154/230526_A01366_0392_AHF3LVDSX7
+        - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY/fastq
+        - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2/fastq
+        - inputs/data_sa154/220420_A01366_0179_BH72WWDMXY/fastq
+        - inputs/data_sa154/220422_A01366_0180_BHJLLNDSX3/fastq
+        - inputs/data_sa154/220425_A01366_0182_BH7HJ3DMXY/fastq
+        - inputs/data_sa154/220428_A01366_0187_BHCFHLDMXY/fastq
+        - inputs/data_sa154/220505_A01366_0193_BHKC3MDSX3/fastq
+        - inputs/data_sa154/220526_A01366_0207_BHCGLCDMXY/fastq
+        - inputs/data_sa154/220531_A01366_0211_AHCGNYDMXY/fastq
+        - inputs/data_sa154/220615_A01366_0219_AHK7WHDSX3/fastq
+        - inputs/data_sa154/220726_A01366_0242_BHN3GKDSX3/fastq
+        - inputs/data_sa154/220726_A01366_0243_AH5KL2DRX2/fastq
+        - inputs/data_sa154/220823_A01366_0268_AH5HJJDRX2/fastq
+        - inputs/data_sa154/220826_A01366_0270_BHGFMVDMXY/fastq
+        - inputs/data_sa154/220907_A01366_0275_AHGFV2DMXY/fastq
+        - inputs/data_sa154/220920_A01366_0282_AHCMHFDRX2/fastq
+        - inputs/data_sa154/220922_A01366_0283_AHF7FYDMXY/fastq
+        - inputs/data_sa154/221117_A01366_0317_BHGG3KDMXY/fastq
+        - inputs/data_sa154/221118_A01366_0319_AH7GYHDRX2/fastq
+        - inputs/data_sa154/221215_A01366_0329_AH7VKTDSX5/fastq
+        - inputs/data_sa154/221215_A01366_0330_BHNGLVDRX2/fastq
+        - inputs/data_sa154/221222_A01366_0333_AHGMKHDMXY/fastq
+        - inputs/data_sa154/230105_A01366_0334_BHJJ5VDSX5/fastq
+        - inputs/data_sa154/230106_A01366_0336_AHKFGJDSX5/fastq
+        - inputs/data_sa154/230201_A01366_0347_AHVLN5DRX2/fastq
+        - inputs/data_sa154/230420_A01366_0377_AHNFLGDRX2/fastq
+        - inputs/data_sa154/230511_A01366_0386_AHKC5TDMXY/fastq
+        - inputs/data_sa154/230526_A01366_0392_AHF3LVDSX7/fastq
     feature types:
         Gene Expression:
             - AHM4688A1
@@ -79,8 +79,8 @@ _defaults:
 seurat:
     _defaults:
         stages:
-            - quantification/cell ranger arc
-            - seurat/prepare/cell ranger arc
+            - quantification/cell_ranger_arc
+            - seurat/prepare/cell_ranger_arc
         index path: inputs/cellranger_arc_ref
         feature identifiers: name
         quantification method: cell ranger arc
@@ -101,4 +101,4 @@ seurat:
         limsid:
             - AHM4688A3
             - AHM4688A6
-        quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
+        # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs

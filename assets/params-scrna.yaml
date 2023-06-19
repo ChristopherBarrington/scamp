@@ -53,19 +53,19 @@ cell ranger and seurat:
     stella 120h rep1:
         limsid: COO4671A1
         dataset tag: ST120R1
-        # quantification path: inputs/cellranger_nm322/COO4671A1/outs
+        quantification path: inputs/cellranger_nm322/COO4671A1/outs
 
     pecam1 120h rep1:
         limsid: COO4671A2
         dataset tag: P120R1
-        # quantification path: inputs/cellranger_nm322/COO4671A2/outs
+        quantification path: inputs/cellranger_nm322/COO4671A2/outs
 
     ssea1 120h rep1:
         limsid: COO4671A3
         dataset tag: SS120R1
-        # quantification path: inputs/cellranger_nm322/COO4671A3/outs
+        quantification path: inputs/cellranger_nm322/COO4671A3/outs
 
     blimp1 + ssea1 120h rep1:
         limsid: COO4671A4
         dataset tag: BS120R1
-        # quantification path: inputs/cellranger_nm322/COO4671A4/outs
+        quantification path: inputs/cellranger_nm322/COO4671A4/outs
