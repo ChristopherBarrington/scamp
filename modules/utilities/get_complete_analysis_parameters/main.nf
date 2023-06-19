@@ -1,3 +1,4 @@
+// read the parameters object, organise it and fill in the blanks
 
 include { convert_map_keys_to_files }  from '../convert_map_keys_to_files'
 include { make_string_directory_safe } from '../make_string_directory_safe'
