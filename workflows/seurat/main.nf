@@ -3,8 +3,8 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { check_for_matching_key_values } from '../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }     from '../../modules/utilities/concat_workflow_emissions'
+include { check_for_matching_key_values } from '../../utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }     from '../../utilities/concat_workflow_emissions'
 
 include { cell_ranger as prepare_cell_ranger }         from './prepare/cell_ranger'
 include { cell_ranger_arc as prepare_cell_ranger_arc } from './prepare/cell_ranger_arc'

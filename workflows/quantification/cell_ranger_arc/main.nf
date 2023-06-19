@@ -7,11 +7,11 @@ include { count as quantify }   from '../../../modules/cell_ranger_arc/count'
 include { make_libraries_csv }  from '../../../modules/cell_ranger_arc/make_libraries_csv'
 include { mkref as make_index } from '../../../modules/cell_ranger_arc/mkref'
 
-include { check_for_matching_key_values }     from '../../../modules/utilities/check_for_matching_key_values'
-include { concat_workflow_emissions }         from '../../../modules/utilities/concat_workflow_emissions'
-include { merge_metadata_and_process_output } from '../../../modules/utilities/merge_metadata_and_process_output'
-include { merge_process_emissions }           from '../../../modules/utilities/merge_process_emissions'
-include { rename_map_keys }                   from '../../../modules/utilities/rename_map_keys'
+include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
+include { merge_metadata_and_process_output } from '../../../utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../../utilities/merge_process_emissions'
+include { rename_map_keys }                   from '../../../utilities/rename_map_keys'
 
 include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
 
