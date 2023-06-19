@@ -12,6 +12,9 @@ cat $path_to_gtfs/*.gtf > features.gtf
 # ! make sure gene_type not gene_biotype !
 #
 
+# rename any gene_biotype keys to gene_type
+sed --in-place 's/ gene_biotype / gene_type /' features.gtf
+
 # reformat non-nuclear contigs
 NON_NUCLEAR_CONTIGS=`echo -n $non_nuclear_contigs | sed --regexp-extended 's/\\[|,|\\]//g' | jq -R -s -c 'split(\" \")'`
 
