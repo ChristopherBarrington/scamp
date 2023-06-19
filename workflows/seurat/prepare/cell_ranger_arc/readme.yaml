@@ -52,6 +52,9 @@ steps:
         description: Whether to use `accession` or `name` as the RNA feature index. The non-selected identifier is saved into an `RNA_alt` assay in the object.
         type: string
         optional: true
+      - key: remove barcode suffixes
+        description: (R) boolean as to whether the numeric suffixes of cell barcodes should be removed. These get messy with multiple integrations and could be replaced by the short dataset tag.
+        type: string
       - key: dataset name
         description: A human-readable name for the dataset that will be used as the Seurat `Project`. If not provided in the parameters, the dataset key will be used.
         type: string

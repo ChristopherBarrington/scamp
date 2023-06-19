@@ -67,9 +67,6 @@ steps:
         description: Whether to use `accession` or `name` as the feature index. The non-selected identifier is saved into an `RNA_alt` assay in the object.
         type: string
         optional: true
-      - key: dataset tag
-        description: A short name for the dataset so that cell barcodes can be informatively appended with this tag rather than a number.
-        type: string
       - key: dataset name
         description: A human-readable name for the dataset that will be used as the Seurat `Project`. If not provided in the parameters, the dataset key will be used.
         type: string
