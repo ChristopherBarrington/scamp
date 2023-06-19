@@ -8,12 +8,13 @@ FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*
 
 # run cell ranger count
 cellranger count \\
+	$count_args	\\
 	--id=$id \\
 	--transcriptome=`realpath index_path` \\
 	--fastqs=\${FASTQ_PATHS} \\
 	--sample=$sample \\
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
-	--disable-ui $count_args
+	--disable-ui
 
 ln --symbolic $id/outs/web_summary.html
 

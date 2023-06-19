@@ -5,12 +5,12 @@ awk --assign FS=',' 'NR==1{print} ; \$2~/^($samples_regex)\$/{print}' all_librar
 
 # run cell ranger arc count
 cellranger-arc count \\
-	$additional_arguments \\
+	$count_args \\
 	--id=$id \\
 	--libraries=libraries.csv \\
 	--reference=index_path \\
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
-	--disable-ui $count_args
+	--disable-ui
 
 # make links to summary reports
 ln --symbolic $id/outs/web_summary.html joint_summary.html
