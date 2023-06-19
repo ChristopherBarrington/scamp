@@ -70,7 +70,7 @@ workflow cell_ranger_arc {
 		parameters
 			.map{it.subMap(['fastq paths', 'feature types'])}
 			.unique()
-			.map{it + ['sample names': it.get('feature types').values().flatten()]}
+			.map{it + ['sample_names': it.get('feature types').values().flatten()]}
 			.map{it + ['feature_types': it.get('feature types').collect{k,v -> [k]*v.size()}.flatten()]}
 			.map{it + [fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
 			.map{it.findAll{it.key!='feature types'}}
@@ -78,7 +78,7 @@ workflow cell_ranger_arc {
 			.set{feature_type_params}
 
 		// make channels to create the libraries csv file that cell ranger arc count expects
-		fastq_paths       = feature_type_params.map{it.get('fastq_paths')}
+		fastq_paths       = feature_type_params.map{it.get('fastq paths')}
 		fastq_files_regex = feature_type_params.map{it.get('fastq_files_regex')}
 		samples           = feature_type_params.map{it.get('sample_names')}
 		feature_types     = feature_type_params.map{it.get('feature_types')}
