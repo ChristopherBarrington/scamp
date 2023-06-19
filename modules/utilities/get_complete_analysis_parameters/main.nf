@@ -78,7 +78,7 @@ def get_default_dataset_params() {
 }
 
 // get a hash of analysis parameters
-// - analysis parameter stanzas do  not start with underscore
+// - analysis parameter stanzas do not start with underscore
 
 def get_analysis_params() {
 	params.findAll{!it.key.startsWith('_')}
