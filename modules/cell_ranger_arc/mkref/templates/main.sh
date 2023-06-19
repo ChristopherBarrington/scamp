@@ -7,11 +7,6 @@ VERSION=`cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc-//'`
 cat $path_to_fastas/*.fa > assembly.fasta
 cat $path_to_gtfs/*.gtf > features.gtf
 
-#
-# todo: filter the gtf
-# ! make sure gene_type not gene_biotype !
-#
-
 # rename any gene_biotype keys to gene_type
 sed --in-place 's/ gene_biotype / gene_type /' features.gtf
 
