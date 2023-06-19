@@ -1,11 +1,9 @@
-// read the parameters object, organise it and fill in the blanks
+// get a complete set of parameters for every parameter set, filling in genomes, shared and default parameters
 
 include { convert_map_keys_to_files }  from '../convert_map_keys_to_files'
 include { make_string_directory_safe } from '../make_string_directory_safe'
 include { pluck }                      from '../pluck'
 include { remove_keys_from_map }       from '../remove_keys_from_map'
-
-// get a complete set of parameters for every parameter set, filling in genomes, shared and default parameters
 
 def get_complete_analysis_parameters(stage=null) {
 	def genomes_params = get_genomes_params()
