@@ -6,12 +6,12 @@
 include { quantification } from './workflows/quantification'
 include { seurat }         from './workflows/seurat'
 
-include { print_as_json } from './modules/utilities/print_as_json'
+include { print_as_json } from './utilities/print_as_json'
 
-include { concat_workflow_emissions }        from './modules/utilities/concat_workflow_emissions'
-include { get_complete_analysis_parameters } from './modules/utilities/get_complete_analysis_parameters'
-include { make_map }                         from './modules/utilities/make_map'
-include { print_pipeline_title }             from './modules/utilities/print_pipeline_title'
+include { concat_workflow_emissions }        from './utilities/concat_workflow_emissions'
+include { get_complete_analysis_parameters } from './utilities/get_complete_analysis_parameters'
+include { make_map }                         from './utilities/make_map'
+include { print_pipeline_title }             from './utilities/print_pipeline_title'
 
 print_pipeline_title()
 
