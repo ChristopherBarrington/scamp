@@ -40,6 +40,6 @@
 <!-- show output description -->
 
 {{ if $output_value := .Params.value }}
-	<h2 id="arguments">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "sign-out-alt") }} Output value</h2>
+	<h2 id="output-value">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "sign-out-alt") }} Output value</h2>
 	{{ index $output_value "description" | markdownify}}
 {{ end }}
