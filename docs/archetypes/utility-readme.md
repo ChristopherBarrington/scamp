@@ -14,5 +14,8 @@ arguments:
 value:
   description: 
 
+example: |
+  "foo" + "bar" == "foobar"
+
 authors:
   - "@ChristopherBarrington"
