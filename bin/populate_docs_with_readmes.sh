@@ -16,3 +16,8 @@ find scamp/utilities -name 'main.yaml' |
 
 find content/{modules,workflows,utilities} -mindepth 0 -type d |
 	xargs -n 1 -P 4 -I @ sh -c "hugo new --kind docs-group --force @/_index.md"
+
+sed -i .sed 's/weight: /weight: 101/' content/modules/_index.md
+sed -i .sed 's/weight: /weight: 102/' content/workflows/_index.md
+sed -i .sed 's/weight: /weight: 103/' content/utilities/_index.md
+rm content/{modules,workflows,utilities}/_index.md.sed
