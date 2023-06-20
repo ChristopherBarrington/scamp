@@ -1,0 +1,32 @@
+name: concatenate process emissions
+
+description: |
+  Collect an emission from multiple channels or processes into a collection.
+
+tags:
+  - utility
+
+arguments:
+  - name: channel_list
+    type: channels
+    description: Collection of channels that contain a named emission matching `key`.
+  - name: key
+    type: string
+    description: Name of the emitted channel from the processes in `channel_list` to collect.
+
+example: |
+  // run a process, providing the required channels
+  module_1(opt, tags, ids)
+  module_2(opt, tags, ids, samples)
+  module_3(opt, tags, ids, targets)
+
+  // collect all of the emitted `ids`
+  channel_list = [module_1, module_2, module_3]
+
+  concat_workflow_emissions(channel_list, 'ids')
+  // [ "/path/to/work/dir/file_1.yaml",
+  //   "/path/to/work/dir/file_2.yaml",
+  //   "/path/to/work/dir/file_3.yaml" ]
+
+authors:
+  - "@ChristopherBarrington"

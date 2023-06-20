@@ -1,7 +1,7 @@
 name: merge outputs of a process
 
 description: |
-  Iteratively merges output channels of a process into a single channel.
+  Iteratively merges output channels of a process into a single channel of maps.
 
 tags:
   - utility
@@ -16,6 +16,18 @@ arguments:
 
 value:
   description: A channel that emits the values of `process`'s `keys` in a `map`.
+
+example: |
+  // run a process, providing the required channels
+  module_name(opt, tags, ids)
+
+  // make a channel of outputs from the module
+  merge_process_emissions(module_name, ['opt', 'output_file'])
+
+  // { "opt": {
+  //      "ids": ["A", "B", "C"],
+  //      "secret": "foo-bar"},
+  //   "output_file": "/path/to/work/dir/out.file" }
 
 authors:
   - "@ChristopherBarrington"

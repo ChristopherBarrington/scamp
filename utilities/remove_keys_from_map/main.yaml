@@ -19,5 +19,14 @@ arguments:
 value:
   description: The input map `x` with `key`/`keys` removed.
 
+example: |
+  map = [first: 'sherlock', second: 'john', third: 'james']
+
+  remove_keys_from_map(map, 'third')
+  // { "first": "sherlock", "second": "john" }
+  
+  remove_keys_from_map(map, ['second','third'])
+  // { "first": "sherlock" }
+
 authors:
   - "@ChristopherBarrington"

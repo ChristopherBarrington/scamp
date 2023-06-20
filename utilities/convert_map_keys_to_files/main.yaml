@@ -1,0 +1,37 @@
+name: convert key values to files
+
+description: |
+  Iteratively search a `map` for matching keys which are converted to `file` types. Single values (`string`) are converted, or all elements in a `collection`, or all values of a `map`.
+
+tags:
+  - utility
+
+arguments:
+  - name: x
+    type: map
+    description: A potentially nested `map` that contains key/value pairs that can be identified using `keys` and modified to `file` type.
+  - name: keys
+    type: strings
+    description: Collection of strings that are keys in `x`. The string(s) in these keys are converted using `file()`. 
+
+value:
+  description: `x` `keys` are modified and the new `map` returned.
+
+example: |
+  x = [first: 'sherlock', second: 'john', nemeses: ['james', 'lestrade']]
+  // { "first": "sherlock",
+  //   "second": "john",
+  //   "nemeses": ["james", "lestrade"] }
+
+  convert_map_keys_to_files(x, 'first')
+  // { "first": "/path/to/sherlock",
+  //   "second": "john",
+  //   "nemeses": ["james", "lestrade"] }
+
+  convert_map_keys_to_files(x, ['first', 'nemeses'])
+  // { "first": "/path/to/sherlock",
+  //   "second": "john",
+  //   "nemeses": ["/path/to/james", "/path/to/lestrade"] }
+
+authors:
+  - "@ChristopherBarrington"

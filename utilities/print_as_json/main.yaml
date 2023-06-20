@@ -11,8 +11,17 @@ arguments:
     type: any
     description: The variable that sound be printed.
 
-value:
-  description: None.
+example: |
+  var = [foo: [bar: [1,2,3]], baz: 'francis crick']
+  
+  print_as_json(var)
+  
+  // {
+  //     "foo": {
+  //         "bar": [1, 2, 3]
+  //     },
+  //     "baz": "francis crick"
+  // }
 
 authors:
   - "@ChristopherBarrington"

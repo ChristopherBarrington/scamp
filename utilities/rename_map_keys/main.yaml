@@ -19,5 +19,14 @@ arguments:
 value:
   description: The input `map` with `from` keys renamed as `to`.
 
+example: |
+  map = [first: 'sherlock', second: 'john', third: 'james']
+  
+  rename_map_keys(map, 'third', 'nemesis')
+  // { "first": "sherlock", "second": "john", "nemesis": "james" }
+  
+  rename_map_keys(map, ['second','third'], ['hero','nemesis'])
+  // { "first": "sherlock", "hero": "john", "nemesis": "james" }
+
 authors:
   - "@ChristopherBarrington"

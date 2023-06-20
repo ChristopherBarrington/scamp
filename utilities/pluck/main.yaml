@@ -20,5 +20,14 @@ arguments:
 value:
   description: The value at the end of the `path` in `map`.
 
+example: |
+  map = [foo: [bar: [baz: 123, buz: 456]]]
+  
+  pluck(map, ['foo', 'bar', 'baz'])
+  // 123
+  
+  pluck(map, ['francis', 'crick'], 'not found')
+  // 'not found'
+
 authors:
   - "@ChristopherBarrington"

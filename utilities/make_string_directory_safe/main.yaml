@@ -1,0 +1,21 @@
+name: make string directory-safe
+
+description: |
+  Try to make a string safe for use as a directory (or file) name.
+
+tags:
+  - utility
+
+arguments:
+  - name: x
+    type: string
+    description: The string that will be transformed.
+
+example: |
+  x = 'foo + bar / baz'
+  
+  make_string_directory_safe(x)
+  // "foo_bar_baz"
+
+authors:
+  - "@ChristopherBarrington"
