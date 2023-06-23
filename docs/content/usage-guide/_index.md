@@ -80,15 +80,15 @@ Once the pipeline parameters are encoded in the parameters file, the pipeline ca
 
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision <release> \
-  -params-file inputs/parameters.yaml
+  --scamp-file inputs/parameters.yaml
 {{< /highlight >}}
 
 If you want to test you configuration file without running any real analysis, you can use:
 
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision <release> \
-  -params-file inputs/parameters.yaml \
-  -stub-run -profile stub_run
+  -stub-run -profile stub_run \
+  --scamp-file inputs/parameters.yaml
 {{< /highlight >}}
 
 This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though!

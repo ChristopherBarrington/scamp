@@ -61,7 +61,7 @@ def get_complete_analysis_parameters(stage=null) {
 // ++ add an element to a specific genome: genomes.find{it.'key'=='mouse'}.put('foo','bar')
 
 def get_genomes_params() {
-	pluck(params, ['_project', 'genomes'])
+	pluck(get_scamp_params(), ['_project', 'genomes'])
 		// .collectEntries{key, parameters -> [key, parameters + ['genome': key, 'unique id': key]]}
 		.collectEntries{key, parameters -> [key, parameters + ['key': key]]}
 		.collectEntries{key, parameters -> [key, parameters + ['id': make_string_directory_safe(parameters.get('id', parameters.get('key')))]]}
@@ -72,7 +72,7 @@ def get_genomes_params() {
 // - default parameters stanzas are called '_defaults'
 
 def get_default_dataset_params() {
-	def default_analysis_params = params.get('_defaults', [:])
+	def default_analysis_params = get_scamp_params().get('_defaults', [:])
 	get_analysis_params()
 		.collectEntries{analysis_key, datasets -> [analysis_key, default_analysis_params + datasets.get('_defaults', [:])]}
 }
@@ -81,7 +81,19 @@ def get_default_dataset_params() {
 // - analysis parameter stanzas do not start with underscore
 
 def get_analysis_params() {
-	params.findAll{!it.key.startsWith('_')}
+	get_scamp_params().findAll{!it.key.startsWith('_')}
+}
+
+// read and parse the scamp parameters
+
+def get_scamp_params() {
+	try {
+		@Grab('org.apache.groovy:groovy-yaml')
+		def yamlslurper = new groovy.yaml.YamlSlurper()
+		yamlslurper.parse(file(params.get('scamp-file')))
+	} catch(Exception e) {
+		System.exit(0)
+	}
 }
 
 // define which parameter keys should be files
