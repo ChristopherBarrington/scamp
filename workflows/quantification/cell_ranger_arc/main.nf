@@ -74,6 +74,7 @@ workflow cell_ranger_arc {
 			.map{it + ['feature_types': it.get('feature types').collect{k,v -> [k]*v.size()}.flatten()]}
 			.map{it + [fastq_files_regex: '(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz']}
 			.map{it.findAll{it.key!='feature types'}}
+			.first()
 			.dump(tag: 'quantification:cell_ranger_arc:feature_type_params', pretty: true)
 			.set{feature_type_params}
 
