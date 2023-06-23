@@ -101,4 +101,4 @@ seurat:
         limsid:
             - AHM4688A3
             - AHM4688A6
-        # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
+        quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
