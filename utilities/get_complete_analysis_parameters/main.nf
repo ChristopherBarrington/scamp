@@ -84,8 +84,16 @@ def get_analysis_params() {
 	get_scamp_params().findAll{!it.key.startsWith('_')}
 }
 
+// read and parse the scamp parameters
+
 def get_scamp_params() {
-	params
+	try {
+		@Grab('org.apache.groovy:groovy-yaml')
+		def yamlslurper = new groovy.yaml.YamlSlurper()
+		yamlslurper.parse(file(params.get('scamp-file')))
+	} catch(Exception e) {
+		System.exit(0)
+	}
 }
 
 // define which parameter keys should be files
