@@ -4,15 +4,15 @@
 
 {
 	"shebang" : {
-		"target": "line-1",
+		"target": 1,
 		"title": "the ricky martin line",
 		"text": "Any interpreter can be used, as long as it would work as <code>./script.sh</code>. The interpreter must be available on the command line, whether that be by a module, environment or parent shell."},
 	"programs" : {
-		"target": "line-3",
+		"target": 3,
 		"title": "working programs",
 		"text": "The two programs here are used to create the <code>output.file</code> using the variables passed from the <code>input</code> of the process. Note that <code>$</code> is interpreted as a Nextflow variable, so these need to be delimited for other languages that make use of <code>$</code>. So maybe don't use Perl."},
 	"yaml_records" : {
-		"target": "line-6",
+		"target": 6,
 		"title": "versions and parameters",
 		"text": "These two YAML files record the versions of key software used by the process and parameters passed to the task. They may be used in reporting."}
 }
