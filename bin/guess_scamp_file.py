@@ -81,6 +81,8 @@ def validate_arguments():
 	if exit_early == True:
 		sys.exit()
 
+	args.data_root = re.sub('/$', '', args.data_root)
+
 	if args.data_path is None: get_data_path_from_lims_id()
 	if args.lims_id is None: get_lims_id_from_data_path()
 	if args.design_file is None: get_design_file_path()
@@ -91,6 +93,7 @@ def validate_arguments():
 
 # if only given a lims id, find that directory
 def get_data_path_from_lims_id():
+	print('searching for {}/*/*/{}'.format(args.data_root, args.lims_id))
 	if args.lims_id is None:
 		print('cannot find a lims directory without `lims_id`!')
 		sys.exit()
@@ -103,12 +106,15 @@ def get_data_path_from_lims_id():
 			args.data_path = path
 
 def find_data_path_from_lims_id():
+	step = 1
 	labs = glob.glob(os.path.join(args.data_root, '*'))
 	for lab in labs:
 		scientists = glob.glob(os.path.join(lab, '*'))
 		for scientist in scientists:
+			print('serached: {}'.format(step), end='\r')
 			path = os.path.join(lab, scientist, args.lims_id)
 			if os.path.exists(path): return(path)
+		else: step = step + 1
 
 # if lims id is not provided, get it from the data path
 def get_lims_id_from_data_path():
@@ -217,14 +223,14 @@ def get_library_types():
 	sample_sheet['sample_name_group'] = sample_sheet['sample_name'].map(lambda x: re.sub(all_sample_name_regexes, '', x))
 
 	# check that every row has a feature type
-	if (sample_sheet['library_type'].eq('unassigned')).any():
-		sample_sheet[sample_sheet['library_type'] == 'unassigned']	
+	if (sample_sheet['library_type'].eq('unassigned')).any() and args.project_type != '10X-3prime':
+		print(sample_sheet[sample_sheet['library_type'] == 'unassigned'])
 		print('some rows could not be assigned a feature type! check sample name regexes!')
 
 	# check that every row had exactly one feature type regex match
 	sample_sheet['total_feature_type_matches'] = sample_sheet[feature_types_to_search_terms.keys()].sum(axis=1)
 	if sample_sheet['total_feature_type_matches'].gt(1).any():
-		sample_sheet[sample_sheet['total_feature_type_matches'] > 1]	
+		print(sample_sheet[sample_sheet['total_feature_type_matches'] > 1])
 		print('some rows contained more than one feature type! check sample name regexes!')
 
 	# get a dictionary of lims id in library type groups
