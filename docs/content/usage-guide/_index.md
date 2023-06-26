@@ -76,20 +76,41 @@ conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
 {{< /highlight >}}
 {{% /notice %}}
 
+{scamp} can be used to generate a best-guess parameters file. The file it creates is dependent on the sample sheet and directory structure on Nemo of the ASF's `data` directory in `babs/inputs`. The file it creates should be checked - especially for cases where multiple libraries contribute to individual samples, such as 10X multiome projects.
+
+(It is currently a bit of a faff though it may move into a container) The following snippet will use the `guess_scamp_file.py` script that is included in {scamp} to find the directory for the project and parse the accompanying design file. First, {scamp} must be pulled and its `bin` added to your `PATH`. For command line options, use `guess_scamp_file.py --help`. The script includes a set of default parameters, which will need to be updated as we include new protocols.
+
+{{< tab title="bash" >}}
+{{< highlight bash >}}
+nextflow pull ChristopherBarrington/scamp
+export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
+
+guess_scamp_file.py --genome mm10 --lims-id SC22051 --output-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+{{% notice style="warning" title=" " icon=" " %}}
+Check the guessed parameters file! Pay particular attention to the LIMS IDs associated to dataset, the feature types and sample names!
+{{% /notice %}}
+
 Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched:
 
+{{< tab title="bash" >}}
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision <release> \
-  --scamp-file inputs/parameters.yaml
+  --scamp-file inputs/scamp-file.yaml
 {{< /highlight >}}
+{{< /tab >}}
 
 If you want to test you configuration file without running any real analysis, you can use:
 
+{{< tab title="bash" >}}
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision <release> \
   -stub-run -profile stub_run \
-  --scamp-file inputs/parameters.yaml
+  --scamp-file inputs/scamp-file.yaml
 {{< /highlight >}}
+{{< /tab >}}
 
 This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though!
 
