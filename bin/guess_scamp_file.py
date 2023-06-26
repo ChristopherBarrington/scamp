@@ -340,6 +340,7 @@ def main():
 			'scientist': scientist,
 			'lims id': args.lims_id,
 			'babs id': 'unknown',
+			'type': args.project_type,
 			'genomes': genomes},
 		'_defaults': {
 			'genome': args.genome,
