@@ -261,30 +261,18 @@ def get_dataset_index():
 
 def get_feature_types():
 	match args.project_type:
-		case '10X-3prime':
-			return(['Gene Expression'])
-
-		case '10X-Multiomics':
-			return(['Gene Expression', 'Chromatin Accessibility'])
-
-		case '10X-FeatureBarcoding':
-			return(['Gene Expression', 'CMO'])
-
+		case '10X-3prime': return(['Gene Expression'])
+		case '10X-Multiomics': return(['Gene Expression', 'Chromatin Accessibility'])
+		case '10X-FeatureBarcoding':return(['Gene Expression', 'CMO'])
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
 
 def get_stages():
 	match args.project_type:
-		case '10X-3prime':
-			return(['quantification/cell_ranger', 'seurat/prepare/cell_ranger'])
-
-		case '10X-Multiomics':
-			return(['quantification/cell_ranger_arc', 'seurat/prepare/cell_ranger_arc'])
-
-		case '10X-FeatureBarcoding':
-			return(['quantification/cell_ranger_multi', 'seurat/prepare/cell_ranger'])
-
+		case '10X-3prime': return(['quantification/cell_ranger', 'seurat/prepare/cell_ranger'])
+		case '10X-Multiomics': return(['quantification/cell_ranger_arc', 'seurat/prepare/cell_ranger_arc'])
+		case '10X-FeatureBarcoding': return(['quantification/cell_ranger_multi', 'seurat/prepare/cell_ranger'])
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
@@ -305,8 +293,8 @@ def write_formatted_scamp_file(params):
 	print('writing template scamp parameters to {}. CHECK THE CONTENTS!'.format(args.output_file))
 	with open(args.output_file, 'w') as outfile:
 		yaml = YAML()
-		yaml.indent(mapping=4, offset=4, sequence=4)
 		yaml.width = 4096
+		yaml.indent(mapping=4, offset=4, sequence=4)
 		yaml.dump(params, stream=outfile)
 
 # ------------------------------------------------------------------------------------------------
