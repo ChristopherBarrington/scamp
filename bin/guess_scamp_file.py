@@ -81,7 +81,7 @@ def validate_arguments():
 	if exit_early == True:
 		sys.exit()
 
-	if args.data_path is None: find_data_path_from_lims_id()
+	if args.data_path is None: get_data_path_from_lims_id()
 	if args.lims_id is None: get_lims_id_from_data_path()
 	if args.design_file is None: get_design_file_path()
 	if args.project_type is None: get_project_type_from_sample_sheet()
@@ -90,21 +90,25 @@ def validate_arguments():
 	args.genome = args.genomes[0]
 
 # if only given a lims id, find that directory
-def find_data_path_from_lims_id():
+def get_data_path_from_lims_id():
 	if args.lims_id is None:
 		print('cannot find a lims directory without `lims_id`!')
 		sys.exit()
 	else:
-		paths = glob.glob(os.path.join(args.data_root, '*', '*', '*'))
-		path = list(filter(lambda x: x.find(args.lims_id) != -1, paths))
-		if len(path) == 0:
+		path = find_data_path_from_lims_id()
+		if path is None:
 			print('no path found to {} via {}'.format(args.lims_id, args.data_root))
 			sys.exit()
-		if len(path) > 1:
-			print('multiple paths found to {} via {}'.format(args.lims_id, args.data_root))
-			sys.exit()
 		else:
-			args.data_path = path.pop(0)
+			args.data_path = path
+
+def find_data_path_from_lims_id():
+	labs = glob.glob(os.path.join(args.data_root, '*'))
+	for lab in labs:
+		scientists = glob.glob(os.path.join(lab, '*'))
+		for scientist in scientists:
+			path = os.path.join(lab, scientist, args.lims_id)
+			if os.path.exists(path): return(path)
 
 # if lims id is not provided, get it from the data path
 def get_lims_id_from_data_path():
