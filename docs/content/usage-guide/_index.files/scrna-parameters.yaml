@@ -3,6 +3,7 @@ _project:
     scientist: christopher.cooke
     lims id: SC22034
     babs id: nm322
+    type: 10X-3prime
     genomes:
         mm10:
             organism: mus musculus
