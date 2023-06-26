@@ -75,7 +75,7 @@ def validate_arguments():
 		exit_early = True
 
 	if os.path.exists(args.data_root) is False:
-		print('`data_root` but does not exist!')
+		print('`data_root` does not exist!')
 		exit_early = True
 
 	if exit_early == True:
