@@ -34,7 +34,7 @@ In this example for a scRNA-seq project, there are four datasets that will be qu
 {{< /tab >}}
 
 {{< tab title="snRNA+ATAC-seq" >}}
-{{< shepherd_tour tour="multiome" lang="yaml" btn_msg="Take the input parameters tour" >}}
+{{< shepherd_tour tour="multiome" lang="yaml" >}}
 {{< /tab >}}
 {{< /tabs >}}
 
