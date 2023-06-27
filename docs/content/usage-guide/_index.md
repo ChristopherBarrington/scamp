@@ -73,6 +73,8 @@ For now, the processes are __not__ containerised. All software, packages and lib
 module load CellRanger-ARC/2.0.1
 module load CellRanger/7.1.0
 conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
+
+export NXF_HOME=/nemo/stp/babs/working/barrinc/nextflow
 {{< /highlight >}}
 {{% /notice %}}
 
@@ -80,11 +82,15 @@ conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
 
 (It is currently a bit of a faff though it may move into a container) The following snippet will use the `guess_scamp_file.py` script that is included in {scamp} to find the directory for the project and parse the accompanying design file. First, {scamp} must be pulled and its `bin` added to your `PATH`. For command line options, use `guess_scamp_file.py --help`. The script includes a set of default parameters, which will need to be updated as we include new protocols.
 
+{{% notice style="warning" title=" " icon=" " %}}
+The `nextflow pull` will not work until the repository is made public, has `main` content and/or a `tag`. Use the above `NXF_HOME` for now.
+{{% /notice %}}
+
 {{< tab title="bash" >}}
 {{< highlight bash >}}
-nextflow pull ChristopherBarrington/scamp
 export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
 
+nextflow pull ChristopherBarrington/scamp
 guess_scamp_file.py --genome mm10 --lims-id SC22051 --output-file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
@@ -98,7 +104,7 @@ Once the pipeline parameters are encoded in the parameters file, the pipeline ca
 {{< tab title="bash" >}}
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision <release> \
-  --scamp-file inputs/scamp-file.yaml
+  --scamp-file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -108,7 +114,7 @@ If you want to test you configuration file without running any real analysis, yo
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision <release> \
   -stub-run -profile stub_run \
-  --scamp-file inputs/scamp-file.yaml
+  --scamp-file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
