@@ -4,8 +4,8 @@
 sort --key 2,2  --field-separator , <<< "$sample_types" > sample_types.csv
 
 # write a table of paths and sample name
-find -L fastq_path_* -regextype posix-extended -regex ".*/$fastq_files_regex" |
-sed -E 's/$fastq_files_regex/\\1/' |
+find -L fastq_path_* -mindepth 1 -maxdepth 1 -regextype posix-extended -regex ".*/$fastq_files_regex" |
+sed --regexp-extended --expression 's/$fastq_files_regex/\\1/' |
 uniq |
 awk --assign OFS=',' \
      '{cmd=sprintf("basename %s", \$0); cmd | getline limsid ;
