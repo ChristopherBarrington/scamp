@@ -119,5 +119,3 @@ nextflow run ChristopherBarrington/scamp -revision <release> \
 {{< /tab >}}
 
 This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though!
-
-Since {scamp} uses the parameters file for _all_ pipeline parameters, we cannot use the `--` approach to pass parameter options to {scamp}. This would effectively add additional stanzas to the configuration file. Depending on implementation, some parameters may be passed using `--_nextflow.<parameter>`.
