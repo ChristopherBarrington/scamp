@@ -19,7 +19,7 @@ find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/_SC_ATAC_REPORTER/CREATE_WEB
 	head --lines 1 |
 	xargs --max-args 1 -I @ ln --symbolic --force @ atac_summary.html
 
-find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/_SC_ATAC_REPORTER/GEX_SUMMARIZE_REPORTS -name 'web_summary.html' |
+find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/GEX_SUMMARIZE_REPORTS -name 'web_summary.html' |
 	head --lines 1 |
 	xargs --max-args 1 -I @ ln --symbolic --force @ rna_summary.html
 
