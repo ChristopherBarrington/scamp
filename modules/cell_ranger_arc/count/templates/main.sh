@@ -17,11 +17,11 @@ ln --symbolic $id/outs/web_summary.html joint_summary.html
 
 find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/_SC_ATAC_REPORTER/CREATE_WEBSUMMARY -name 'web_summary.html' |
 	head --lines 1 |
-	xargs --max-args 1 -I @ ln --symbolic --force @ atac_summary.html
+	xargs --max-args 1 -I @ ln --symbolic @ atac_summary.html
 
 find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/GEX_SUMMARIZE_REPORTS -name 'web_summary.html' |
 	head --lines 1 |
-	xargs --max-args 1 -I @ ln --symbolic --force @ rna_summary.html
+	xargs --max-args 1 -I @ ln --symbolic @ rna_summary.html
 
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
