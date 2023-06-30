@@ -183,10 +183,10 @@ workflow cell_ranger_arc {
 		tags                    = objects_to_create.map{it.get('unique id')}
 		remove_barcode_suffixes = objects_to_create.map{it.get('remove barcode suffixes')}
 		assays                  = objects_to_create.map{it.get('ordered_assays')}
-		assay_names             = objects_to_create.map{['RNA', 'RNA_alt', 'ATAC']}
 		misc_files              = objects_to_create.map{it.subMap(['granges', 'features']).values()}
-		misc_names              = objects_to_create.map{['gene_models', 'features']}
 		projects                = objects_to_create.map{it.get('dataset name')}
+		assay_names             = Channel.value(['RNA', 'RNA_alt', 'ATAC'])
+		misc_names              = Channel.value(['gene_models', 'features'])
 
 		// read the two rna assays and chromatin accessibility assay into a seurat object and write to rds file
 		make_object(objects_to_create, tags, remove_barcode_suffixes, assays, assay_names, misc_files, misc_names, projects)
