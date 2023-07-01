@@ -222,16 +222,21 @@ def get_library_types():
 	all_sample_name_regexes = '({})'.format(all_sample_name_regexes)	
 	sample_sheet['sample_name_group'] = sample_sheet['sample_name'].map(lambda x: re.sub(all_sample_name_regexes, '', x))
 
-	# check that every row has a feature type
-	if (sample_sheet['library_type'].eq('unassigned')).any() and args.project_type != '10X-3prime':
-		print(sample_sheet[sample_sheet['library_type'] == 'unassigned'])
-		print('some rows could not be assigned a feature type! check sample name regexes!')
-
 	# check that every row had exactly one feature type regex match
 	sample_sheet['total_feature_type_matches'] = sample_sheet[feature_types_to_search_terms.keys()].sum(axis=1)
 	if sample_sheet['total_feature_type_matches'].gt(1).any():
 		print(sample_sheet[sample_sheet['total_feature_type_matches'] > 1])
 		print('some rows contained more than one feature type! check sample name regexes!')
+
+	# check that every row has a feature type
+	if (sample_sheet['library_type'].eq('unassigned')).any() and args.project_type != '10X-3prime':
+		print(sample_sheet[sample_sheet['library_type'] == 'unassigned'])
+		print('some rows could not be assigned a feature type! check sample name regexes!')
+
+	# if all libraries are unassigned type and the project type is 10X-3prime, set the library type to Gene Expression
+	if (sample_sheet['library_type'].eq('unassigned')).all() and args.project_type == '10X-3prime':
+		print('all rows were unassigned but the project type is 10X-3prime; guessing that all libraries will be Gene Expression')
+		sample_sheet['library_type'] = 'Gene Expression'
 
 	# get a dictionary of lims id in library type groups
 	library_types = sample_sheet.groupby(['library_type'])['sample_lims'].apply(set).apply(list).to_dict()	
