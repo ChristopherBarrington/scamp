@@ -108,10 +108,10 @@ workflow cell_ranger_arc {
 		sample_sheet_file = make_libraries_csv.out.path
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, ids, limsids, index_paths, sample_sheet_file)
+		count(datasets_to_quantify, tags, ids, limsids, index_paths, sample_sheet_file)
 
 		// make a channel of newly quantified datasets, each defined in a map
-		merge_process_emissions(quantify, ['opt', 'libraries', 'quantification_path'])
+		merge_process_emissions(count, ['opt', 'libraries', 'quantification_path'])
 			.map{rename_map_keys(it, ['libraries', 'quantification_path'], ['libraries_csv', 'quantification path'])}
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag: 'quantification:cell_ranger_arc:quantified_datasets', pretty: true)
@@ -136,7 +136,7 @@ workflow cell_ranger_arc {
 		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel
 
 		// collate the software version yaml files into one channel
-		concat_workflow_emissions([make_index, quantify], 'versions')
+		concat_workflow_emissions([make_index, count], 'versions')
 			.collect()
 			.set{versions}
 

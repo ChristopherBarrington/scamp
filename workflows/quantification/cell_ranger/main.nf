@@ -48,10 +48,10 @@ workflow cell_ranger {
 		index_paths = datasets_to_quantify.map{it.get('index path')}
 
 		// quantify the datasets
-		quantify(datasets_to_quantify, tags, ids, limsids, fastq_paths, index_paths)
+		count(datasets_to_quantify, tags, ids, limsids, fastq_paths, index_paths)
 
 		// make a channel of dataset (names) and paths that contain quantified data
-		merge_process_emissions(quantify, ['opt', 'quantification_path'])
+		merge_process_emissions(count, ['opt', 'quantification_path'])
 			.map{rename_map_keys(it, ['quantification_path'], ['quantification path'])}
 			.map{merge_metadata_and_process_output(it)}
 			.dump(tag:'quantification:cell_ranger:quantified_datasets', pretty:true)
@@ -76,7 +76,7 @@ workflow cell_ranger {
 		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel
 
 		// collate the software version yaml files into one channel
-		concat_workflow_emissions([quantify], 'versions')
+		concat_workflow_emissions([count], 'versions')
 			.collect()
 			.set{versions}
 
