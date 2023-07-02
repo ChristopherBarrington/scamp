@@ -111,3 +111,11 @@ disableHugoGeneratorInject = true
   themeVariantAuto = [ "relearn-light", "relearn-dark" ]
   titleSeparator = "|"
   viewURL = "https://github.com/ChristopherBarrington/scamp/blob"
+
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^SCAMP_']
+
+[module]
+[[module.imports]]
+  path = 'github.com/McShelby/hugo-theme-relearn'
