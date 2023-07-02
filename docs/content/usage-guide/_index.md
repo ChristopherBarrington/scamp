@@ -11,6 +11,7 @@ headingPre: |
 
 [module docs]: {{< ref "/modules" >}}
 [workflow docs]: {{< ref "/workflows" >}}
+[scamp releases]: https://github.com/ChristopherBarrington/scamp/releases
 
 These notes illustrate how to setup an analysis using {scamp}. The structure of the parameters file and the command line usage is described. Detailed descriptions of the parameters can be found in the [modules][module docs] or [workflows][workflow docs] documentation.
 
@@ -82,15 +83,11 @@ export NXF_HOME=/nemo/stp/babs/working/barrinc/nextflow
 
 (It is currently a bit of a faff though it may move into a container) The following snippet will use the `guess_scamp_file.py` script that is included in {scamp} to find the directory for the project and parse the accompanying design file. First, {scamp} must be pulled and its `bin` added to your `PATH`. For command line options, use `guess_scamp_file.py --help`. The script includes a set of default parameters, which will need to be updated as we include new protocols.
 
-{{% notice style="warning" title=" " icon=" " %}}
-The `nextflow pull` will not work until the repository is made public, has `main` content and/or a `tag`. Use the above `NXF_HOME` for now.
-{{% /notice %}}
-
 {{< tab title="bash" >}}
 {{< highlight bash >}}
 export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
 
-nextflow pull ChristopherBarrington/scamp
+nextflow pull ChristopherBarrington/scamp -revision main
 guess_scamp_file.py --genome mm10 --lims-id SC22051 --output-file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
@@ -99,11 +96,11 @@ guess_scamp_file.py --genome mm10 --lims-id SC22051 --output-file scamp-file.yam
 Check the guessed parameters file! Pay particular attention to the LIMS IDs associated to dataset, the feature types and sample names!
 {{% /notice %}}
 
-Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched:
+Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched using a [specific release][scamp releases] such as `23.07.02` or the current version using `main`. Using a specific tag is recommended for reproducibility.
 
 {{< tab title="bash" >}}
 {{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision <release> \
+nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
   --scamp-file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
@@ -112,7 +109,7 @@ If you want to test you configuration file without running any real analysis, yo
 
 {{< tab title="bash" >}}
 {{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision <release> \
+nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
   -stub-run -profile stub_run \
   --scamp-file scamp-file.yaml
 {{< /highlight >}}
