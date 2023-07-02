@@ -74,8 +74,6 @@ For now, the processes are __not__ containerised. All software, packages and lib
 module load CellRanger-ARC/2.0.1
 module load CellRanger/7.1.0
 conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
-
-export NXF_HOME=/nemo/stp/babs/working/barrinc/nextflow
 {{< /highlight >}}
 {{% /notice %}}
 
