@@ -21,8 +21,8 @@ relativeURLs = true # true -> rewrite all relative URLs to be relative to the cu
 uglyURLs = false     # true -> basic/index.html -> basic.html
 
 # the directory where Hugo reads the themes from
-themesdir = "themes"
-theme = "hugo-theme-relearn"
+# themesdir = "themes"
+# theme = "hugo-theme-relearn"
 
 # the main language of this site
 languageCode = "en"
@@ -111,7 +111,3 @@ disableHugoGeneratorInject = true
   themeVariantAuto = [ "relearn-light", "relearn-dark" ]
   titleSeparator = "|"
   viewURL = "https://github.com/ChristopherBarrington/scamp/blob"
-
-[security]
-  [security.funcs]
-    getenv = ['^HUGO_', '^CI$', '^SCAMP_']
