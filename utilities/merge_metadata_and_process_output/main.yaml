@@ -9,7 +9,7 @@ tags:
 arguments:
   - name: x
     type: map
-    description: `map` of `opt` and emitted outputs, where the first value is the input parameters map into which all susbsequent keys are merged.
+    description: A `map` of `opt` and emitted outputs, where the first value is the input parameters map into which all susbsequent keys are merged.
 
 value:
   description: First value of `x` with additional values added (and overridden).
