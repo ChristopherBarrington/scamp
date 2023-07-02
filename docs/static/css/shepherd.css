@@ -1,0 +1,86 @@
+
+/* shepherd box */
+
+.btn {
+	width: 100%;
+	text-align: center;
+}
+
+.btn > * {
+	width: 100%
+}
+
+.shepherd-button {
+	background: var(--MAIN-BG-color);
+	color: var(--BOX-TEXT-color);
+	flex-grow: 1;
+	padding: 1rem;
+	border-radius: 0rem;
+	border-top: solid 7px var(--BOX-TEXT-color);
+/*	border-right: solid 0.2rem var(--BOX-TEXT-color);*/
+	margin: 0rem;
+	font-weight: bold;
+}
+
+.shepherd-button:not(:disabled):hover {
+	background: var(--SECONDARY-color);
+}
+
+.shepherd-header {
+	border-radius: 0rem;
+	background: var(--PRIMARY-color) !important;
+}
+
+.shepherd-footer {
+	border-radius: 0rem;
+	padding: 0rem;
+}
+
+.shepherd-title {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: larger;
+}
+
+.shepherd-cancel-icon {
+	color: var(--BOX-TEXT-color) !important;
+	font-weight: bold;
+	font-size: large;
+}
+
+.shepherd-content {
+	border-radius: 0rem;
+	border: solid 6px var(--BOX-TEXT-color);
+	padding:0 ;
+	background: var(--MAIN-BG-color);
+}
+
+/* arrows */
+
+.shepherd-element[data-popper-placement^='left'] .shepherd-arrow,
+.shepherd-element.shepherd-pinned-left .shepherd-arrow {
+  right: -1rem;
+}
+
+.shepherd-element[data-popper-placement^='left'] .shepherd-arrow:before,
+.shepherd-element.shepherd-pinned-left .shepherd-arrow:before {
+  transform: rotate(180deg);
+}
+
+.shepherd-element .shepherd-arrow {
+  height: auto;
+  width: auto;
+}
+
+.shepherd-element .shepherd-arrow:before {
+  content: url('/images/arrow.svg');
+  display: inline-block;
+  visibility: show;
+}
+
+/* line numbers in code chunks */
+
+.shepherd-highlight a.highlight {
+	width: 0;
+	visibility: hidden;
+}

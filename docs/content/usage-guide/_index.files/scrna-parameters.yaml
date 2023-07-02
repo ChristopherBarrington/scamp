@@ -1,0 +1,49 @@
+_project:
+    lab: morisn
+    scientist: christopher.cooke
+    lims id: SC22034
+    babs id: nm322
+    type: 10X-3prime
+    genomes:
+        mm10:
+            organism: mus musculus
+            assembly: mm10
+            ensembl release: 98
+
+_defaults:
+    fastq paths:
+        - inputs/primary_data/220221_A01366_0148_AH7HYGDMXY/fastq
+        - inputs/primary_data/220310_A01366_0156_AH5YTYDMXY/fastq
+        - inputs/primary_data/220818_A01366_0266_BHCJK7DMXY/fastq
+        - inputs/primary_data/230221_A01366_0353_AHNH37DSX5/fastq
+    feature types:
+        Gene Expression:
+            - COO4671A1
+            - COO4671A2
+            - COO4671A3
+            - COO4671A4
+    feature identifiers: name
+
+cell ranger and seurat:
+    _defaults:
+        stages:
+            - quantification/cell ranger
+            - seurat/prepare/cell ranger
+        index path: inputs/10x_indexes/refdata-cellranger-mm10-3.0.0
+        genome: mm10
+
+    stella 120h rep1:
+        limsid: COO4671A1
+        dataset tag: ST120R1
+
+    pecam1 120h rep1:
+        limsid: COO4671A2
+        dataset tag: P120R1
+
+    ssea1 120h rep1:
+        limsid: COO4671A3
+        dataset tag: SS120R1
+
+    blimp1 + ssea1 120h rep1:
+        limsid: COO4671A4
+        dataset tag: BS120R1

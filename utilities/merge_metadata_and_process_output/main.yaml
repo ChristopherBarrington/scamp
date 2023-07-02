@@ -1,0 +1,34 @@
+name: combine metadata and process outputs
+
+description: |
+  Combines keys from maps to give the set of input parameters to a process and its emitted values.
+
+tags:
+  - utility
+
+arguments:
+  - name: x
+    type: map
+    description: `map` of `opt` and emitted outputs, where the first value is the input parameters map into which all susbsequent keys are merged.
+
+value:
+  description: First value of `x` with additional values added (and overridden).
+
+example: |
+  // run a process, providing the required channels
+  module_name(opt, tags, ids)
+
+  // make a channel of outputs from the module
+  merge_process_emissions(make_object, ['opt', 'seurat'])
+    // { "opt": {
+    //      "ids": ["A", "B", "C"],
+    //      "secret": "foo-bar"},
+    //   "output_file": "/path/to/cached/task/out.file" }
+
+    .map{merge_metadata_and_process_output(it)}
+    // { "ids": ["A", "B", "C"],
+    //   "secret": "foo-bar",
+    //   "output_file": "/path/to/cached/task/out.file" }
+
+authors:
+  - "@ChristopherBarrington"

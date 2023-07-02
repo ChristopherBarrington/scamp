@@ -1,0 +1,104 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: laba
+    scientist: scientist.a
+    lims id: SC23001
+    babs id: sn001
+    genomes:
+        mm10_mcherry:
+            organism: mus musculus
+            assembly: mm10
+            ensembl release: 98
+            non-nuclear contigs:
+                - chrM
+            mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+            cell cycle genes: inputs/cell_cycle_genes.yaml
+
+_defaults:
+    genome: mm10_mcherry
+    fastq paths:
+        - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY/fastq
+        - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2/fastq
+        - inputs/data_sa154/220420_A01366_0179_BH72WWDMXY/fastq
+        - inputs/data_sa154/220422_A01366_0180_BHJLLNDSX3/fastq
+        - inputs/data_sa154/220425_A01366_0182_BH7HJ3DMXY/fastq
+        - inputs/data_sa154/220428_A01366_0187_BHCFHLDMXY/fastq
+        - inputs/data_sa154/220505_A01366_0193_BHKC3MDSX3/fastq
+        - inputs/data_sa154/220526_A01366_0207_BHCGLCDMXY/fastq
+        - inputs/data_sa154/220531_A01366_0211_AHCGNYDMXY/fastq
+        - inputs/data_sa154/220615_A01366_0219_AHK7WHDSX3/fastq
+        - inputs/data_sa154/220726_A01366_0242_BHN3GKDSX3/fastq
+        - inputs/data_sa154/220726_A01366_0243_AH5KL2DRX2/fastq
+        - inputs/data_sa154/220823_A01366_0268_AH5HJJDRX2/fastq
+        - inputs/data_sa154/220826_A01366_0270_BHGFMVDMXY/fastq
+        - inputs/data_sa154/220907_A01366_0275_AHGFV2DMXY/fastq
+        - inputs/data_sa154/220920_A01366_0282_AHCMHFDRX2/fastq
+        - inputs/data_sa154/220922_A01366_0283_AHF7FYDMXY/fastq
+        - inputs/data_sa154/221117_A01366_0317_BHGG3KDMXY/fastq
+        - inputs/data_sa154/221118_A01366_0319_AH7GYHDRX2/fastq
+        - inputs/data_sa154/221215_A01366_0329_AH7VKTDSX5/fastq
+        - inputs/data_sa154/221215_A01366_0330_BHNGLVDRX2/fastq
+        - inputs/data_sa154/221222_A01366_0333_AHGMKHDMXY/fastq
+        - inputs/data_sa154/230105_A01366_0334_BHJJ5VDSX5/fastq
+        - inputs/data_sa154/230106_A01366_0336_AHKFGJDSX5/fastq
+        - inputs/data_sa154/230201_A01366_0347_AHVLN5DRX2/fastq
+        - inputs/data_sa154/230420_A01366_0377_AHNFLGDRX2/fastq
+        - inputs/data_sa154/230511_A01366_0386_AHKC5TDMXY/fastq
+        - inputs/data_sa154/230526_A01366_0392_AHF3LVDSX7/fastq
+    feature types:
+        Gene Expression:
+            - AHM4688A1
+            - AHM4688A2
+            - AHM4688A3
+            - AHM4688A7
+            - AHM4688A9
+            - AHM4688A11
+            - AHM4688A15
+            - AHM4688A17
+            - AHM4688A19
+            - AHM4688A21
+            - AHM4688A23
+            - AHM4688A25
+            - AHM4688A27
+        Chromatin Accessibility:
+            - AHM4688A4
+            - AHM4688A5
+            - AHM4688A6
+            - AHM4688A8
+            - AHM4688A10
+            - AHM4688A12
+            - AHM4688A16
+            - AHM4688A18
+            - AHM4688A20
+            - AHM4688A22
+            - AHM4688A24
+            - AHM4688A26
+            - AHM4688A28
+
+seurat:
+    _defaults:
+        stages:
+            - quantification/cell_ranger_arc
+            - seurat/prepare/cell_ranger_arc
+        index path: inputs/cellranger_arc_ref
+        feature identifiers: name
+        quantification method: cell ranger arc
+
+    8 weeks sample1:
+        limsid:
+            - AHM4688A1
+            - AHM4688A4
+        # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
+
+    8 weeks sample2:
+        limsid:
+            - AHM4688A2
+            - AHM4688A5
+        # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
+
+    8 weeks sample3:
+        limsid:
+            - AHM4688A3
+            - AHM4688A6
+        quantification path: inputs/cellranger_sa154/8weeks_sample3/outs

@@ -1,0 +1,117 @@
+
+# this is a required setting for this theme to appear on https://themes.gohugo.io/
+# change this to a value appropriate for you; if your site is served from a subdirectory
+# set it like "https://example.com/mysite/"
+baseURL = "https://example.com/"
+
+# canonicalization will only be used for the sitemap.xml and index.xml files;
+# if set to false, a site served from a subdirectory will generate wrong links
+# inside of the above mentioned files; if you serve the page from the servers root
+# you are free to set the value to false as recommended by the official Hugo documentation
+canonifyURLs = true # true -> all relative URLs would instead be canonicalized using baseURL
+
+# required value to serve this page from a webserver AND the file system;
+# if you don't want to serve your page from the file system, you can also set this value
+# to false
+relativeURLs = true # true -> rewrite all relative URLs to be relative to the current content
+
+# if you set uglyURLs to false, this theme will append 'index.html' to any branch bundle link
+# so your page can be also served from the file system; if you don't want that,
+# set disableExplicitIndexURLs=true in the [params] section
+uglyURLs = false     # true -> basic/index.html -> basic.html
+
+# the directory where Hugo reads the themes from
+themesdir = "themes"
+theme = "hugo-theme-relearn"
+
+# the main language of this site
+languageCode = "en"
+
+# make sure your defaultContentLanguage is the first one in the [Languages]
+# array below, as the theme needs to make assumptions on it
+defaultContentLanguage = "en"
+
+# if you want to get rrrid o' ourrr pirrrates nonsense uncomment th' next line
+# disableLanguages = ['pir']
+
+# the site's title
+# title = "scamp"
+
+# We disable this for testing the exampleSite; you must do so too
+# if you want to use the themes parameter disableGeneratorVersion=true;
+# otherwise Hugo will create a generator tag on your home page
+disableHugoGeneratorInject = true
+
+[outputs]
+  # add JSON to the home to support Lunr search; This is a mandatory setting
+  # for the search functionality
+  # add PRINT to home, section and page to activate the feature to print whole
+  # chapters
+  home = ["HTML", "RSS", "PRINT", "SEARCH", "SEARCHPAGE"]
+  section = ["HTML", "RSS", "PRINT"]
+  page = ["HTML", "RSS", "PRINT"]
+
+[markup]
+  [markup.highlight]
+    guessSyntax = false
+    lineNos = false
+    lineNumbersInTable = false
+    anchorLineNos = true
+    style = "github"
+
+  [markup.goldmark.renderer]
+    unsafe = true
+
+# menu shortcuts
+[Languages]
+  [Languages.en]
+    title = "scamp"
+    [Languages.en.params]
+      landingPageName = "<i class='fas fa-home'></i> Home"
+
+[menu]
+  [[menu.shortcuts]]
+    name = "<i class='fas fa-fw fa-tags'></i> tags"
+    url = "tags/"
+    weight = 1
+
+  [[menu.shortcuts]]
+    name = "<i class='fab fa-fw fa-github'></i> scamp"
+    url = "https://github.com/ChristopherBarrington/scamp"
+    weight = 2
+
+  [[menu.shortcuts]]
+    name = "<i class='fas fa-random'></i> nextflow.io"
+    url = "https://nextflow.io"
+    weight = 3
+
+  [[menu.shortcuts]]
+    name = "<i class='fas fa-cog fa-spin'></i> nextflow docs"
+    url = "https://nextflow.io/docs/latest"
+    weight = 4
+
+# settings specific to this theme's features; choose to your liking and
+# consult this documentation for explanation
+[params]
+  additionalContentLanguage = [ "en" ]
+  alwaysopen = false
+  author = "Christopher Barrington"
+  collapsibleMenu = true
+  description = "Documentation for scamp"
+  disableBreadcrumb = false
+  disableInlineCopyToClipBoard = true
+  disableLandingPageButton = false
+  disableNextPrev = true
+  disableSeoHiddenPages = true
+  disableShortcutsTitle = false
+  disableToc = false
+  editURL = "https://github.com/ChristopherBarrington/scamp/edit/main/docs/content"
+  showVisitedLinks = false
+  themeVariant = [ "auto", "relearn-bright", "relearn-light", "relearn-dark", "learn", "neon" ]
+  themeVariantAuto = [ "relearn-light", "relearn-dark" ]
+  titleSeparator = "|"
+  viewURL = "https://github.com/ChristopherBarrington/scamp/blob"
+
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^SCAMP_']

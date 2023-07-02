@@ -1,0 +1,25 @@
+name: format a key using input strings
+
+description: |
+  Joins strings togther with a spearator in the aim of making a uniquely identifiable identifier. But does no checking for any type of unique-ness.
+
+tags:
+  - utility
+
+arguments:
+  - name: values
+    type: strings or map
+    description: Can be a collection of strings or a map. If it is a `Map` then the values are taken and joined togther.
+  - name: sep
+    type: string
+    description: Separator to use that will join the string `values` togther. Deafults to " / ".
+
+example: |
+  format_unique_key(['abc', 123])
+  // "abc / 123"
+
+  format_unique_key([foo:'abc', bar:123], sep='.')
+  // "abc.123"
+
+authors:
+  - "@ChristopherBarrington"

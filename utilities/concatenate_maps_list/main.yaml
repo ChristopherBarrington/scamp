@@ -1,0 +1,27 @@
+name: concatenate maps list
+
+description: |
+  Concatenate a collection of `map`s into a single `map`, overriding with successive keys.
+
+tags:
+  - utility
+
+arguments:
+  - name: x
+    type: maps
+    description: Collection of `map` objects. Each `map` is added together with increasing importance; successive `map` keys override those already defined.
+
+value:
+  description: `map` with every key from every `map` in `x`.
+
+example: |
+  x = [first: 'sherlock', second: 'john']
+  y = [first: 'del boy', third: 'rodney']
+
+  concatenate_maps_list([x,y])
+  // { "first": "del boy",
+  //   "second": "john",
+  //   "third": "rodney" }
+
+authors:
+  - "@ChristopherBarrington"

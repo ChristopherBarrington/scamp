@@ -1,0 +1,14 @@
+
+// targets must start `line-`
+// these will be replaced by regex for the tour name
+
+{
+	"program" : {
+		"target": 3,
+		"title": "working programs",
+		"text": "The expected output file is created as an empty file."},
+	"yaml_records" : {
+		"target": 4,
+		"title": "versions and parameters",
+		"text": "These expected files are also created."}
+}

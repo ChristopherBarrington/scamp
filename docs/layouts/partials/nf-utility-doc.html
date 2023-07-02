@@ -1,0 +1,52 @@
+
+{{ $page_context := .Page }} <!-- not sure how this works -->
+{{ $commit_id := getenv "SCAMP_COMMIT" }}
+{{ $viewURL := .Site.Params.viewURL }}
+{{ $pagePath := replace .File.Path ".md" "" }}
+
+<!-- show description -->
+
+<p>{{ .Params.description | markdownify | safeHTML }}</p>
+
+{{ partial "shortcodes/button.html" (dict
+           "context" $page_context
+           "href" (printf "%s/%s/%s" $viewURL $commit_id $pagePath)
+           "target" "_blank"
+           "style" "transparent"
+           "icon" "fab fa-github"
+           "content" "github") }}
+
+<!-- show arguments table -->
+
+{{ if $arguments := .Params.arguments }}
+	<h2 id="arguments">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "th-list") }} Arguments</h2>
+	<table class="parameters-table">
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Type</th>
+		</tr>
+		{{ range $argument := $arguments }}
+			{{ $name := index $argument "name" }}
+			<tr>
+				<td><code>{{ index $argument "name" }}</code></td>
+				<td>{{ index $argument "description" | markdownify }}</td>
+				<td><code>{{ index $argument "type" }}</code></td>
+			</tr>
+		{{ end }}
+	</table>
+{{ end }}
+
+<!-- show output description -->
+
+{{ if $output_value := .Params.value }}
+	<h2 id="output-value">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "sign-out-alt") }} Output value</h2>
+	{{ index $output_value "description" | markdownify}}
+{{ end }}
+
+<!-- show the example -->
+
+{{ if $example := .Params.example }}
+	<h2 id="example">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "desktop") }} Example</h2>
+	{{ highlight $example "groovy" }}
+{{ end }}

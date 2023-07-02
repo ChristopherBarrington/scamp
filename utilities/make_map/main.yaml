@@ -1,0 +1,27 @@
+name: make a map from two collections
+
+description: |
+  Create `Map` from a `Collection` of values and keys.
+
+tags:
+  - utility
+
+arguments:
+  - name: values
+    type: Collection
+    description: Values in the new `Map`.
+  - name: keys
+    type: strings
+    description: Keys used in new `Map` to access `values`.
+
+example: |
+  values = ['sherlock', 'john', 'james']
+  keys = ['first', 'second', 'third']
+
+  make_map(values, keys)
+  // { "first": "sherlock",
+  //   "second": "john",
+  //   "third": "james" }
+
+authors:
+  - "@ChristopherBarrington"

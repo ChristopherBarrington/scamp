@@ -1,0 +1,29 @@
+
+/* modify the copy button in the top-right corner of the chunk */
+
+pre .copy-to-clipboard-button {
+	background-color: transparent;
+	border: hidden;
+	color: var(--INTERNAL-SECONDARY-color);
+	visibility: hidden;
+}
+
+.copy-to-clipboard-button > i {
+	font-size: 1.3rem;
+}
+
+pre .copy-to-clipboard-button:hover {
+	background-color: transparent;
+	color: var(--INTERNAL-ACCENT-color);
+}
+
+.highlight:hover > pre .copy-to-clipboard-button{
+	visibility: visible;
+}
+
+/* remove border and padding from code chunks */
+
+.shepherd-highlight pre.pre-code {
+    padding: 0rem;
+    border-style: none;
+}

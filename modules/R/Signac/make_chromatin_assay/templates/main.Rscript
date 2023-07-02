@@ -1,0 +1,75 @@
+#! Rscript
+
+# *************************************************************************************************
+# given a path of cell ranger formatted output, create an assay ready to use in seurat
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(dplyr)
+library(magrittr)
+library(purrr)
+library(scales)
+library(scampr)
+library(Seurat)
+library(Signac)
+library(stringr)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('making a chromatin assay using signac', level='main')
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(feature_type = "$feature_type") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+# -------------------------------------------------------------------------------------------------
+# get data to make the assay
+# -------------------------------------------------------------------------------------------------
+
+log_message('preparing to atac-seq assay', level='section')
+
+# load fragments file from cell ranger `outs` directory
+atac_fragments_file <- file.path('quantification_path', 'atac_fragments.tsv.gz')
+
+# load counts from the list of matrices
+readRDS(file='counts_matrices.rds') |>
+	pluck(feature_type) -> atac_counts
+
+# get a GRanges of peaks
+atac_counts |>
+	rownames() |>
+	StringToGRanges(sep=c(':', '-')) -> atac_peaks
+
+# load the gene annotations GRanges and get the genome Seqinfo 
+annotations <- readRDS('annotations.rds')
+seqinfo <- seqinfo(annotations)
+
+# print an update log message
+sprintf(fmt='atac-seq fragments file: %s', atac_fragments_file) |> log_message()
+atac_peaks |> length() |> comma() |> sprintf(fmt='%s atac peaks identified') |> log_message()
+
+# -------------------------------------------------------------------------------------------------
+# use this data to make the assay
+# -------------------------------------------------------------------------------------------------
+
+log_message('creating atac-seq assay', level='section')
+
+CreateChromatinAssay(counts=atac_counts, ranges=atac_peaks,
+                     genome=seqinfo, sep=c(':', '-'),
+                     fragments=atac_fragments_file, annotation=annotations,
+                     min.cells=0, max.cells=NULL, min.features=0,
+                     validate.fragments=TRUE) -> assay
+
+# -------------------------------------------------------------------------------------------------
+# save the output
+# -------------------------------------------------------------------------------------------------
+
+log_message('saving assay.rds', level='section')
+
+saveRDS(object=assay, file='assay.rds')

@@ -1,0 +1,103 @@
+#! Rscript
+
+# *************************************************************************************************
+# given a list of assays and assay names, create a minimal seurat object
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(magrittr)
+library(purrr)
+library(scampr)
+library(Seurat)
+library(Signac)
+library(stringr)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('making a seurat object from a collection of assays', level='main')
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(assay_names = "$assay_names",
+	remove_barcode_suffix = $remove_barcode_suffix,
+     misc_names = "$misc_names",
+     project = "$project") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+# -------------------------------------------------------------------------------------------------
+# create a seurat object with at least one assay
+# -------------------------------------------------------------------------------------------------
+
+log_message("creating seurat object", level='section')
+
+assay_files <- list.files(path='assays', pattern='*.rds', full.names=TRUE)
+assay_names %<>% str_split(pattern=',') %>% pluck(1)
+
+sprintf(fmt='found %s assays', length(assay_files)) |> log_message()
+sprintf(fmt='provided %s assay names', length(assay_names)) |> log_message()
+
+if(length(assay_names) != length(assay_files))
+	stop('number of assay files does not match number of comma-separated assay names!')
+
+sprintf(fmt='found %s assays', length(assay_names)) |> log_message()
+
+for(i in seq_along(assay_files)) {
+	assay_file <- assay_files[i]
+	assay_name <- assay_names[i]
+
+	sprintf(fmt='adding `%s` from %s', assay_name, assay_file) |> log_message()
+
+	if(i == 1) {
+		CreateSeuratObject(project=project, meta.data=NULL,
+		                   counts=readRDS(assay_file), assay=assay_name,
+		                   names.field=1, names.delim='_',
+		                   min.cells=0, min.features=0) -> seurat
+	} else {
+		seurat[[assay_name]] <- readRDS(assay_file)
+	}
+}
+
+# -------------------------------------------------------------------------------------------------
+# remove trailing numeric identifiers from barcodes, if requested
+# -------------------------------------------------------------------------------------------------
+
+log_message('checking if cells should be renamed and have `-1` removed from barcodes', level='section')
+
+if(remove_barcode_suffix) {
+	seurat %>%
+		Cells() |>
+		str_remove('pecam1_120h_rep2_') |>
+		str_remove('-\\\\d+\$') -> cell_ids
+	seurat %<>% RenameCells(new.names=cell_ids)
+}
+
+# -------------------------------------------------------------------------------------------------
+# add useful parts of the index to the misc slot of the seurat object
+# -------------------------------------------------------------------------------------------------
+
+log_message("adding information to seurat object's misc slot", level='section')
+
+misc_files <- list.files(path='misc', pattern='*.rds', full.names=TRUE)
+misc_names %<>% str_split(pattern=',') %>% pluck(1)
+
+sprintf(fmt='found %s misc files', length(misc_files)) |> log_message()
+sprintf(fmt='provided %s misc names', length(misc_names)) |> log_message()
+
+if(length(misc_names) != length(misc_files))
+	stop('number of misc files does not match number of comma-separated assay misc!')
+
+for(i in seq_along(misc_files)) {
+	misc_file <- misc_files[i]
+	misc_name <- misc_names[i]
+
+	sprintf(fmt='adding `%s` from %s', misc_name, misc_file) |> log_message()
+
+	Misc(object=seurat, slot=misc_name) <- readRDS(misc_file)
+}
+
+saveRDS(object=seurat, file='seurat.rds')

@@ -1,0 +1,22 @@
+process complicated_analysis {
+  tag "$tag"
+
+  cpus 16
+  memory '64GB'
+  time '3d'
+
+  input:
+    val opt
+    val tag
+    val sample
+    file 'db'
+
+  output:
+    val opt, emit: opt
+    path 'task.yaml', emit: task
+    path 'versions.yaml', emit: versions
+    path 'output.file', emit: output
+
+  script:
+    template workflow.stubRun ? 'stub.sh' : 'main.sh'
+}

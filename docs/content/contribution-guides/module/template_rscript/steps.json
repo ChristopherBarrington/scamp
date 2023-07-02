@@ -1,0 +1,22 @@
+
+// targets must start `line-`
+// these will be replaced by regex for the tour name
+
+{
+	"shebang" : {
+		"target": 1,
+		"title": "the ricky martin line",
+		"text": "Any interpreter can be used, as long as it would work as <code>./script.sh</code>. The interpreter must be available on the command line, whether that be by a module, environment or parent shell."},
+	"nfvalues" : {
+		"target": 10,
+		"title": "Nextflow input parameters",
+		"text": "This list of parameters will be exported to the global environment and written to `task.yaml`. This functionality is exported from {scampr}."},
+	"packageversions" : {
+		"target": 6,
+		"title": "R package versions",
+		"text": "A record of package versions is written using {scampr} for any libraries loaded by the script."},
+	"output" : {
+		"target": 14,
+		"title": "Write output file(s)",
+		"text": "Any output from the function should be saved in an appropriate format. These files should be listed in the `output` stanza."},
+}

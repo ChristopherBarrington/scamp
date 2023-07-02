@@ -1,0 +1,18 @@
+
+# nextflow
+.nextflow*
+work
+results
+
+# hugo
+docs/.hugo_build.lock
+docs/public
+docs/resources
+
+# these would be auto-populated
+docs/content/modules
+docs/content/utilities
+docs/content/workflows
+
+# scamp
+inputs

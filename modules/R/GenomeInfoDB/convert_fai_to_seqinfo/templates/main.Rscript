@@ -1,0 +1,46 @@
+#! Rscript
+
+# *************************************************************************************************
+# given the path to an fai file, this script:
+# - creates a Seqinfo object
+# - saves it as an rds file
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(dplyr)
+library(gtools)
+library(magrittr)
+library(GenomeInfoDb)
+library(rtracklayer)
+library(scampr)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('making a seqinfo from fai', level='main')
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(genome_name = "$genome_name",
+     fai_file = "$fai_file") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+# -------------------------------------------------------------------------------------------------
+# make a Seqinfo object for the genome
+# -------------------------------------------------------------------------------------------------
+
+log_message('making a Seqinfo object for the genome', level='section')
+
+read.delim(file=fai_file, header=FALSE, sep='\t') |>
+	select(seqnames=V1, seqlengths=V2) |>
+	arrange(mixedorder(seqnames)) |>
+	arrange(match(seqnames, mixedsort(seqnames))) |>
+	as.list() |>
+	append(list(genome=genome_name)) |>
+	do.call(what=Seqinfo) -> seqinfo
+
+saveRDS(object=seqinfo, file='seqinfo.rds')

@@ -1,0 +1,62 @@
+#! Rscript
+
+# *************************************************************************************************
+# creates a list of counts matrices from a cell ranger formatted output directory
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(plyr)
+library(dplyr)
+library(magrittr)
+library(scampr)
+library(Seurat)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('reading a cell ranger formatted counts matrix into a list of matrices', level='main')
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(feature_identifier = "$feature_identifier") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+# -------------------------------------------------------------------------------------------------
+# read cell ranger formatted barcoded counts matrix into a list of counts matrices
+# -------------------------------------------------------------------------------------------------
+
+log_message('reading barcoded counts matrix', level='section')
+
+switch(feature_identifier,
+       accession=1,
+       name=2,
+       0) -> gene_column
+
+Sys.readlink('barcoded_matrix') |> sprintf(fmt='input barcoded counts matrix: %s') |> log_message()
+sprintf(fmt='using `%s` (column %s) as gene identifiers', feature_identifier, gene_column) |> log_message()
+
+Read10X(data.dir='barcoded_matrix',
+        gene.column=gene_column,
+        cell.column=1,
+        unique.features=TRUE,
+        strip.suffix=FALSE) -> all_counts
+
+saveRDS(object=all_counts, file='counts_matrices.rds')
+
+# -------------------------------------------------------------------------------------------------
+# get a copy of the features file, used to convert between accessions and feature names
+# -------------------------------------------------------------------------------------------------
+
+log_message("copying features file", level='section')
+
+# read the cell ranger features file that provides (ensembl) id and (gene name)
+file.path('barcoded_matrix', 'features.tsv.gz') |>
+	read.delim(sep='\t', header=FALSE) |>
+	rename(any_of(c(accession='V1', name='V2', feature_type='V3', chromosome='V4', start='V5', end='V6'))) |>
+	dlply(~feature_type, select, -feature_type) -> features
+
+saveRDS(object=features, file='features.rds')

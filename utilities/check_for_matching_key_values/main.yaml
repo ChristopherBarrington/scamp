@@ -1,0 +1,31 @@
+name: check that values for keys in maps match
+
+description: |
+  Verify that keys in a collection of `maps` match.
+
+tags:
+  - utility
+
+arguments:
+  - name: x
+    type: maps
+    description: Collection of maps that may or may not contain one or more of `keys`.
+  - name: keys
+    type: strings
+    description: Collection of strings that define which keys should be tested in `x`.
+
+value:
+  description: Boolean `true` or `false` if more than one of the `keys` were found in the `map`s and that all of the keys matched in each `map` for which there was a key/value pair.
+
+example: |
+  x = [first: 'sherlock', second: 'john']
+  y = [first: 'mary', second: 'john']
+
+  println(check_for_matching_key_values([x,y], ['first']))
+  // false
+
+  println(check_for_matching_key_values([x,y], ['second']))
+  // true
+
+authors:
+  - "@ChristopherBarrington"

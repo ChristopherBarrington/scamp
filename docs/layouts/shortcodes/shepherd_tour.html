@@ -1,0 +1,29 @@
+<!-- collect named parameters, supplying defaults for missing parameters -->
+
+{{ $tour := (default "tour" (.Get "tour")) }}
+{{ $lang := (default "bash" (.Get "lang")) }}
+{{ $anchor := (default (.Get "tour") (.Get "anchor")) }}
+{{ $btn_msg := (default "Start the tour!" (.Get "btn_msg")) }}
+{{ $icon := (default "bullhorn" (.Get "icon")) }}
+
+{{ $steps_file := (path.Join .Page.File.Dir $tour "steps.json") }}
+{{ $tour_name := printf "shepherd_tour_%s" $tour }}
+
+<!-- output the code chunk -->
+<div class="shepherd-highlight">{{ highlight ((path.Join .Page.File.Dir $tour "chunk") | readFile | safeHTML) $lang (printf "linenos=true,lineAnchors=%s" $anchor) }}</div>
+
+{{ if fileExists $steps_file }}
+	<!-- get the javascript elements and replace placeholders -->
+	{{ $steps_json := readFile $steps_file | replaceRE `("target":\s+)(\d+)` (printf "%s\"%s-%s\"" "$1" $anchor "$2") | safeJS }}
+	{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour_name $steps_json) | safeJS }}
+
+	<!-- output the parsed javascript(s) -->
+	<script type="text/javascript">{{ $shepherd }}</script>
+
+	<!-- make a button to start the tour -->
+	<p>{{ partial "shortcodes/button.html" (dict "context" .
+	                                             "style" "primary"
+	                                             "icon" $icon
+	                                             "href" (printf "javascript:%s.start();" $tour_name)
+	                                             "content" $btn_msg) }}</p>
+{{ end }}

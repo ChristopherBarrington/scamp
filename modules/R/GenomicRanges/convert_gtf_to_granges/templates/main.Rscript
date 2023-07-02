@@ -1,0 +1,61 @@
+#! Rscript
+
+# *************************************************************************************************
+# given the path to gtf and fai files, this script:
+# - creates a GRanges object
+# - saves it as an rds file
+# *************************************************************************************************
+
+# -------------------------------------------------------------------------------------------------
+# attach and record packages used in this Rscript
+# -------------------------------------------------------------------------------------------------
+
+library(dplyr)
+library(gtools)
+library(magrittr)
+library(GenomeInfoDb)
+library(rtracklayer)
+library(scampr)
+
+record_package_versions(root_name="${task.process}")
+
+log_message('making a granges from a gtf file', level='main')
+
+# -------------------------------------------------------------------------------------------------
+# collect nextflow properties for the task
+# -------------------------------------------------------------------------------------------------
+
+list(genome = "$genome",
+     gtf_file = "$gtf",
+     fai_file = "$fai") |>
+	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+
+# -------------------------------------------------------------------------------------------------
+# make a Seqinfo object for the genome
+# -------------------------------------------------------------------------------------------------
+
+log_message('making a Seqinfo object for the genome', level='section')
+
+read.delim(file=fai_file, header=FALSE, sep='\t') |>
+	select(seqnames=V1, seqlengths=V2) |>
+	arrange(mixedorder(seqnames)) |>
+	arrange(match(seqnames, mixedsort(seqnames))) |>
+	as.list() |>
+	append(list(genome=genome)) |>
+	do.call(what=Seqinfo) -> seqinfo
+
+# -------------------------------------------------------------------------------------------------
+# import GTF file
+# -------------------------------------------------------------------------------------------------
+
+log_message('making a granges of the gene models', level='section')
+
+import(con=gtf_file, format='GTF') -> granges
+
+if(mcols(granges)\$gene_biotype |> is.null())
+	mcols(granges)\$gene_biotype <- mcols(granges)\$gene_type
+
+seqlevels(granges) <- seqlevels(seqinfo)
+seqinfo(granges) <- seqinfo
+
+saveRDS(object=granges, file='granges.rds')

@@ -1,0 +1,33 @@
+name: pluck keys from a nested map
+
+description: |
+  Iteratively pluck keys from a map of maps.
+
+tags:
+  - utility
+
+arguments:
+  - name: map
+    type: map
+    description: Nested map of maps.
+  - name: path
+    type: strings
+    description: Collection of keys that are sought in `map`.
+  - name: missing
+    type: any
+    description: A value to return if no value is found at the end of `path`. Defaults to "missing".
+
+value:
+  description: The value at the end of the `path` in `map`.
+
+example: |
+  map = [foo: [bar: [baz: 123, buz: 456]]]
+  
+  pluck(map, ['foo', 'bar', 'baz'])
+  // 123
+  
+  pluck(map, ['francis', 'crick'], 'not found')
+  // 'not found'
+
+authors:
+  - "@ChristopherBarrington"
