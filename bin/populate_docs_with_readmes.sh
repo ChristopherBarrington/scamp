@@ -17,11 +17,15 @@ find scamp/utilities -name 'main.yaml' |
 find content/{modules,workflows,utilities} -mindepth 0 -type d |
 	xargs -I @ sh -c "hugo new --kind docs-group --force @/_index.md"
 
-sed -i 's/weight: /weight: 101/' content/modules/_index.md
-sed -i 's/weight: /weight: 102/' content/workflows/_index.md
-sed -i 's/weight: /weight: 103/' content/utilities/_index.md
 
-# sed -i .sed 's/weight: /weight: 101/' content/modules/_index.md
-# sed -i .sed 's/weight: /weight: 102/' content/workflows/_index.md
-# sed -i .sed 's/weight: /weight: 103/' content/utilities/_index.md
-# rm content/{modules,workflows,utilities}/_index.md.sed
+if [[ $OSTYPE == 'darwin'* ]]; then
+	sed -i .sed 's/weight: /weight: 101/' content/modules/_index.md
+	sed -i .sed 's/weight: /weight: 102/' content/workflows/_index.md
+	sed -i .sed 's/weight: /weight: 103/' content/utilities/_index.md
+	rm content/{modules,workflows,utilities}/_index.md.sed
+
+else
+	sed -i 's/weight: /weight: 101/' content/modules/_index.md
+	sed -i 's/weight: /weight: 102/' content/workflows/_index.md
+	sed -i 's/weight: /weight: 103/' content/utilities/_index.md
+fi
