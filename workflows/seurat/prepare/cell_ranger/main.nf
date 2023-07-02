@@ -132,10 +132,10 @@ workflow cell_ranger {
 		counts_matrices = barcoded_matrices.map{it.get('counts_matrices')}
 
 		// write rna assay to rds file
-		make_rna_assay(barcoded_matrices, tags, 'Gene Expression', counts_matrices)
+		make_assay(barcoded_matrices, tags, 'Gene Expression', counts_matrices)
 
 		// make a channel of newly created rna assays
-		merge_process_emissions(make_rna_assay, ['opt', 'assay'])
+		merge_process_emissions(make_assay, ['opt', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
 			.map{rename_map_keys(it, 'assay', sprintf('rna_assay_by_%s', it.get('identifier')))}
 			.branch{
@@ -208,7 +208,7 @@ workflow cell_ranger {
 		// make summary report for cell ranger arc stage
 		// -------------------------------------------------------------------------------------------------
 
-		all_processes = [convert_gtf_to_granges, write_10x_counts_matrices, make_rna_assay, make_object]
+		all_processes = [convert_gtf_to_granges, write_10x_counts_matrices, make_assay, make_object]
 
 		// collate the software version yaml files into one
 		concat_workflow_emissions(all_processes, 'versions')

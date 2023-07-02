@@ -52,10 +52,10 @@ workflow cell_ranger_arc {
 		path_to_gtfs        = genome_indexes.missing.map{it.get('gtf files')}
 
 		// create cell ranger arc indexes
-		make_index(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs, path_to_fastas, path_to_gtfs)
+		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs, path_to_fastas, path_to_gtfs)
 
 		// make a channel of newly created genome indexes, each defined in a map
-		merge_process_emissions(make_index, ['opt', 'path'])
+		merge_process_emissions(mkref, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'index path')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(genome_indexes.provided)
@@ -136,7 +136,7 @@ workflow cell_ranger_arc {
 		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel
 
 		// collate the software version yaml files into one channel
-		concat_workflow_emissions([make_index, count], 'versions')
+		concat_workflow_emissions([mkref, count], 'versions')
 			.collect()
 			.set{versions}
 
