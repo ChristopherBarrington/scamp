@@ -4,7 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 // include { mkref } from '../../modules/cell_ranger/mkref'
-include { count as quantify } from '../../../modules/cell_ranger/count'
+include { count } from '../../../modules/cell_ranger/count'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'

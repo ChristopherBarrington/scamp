@@ -3,9 +3,9 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { count as quantify }   from '../../../modules/cell_ranger_arc/count'
-include { make_libraries_csv }  from '../../../modules/cell_ranger_arc/make_libraries_csv'
-include { mkref as make_index } from '../../../modules/cell_ranger_arc/mkref'
+include { count }              from '../../../modules/cell_ranger_arc/count'
+include { make_libraries_csv } from '../../../modules/cell_ranger_arc/make_libraries_csv'
+include { mkref }              from '../../../modules/cell_ranger_arc/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'

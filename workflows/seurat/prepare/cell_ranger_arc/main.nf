@@ -10,9 +10,9 @@ import java.nio.file.Paths
 
 include { convert_gtf_to_granges } from '../../../../modules/R/GenomicRanges/convert_gtf_to_granges'
 
-include { make_assay as make_rna_assay } from '../../../../modules/R/Seurat/make_assay'
-include { make_object }                  from '../../../../modules/R/Seurat/make_object'
-include { write_10x_counts_matrices }    from '../../../../modules/R/Seurat/write_10x_counts_matrices'
+include { make_assay }                from '../../../../modules/R/Seurat/make_assay'
+include { make_object }               from '../../../../modules/R/Seurat/make_object'
+include { write_10x_counts_matrices } from '../../../../modules/R/Seurat/write_10x_counts_matrices'
 
 include { make_chromatin_assay } from '../../../../modules/R/Signac/make_chromatin_assay'
 
