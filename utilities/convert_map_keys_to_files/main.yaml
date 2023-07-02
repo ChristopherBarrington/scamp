@@ -15,7 +15,7 @@ arguments:
     description: Collection of strings that are keys in `x`. The string(s) in these keys are converted using `file()`. 
 
 value:
-  description: `x` `keys` are modified and the new `map` returned.
+  description: Keys of `x` are modified and the new `map` returned.
 
 example: |
   x = [first: 'sherlock', second: 'john', nemeses: ['james', 'lestrade']]
