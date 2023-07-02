@@ -1,7 +1,0 @@
-[security]
-  [security.funcs]
-    getenv = ['^HUGO_', '^CI$', '^SCAMP_']
-
-[module]
-[[module.imports]]
-  path = 'github.com/McShelby/hugo-theme-relearn'
