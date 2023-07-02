@@ -37,6 +37,7 @@ workflow cell_ranger {
 		// make a channel containing all information for the quantification process
 		parameters
 			.map{it.subMap(['unique id', 'dataset id', 'limsid', 'fastq paths', 'index path'])}
+			.dump(tag:'quantification:cell_ranger:datasets_to_quantify', pretty:true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
