@@ -12,7 +12,7 @@ arguments:
     description: Collection of `map` objects. Each `map` is added together with increasing importance; successive `map` keys override those already defined.
 
 value:
-  description: `map` with every key from every `map` in `x`.
+  description: A `map` with every key from every `map` in `x`.
 
 example: |
   x = [first: 'sherlock', second: 'john']
