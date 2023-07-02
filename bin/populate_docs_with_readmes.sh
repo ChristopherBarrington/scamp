@@ -15,7 +15,7 @@ find scamp/utilities -name 'main.yaml' |
 	xargs -I @ sh -c "SCAMP_DOC=scamp/@/main.yaml hugo new --kind doc-utility --force @.md"
 
 find content/{modules,workflows,utilities} -mindepth 0 -type d |
-	xargs --max-args 1 sh -c "hugo new --kind docs-group --force @/_index.md"
+	xargs -I @ sh -c "hugo new --kind docs-group --force @/_index.md"
 
 sed -i 's/weight: /weight: 101/' content/modules/_index.md
 sed -i 's/weight: /weight: 102/' content/workflows/_index.md
