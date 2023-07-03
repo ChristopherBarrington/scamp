@@ -1,5 +1,5 @@
 ---
-title: usage-guide
+title: usage guide
 weight: 1
 
 headingPre: |
