@@ -22,12 +22,20 @@ parser = argparse.ArgumentParser(
 group = parser.add_mutually_exclusive_group(required=True)
 
 group.add_argument(
-	"--lims-id", type=str, required=False, dest='lims_id',
-	help="A LIMS ID that could be found in the `data` directory.")
+	'--lims-id', type=str, required=False, dest='lims_id',
+	help='A LIMS ID that could be found in the `data` directory.')
 
 group.add_argument(
-	"--data-path", type=str, required=False, dest='data_path',
-	help="Path to the data directory for a project, it should contain `primary_data` and `{lims-id}_design.csv`.")
+	'--data-path', type=str, required=False, dest='data_path',
+	help='Path to the data directory for a project, it should contain `primary_data` and `{lims-id}_design.csv`.')
+
+parser.add_argument(
+	'--lab', type=str, required=False, dest='lab',
+	help='<lastname><initial> format for the lab.')
+
+parser.add_argument(
+	'--scientist', type=str, required=False, dest='scientist',
+	help='<firstname>.<lastname> format for the scientist')
 
 parser.add_argument(
 	'--genomes', type=str, nargs='+', required=True, dest='genomes',
@@ -85,6 +93,8 @@ def validate_arguments():
 
 	if args.data_path is None: get_data_path_from_lims_id()
 	if args.lims_id is None: get_lims_id_from_data_path()
+	if args.lab is None: get_lab_from_data_path()
+	if args.scientist is None: get_scientist_from_data_path()
 	if args.design_file is None: get_design_file_path()
 	if args.project_type is None: get_project_type_from_sample_sheet()
 
@@ -93,32 +103,49 @@ def validate_arguments():
 
 # if only given a lims id, find that directory
 def get_data_path_from_lims_id():
-	print('searching for {}/*/*/{}'.format(args.data_root, args.lims_id))
 	if args.lims_id is None:
 		print('cannot find a lims directory without `lims_id`!')
 		sys.exit()
+	
+	elif args.lab is not None and args.scientist is not None:
+		args.data_path = os.path.join(args.data_root, args.lab, args.scientist, args.lims_id)
+
 	else:
-		path = find_data_path_from_lims_id()
+		path = find_data_path()
 		if path is None:
 			print('no path found to {} via {}'.format(args.lims_id, args.data_root))
 			sys.exit()
 		else:
 			args.data_path = path
 
-def find_data_path_from_lims_id():
-	step = 1
-	labs = glob.glob(os.path.join(args.data_root, '*'))
-	for lab in labs:
-		scientists = glob.glob(os.path.join(lab, '*'))
-		for scientist in scientists:
-			print('serached: {}'.format(step), end='\r')
-			path = os.path.join(lab, scientist, args.lims_id)
-			if os.path.exists(path): return(path)
-		else: step = step + 1
+def find_data_path():
+	search_path = args.data_root
 
-# if lims id is not provided, get it from the data path
+	if args.lab is None:
+		search_path = os.path.join(search_path, '*')
+	else:
+		search_path = os.path.join(search_path, args.lab)
+
+	if args.scientist is None:
+		search_path = os.path.join(search_path, '*')
+	else:
+		search_path = os.path.join(search_path, args.scientist)
+
+	search_paths = glob.glob(os.path.join(search_path, args.lims_id))
+
+	for path in search_paths:
+		if os.path.exists(path):
+			return(path)
+
+# if lab, scientist or lims id are not provided, get them from the data path
 def get_lims_id_from_data_path():
-	args.lims_id = os.path.basename(args.data_path)
+	args.lims_id = args.data_path.split(os.path.sep)[-1]
+
+def get_scientist_from_data_path():
+	args.scientist = args.data_path.split(os.path.sep)[-2]
+
+def get_lab_from_data_path():
+	args.lab = args.data_path.split(os.path.sep)[-3]
 
 # get design file path
 def get_design_file_path():
@@ -164,16 +191,6 @@ def get_fastq_paths_from_data_path():
 	paths = glob.glob(args.fastq_paths_glob)
 	paths.sort(key=natural_keys)
 	return(paths)
-
-# ------------------------------------------------------------------------------------------------
-# get the lab and scientist from data_path
-# ------------------------------------------------------------------------------------------------
-
-def get_names_from_data_path():
-	who = args.data_path.split(os.path.sep)
-	lab = who[-3]
-	scientist = who[-2]
-	return(lab, scientist)
 
 # ------------------------------------------------------------------------------------------------
 # read and filter a sample sheet, checking that required columns exist
@@ -345,7 +362,6 @@ def main():
 	fastq_paths = get_fastq_paths_from_data_path()
 	dataset_index = get_dataset_index()
 	feature_types = get_feature_types()
-	lab,scientist = get_names_from_data_path()
 	library_types, sample_lims_ids = get_library_types()
 
 	# get parameters dependent on the above variables
@@ -354,8 +370,8 @@ def main():
 	# put the parameters together
 	params = {
 		'_project': {
-			'lab': lab,
-			'scientist': scientist,
+			'lab': args.lab,
+			'scientist': args.scientist,
 			'lims id': args.lims_id,
 			'babs id': 'unknown',
 			'type': args.project_type,
