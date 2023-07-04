@@ -172,13 +172,13 @@ def get_genome_parameters():
 			'assembly': 'mm10',
 			'ensembl release': 98,
 			'non-nuclear contigs': ['chrM'],
-			'mitochondrial features': 'inputs/mm10_mitochondrial_genes.yaml'},
+			'mitochondrial features': 'undefined'},
 		'GRCh38': {
 			'organism': 'homo sapiens',
 			'assembly': 'GRCh38',
 			'ensembl release': 98,
 			'non-nuclear contigs': ['chrM'],
-			'mitochondrial features': 'inputs/GRCh38_mitochondrial_genes.yaml'}}
+			'mitochondrial features': 'undefined'}}
 
 	genomes = {k:defaults[k] for k in args.genomes if k in defaults}
 	return(genomes)
