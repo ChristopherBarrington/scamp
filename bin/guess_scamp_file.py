@@ -92,8 +92,8 @@ def validate_arguments():
 	args.data_root = re.sub('/$', '', args.data_root)
 
 	if args.data_path is None: get_data_path_from_lims_id()
-	if args.lims_id is None: get_lims_id_from_data_path()
 	if args.lab is None: get_lab_from_data_path()
+	if args.lims_id is None: get_lims_id_from_data_path()
 	if args.scientist is None: get_scientist_from_data_path()
 	if args.design_file is None: get_design_file_path()
 	if args.project_type is None: get_project_type_from_sample_sheet()
