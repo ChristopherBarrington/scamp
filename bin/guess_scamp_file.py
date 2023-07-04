@@ -213,8 +213,8 @@ def read_design_file():
 def get_feature_types_to_search_terms():
 	# dictionary of search terms in `sample_name` and their feature type
 	return({
-		'Gene Expression': ['_GEX$', '_mxGEX$'],
-		'Chromatin Accessibility': ['_ATAC$', '_mxATAC$'],
+		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$'],
+		'Chromatin Accessibility': ['^ATAC_', '_ATAC$', '_mxATAC$'],
 		'CMO': ['_CMO$']})
 
 def get_library_types():
