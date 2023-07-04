@@ -42,6 +42,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          ref: ${{ github.ref_name }}
           submodules: recursive
       - name: Setup Pages
         id: pages
