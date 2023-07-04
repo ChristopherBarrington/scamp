@@ -271,21 +271,26 @@ def get_library_types():
 # ------------------------------------------------------------------------------------------------
 
 def get_dataset_index():
+	indexes_root = '/flask/reference/Genomics'
+	indexes_10x_root = os.path.join(indexes_root, '10x')
+	indexes_10x_3prime_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
+	indexes_10x_multiomics_root = os.path.join(indexes_10x_root, '10x_arc')
+
 	match args.project_type:
 		case '10X-3prime':
 			return({
-				'mm10': '/flask/reference/Genomics/10x/10x_transcriptomes/refdata-gex-mm10-2020-A',
-				'GRCh38': '/flask/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-2020-A'}.get(args.genome))
+				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
+				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
 
 		case '10X-Multiomics':
 			return({
-				'mm10': '/flask/reference/Genomics/10x/10x_arc/refdata-cellranger-arc-mm10-2020-A-2.0.0',
-				'GRCh38': '/flask/reference/Genomics/10x/10x_arc/refdata-cellranger-arc-GRCh38-2020-A-2.0.0'}.get(args.genome))
+				'mm10': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-mm10-2020-A-2.0.0'),
+				'GRCh38': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-GRCh38-2020-A-2.0.0')}.get(args.genome))
 
 		case '10X-FeatureBarcoding':
 			return({
-				'mm10': '/flask/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-arc-mm10-2020-A-2.0.0',
-				'GRCh38': '/flask/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-arc-GRCh38-2020-A-2.0.0'}.get(args.genome))
+				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
+				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
 
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
