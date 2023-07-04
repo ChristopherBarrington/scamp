@@ -92,7 +92,40 @@ if [[ -n ${NXF_HOME} ]]; then
 fi
 
 nextflow pull ChristopherBarrington/scamp -revision main
-guess_scamp_file.py --genome mm10 --lims-id SC22051 --output-file scamp-file.yaml
+export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
+{{< /highlight >}}
+{{< /tab >}}
+
+`guess_scamp_file.py` includes a set of default parameters, which will need to be updated as we include new protocols. Example usage is shown below, where we indicate the genome that we want to use for the project, the LIMS ID under which the data was produced and the name of the output YAML file. For command line options, use `guess_scamp_file.py --help`.
+
+{{< tabs title="guess_scamp_file.py usage examples" >}}
+
+{{< tab title="lims id" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --lims-id SC22034 \
+  --genome mm10 \
+  --output-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< tab title="data directory" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --data-path /nemo/stp/babs/inputs/sequencing/data/morisn/christopher.cooke/SC22034 \
+  --genome mm10 \
+  --output-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< tab title="lab, scientist and lims id" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --lab morisn \
+  --scientist christopher.cooke \
+  --lims-id SC22034 \
+  --genome mm10 \
+  --output-file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -110,14 +143,7 @@ Check the guessed parameters file! Pay particular attention to the LIMS IDs asso
 
 Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched using a [specific release][scamp releases] such as `23.07.02` or the current version using `main`. Using a specific tag is recommended for reproducibility.
 
-{{< tab title="bash" >}}
-{{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
-  --scamp-file scamp-file.yaml
-{{< /highlight >}}
-{{< /tab >}}
-
-If you want to test you configuration file without running any real analysis, you can use:
+If you want to test you configuration file without running any real analysis, you can run Nextflow in `stub-run` mode:
 
 {{< tab title="bash" >}}
 {{< highlight bash >}}
@@ -127,4 +153,13 @@ nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
 {{< /highlight >}}
 {{< /tab >}}
 
-This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though!
+This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though! Once you are confident, you can run the pipeline:
+
+{{< tab title="bash" >}}
+{{< highlight bash >}}
+nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
+  --scamp-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+This should now start the pipeline and show the processes being run for each of the analysis `stages` detailed in your configuration file.
