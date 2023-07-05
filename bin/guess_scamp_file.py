@@ -74,14 +74,9 @@ def validate_arguments():
 		print('`data_path` was provided but does not exist!')
 		exit_early = True
 
-	if os.path.exists(args.data_root) is False:
-		print('`data_root` does not exist!')
-		exit_early = True
-
 	if exit_early == True:
 		sys.exit()
 
-	args.data_root = re.sub('/$', '', args.data_root)
 
 	if args.data_path is None: get_data_path_from_lims_id()
 	if args.lims_id is None: get_lims_id_from_data_path()
@@ -106,15 +101,18 @@ def get_data_path_from_lims_id():
 			args.data_path = path
 
 def find_data_path_from_lims_id():
-	step = 1
+	if os.path.exists(args.data_root) is False:
+		print('`data_root` does not exist!')
+		sys.exit()
+
+	args.data_root = re.sub('/$', '', args.data_root)
 	labs = glob.glob(os.path.join(args.data_root, '*'))
+
 	for lab in labs:
 		scientists = glob.glob(os.path.join(lab, '*'))
 		for scientist in scientists:
-			print('serached: {}'.format(step), end='\r')
 			path = os.path.join(lab, scientist, args.lims_id)
 			if os.path.exists(path): return(path)
-		else: step = step + 1
 
 # if lims id is not provided, get it from the data path
 def get_lims_id_from_data_path():
