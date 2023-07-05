@@ -301,7 +301,7 @@ def get_datasets(sample_lims_ids):
 	for dataset,libraries in sample_lims_ids.items():
 		if len(libraries) == 1:
 			sample_lims_ids[dataset] = libraries.pop()
-	return({k:{'limsid': sample_lims_ids[k]} for k in sample_lims_ids})
+	return({k:{'description': k, 'limsid': sample_lims_ids[k]} for k in sample_lims_ids})
 
 # ------------------------------------------------------------------------------------------------
 # write the guessed parameters file
