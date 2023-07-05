@@ -9,6 +9,7 @@ process count {
 		val opt
 		val tag
 		val id
+		val description
 		val samples
 		path 'index_path'
 		file 'all_libraries.csv'
