@@ -19,6 +19,9 @@ steps:
       - key: id
         description: Output directory name
         type: string
+      - key: description
+        description: A short description of the sample. If missing, the `dataset name` value will be used.
+        type: string
       - key: limsid
         description: Sample name, used in the module to search `fastq paths` for the relevant FastQ files.
         type: string
