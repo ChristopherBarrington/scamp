@@ -1,7 +1,7 @@
 process count {
 	tag "$tag"
 
-	cpus 8
+	cpus 16
 	memory '64GB'
 	time '3d'
 
