@@ -51,15 +51,20 @@
 .shepherd-content {
 	border-radius: 0rem;
 	border: solid 6px var(--BOX-TEXT-color);
-	padding:0 ;
+	padding: 0 ;
 	background: var(--MAIN-BG-color);
+	right: 2rem;
+	left: -1rem;
+	top: -5rem;
+	position: fixed;
 }
 
 /* arrows */
 
 .shepherd-element[data-popper-placement^='left'] .shepherd-arrow,
 .shepherd-element.shepherd-pinned-left .shepherd-arrow {
-  right: -1rem;
+  right: 0rem;
+  top: -0.4rem !important;
 }
 
 .shepherd-element[data-popper-placement^='left'] .shepherd-arrow:before,
