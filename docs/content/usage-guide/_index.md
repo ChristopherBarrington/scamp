@@ -19,7 +19,7 @@ These notes illustrate how to setup an analysis using {scamp}. The structure of 
 
 ## Analysis configuration
 
-A `parameters.yaml` file is used to described all aspects of a project and should serve as a record for parameters used in the pipeline. Passing Nextflow parameters on the command line via `--parameter` mechanism should be avoided; this would create an unexpected structure in the parameters object that may not be accounted for and prevent the pipeline launching.
+A `parameters.yaml` file is used to described all aspects of a project and should serve as a record for parameters used in the pipeline. It will be passed to Nextflow as a parameter using `--scamp-file`.
 
 The structure of `parameters.yaml` allows aspects of a project to be recorded alongside multiple analyses that can contain multiple datasets in a plain text and human readable format. `parameters.yaml` keys that being with underscores are reserved by {scamp} and should not be used in other keys. At the first level, the project (`_project`) and analysis stanzas are specified, the latter can have any name but should be reasonably filename-safe. Within analysis stanzas there are datasets which can also be freely (but sensibly) named.
 
@@ -31,7 +31,7 @@ In this example for a scRNA-seq project, there are four datasets that will be qu
 
 {{< tabs title="Example parameters" >}}
 {{< tab title="scRNA-seq" >}}
-{{< shepherd_tour tour="scrna" lang="yaml" btn_msg="Take the input parameters tour" >}}
+{{< shepherd_tour tour="scrna" lang="yaml" btn_msg="Take a tour of the input parameters" >}}
 {{< /tab >}}
 
 {{< tab title="snRNA+ATAC-seq" >}}
