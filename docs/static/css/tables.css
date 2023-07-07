@@ -12,10 +12,18 @@ table code {
     border-width: 1px;
     border-style: solid;
     border-color: rgba( 134, 134, 134, .333 );
-
 }
 
 .parameters-table table, th, td {
     border: 0;
 }
 
+/* prevent text wrapping */
+
+.parameters-table th:last-child, td:last-child {  
+    text-align: center;
+}
+
+table th {
+    white-space: nowrap;
+}
