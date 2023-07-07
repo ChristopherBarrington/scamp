@@ -49,7 +49,7 @@
 				<th>Parameters key</th>
 				<th>Description</th>
 				<th>Type</th>
-				<th></th>
+				<th>Provider</th>
 			</tr>
 
 			{{ if $parameters := $step.parameters }}
@@ -59,16 +59,25 @@
 						<td>{{ index $info "description" | markdownify }}</td>
 						<td><code>{{ index $info "type" }}</code></td>
 						<td>
-							{{ if $info.optional }}
-								{{ partial "shortcodes/badge.html" (dict
-								           "context" $page_context
-								           "style" "tip" "title" " " "icon" " "
-								           "content" "optional")}}
-							{{ else }}
-								{{ partial "shortcodes/badge.html" (dict
-								           "context" $page_context
-								           "style" "warning" "title" " " "icon" " "
-								           "content" "required")}}{{ end }}
+							{{ $colours := dict "defaults" "green" "process" "blue" }}
+							{{ $icons := dict "defaults" "dog" "process" "cogs" }}
+							{{ $hovers := dict "defaults" "may be guessed by {scamp}" "process" "may be provided by upstream {scamp} process" }}
+
+							{{ if $info.providers }}
+								{{ range $provider := $info.providers }}
+									{{ $colour := index $colours $provider | default "orange" }}
+									{{ $icon := index $icons $provider | default "user" }}
+									{{ $hover := index $hovers $provider | default (printf "scamp-file parameter: `%s`" $provider) }}
+
+									{{ $args := dict
+										"context" $page_context
+										"title" " "
+										"style" $colour
+										"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon))
+										"hover" $hover }}
+									{{ partial "shortcodes/badge.html" $args }}
+								{{ end }}
+							{{ end }}
 						</td>
 					</tr>
 				{{ end }}
