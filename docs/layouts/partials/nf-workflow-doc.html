@@ -23,6 +23,7 @@
 	{{ range $step := $steps }}
 		{{ $name := index $step "name" }}
 		<h3 id="{{ anchorize $name }}">{{ markdownify $name }}</h3>
+		<p>{{ index $step "description" | markdownify }}</p>
 		{{ if $anchor := $step.anchor }}
 			{{ partial "shortcodes/button.html" (dict
 			           "context" $page_context
@@ -43,47 +44,60 @@
 				           "content" $module) }}
 			{{ end }}
 		{{ end }}
-		<p>{{ index $step "description" | markdownify }}</p>
-		<table class="parameters-table">
-			<tr>
-				<th>Parameters key</th>
-				<th>Description</th>
-				<th>Type</th>
-				<th>Provider</th>
-			</tr>
-
-			{{ if $parameters := $step.parameters }}
-				{{ range $info := $parameters }}
-					<tr>
-						<td><code>{{ index $info "key" }}</code></td>
-						<td>{{ index $info "description" | markdownify }}</td>
-						<td><code>{{ index $info "type" }}</code></td>
-						<td>
-							{{ $colours := dict "defaults" "green" "process" "blue" }}
-							{{ $icons := dict "defaults" "dog" "process" "cogs" }}
-							{{ $hovers := dict "defaults" "may be guessed by {scamp}" "process" "may be provided by upstream {scamp} process" }}
-
-							{{ if $info.providers }}
-								{{ range $provider := $info.providers }}
-									{{ $colour := index $colours $provider | default "orange" }}
-									{{ $icon := index $icons $provider | default "user" }}
-									{{ $hover := index $hovers $provider | default (printf "scamp-file parameter: `%s`" $provider) }}
-
-									{{ $args := dict
-										"context" $page_context
-										"title" " "
-										"style" $colour
-										"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon))
-										"hover" $hover }}
-									{{ partial "shortcodes/badge.html" $args }}
-								{{ end }}
-							{{ end }}
-						</td>
-					</tr>
-				{{ end }}
-			{{ end }}
-		</table>
 	{{ end }}
+{{ end }}
+
+<!-- show parameters table -->
+
+{{ if $parameters := .Params.parameters }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "cubes") }} Workflow parameters</h2>
+	<table class="parameters-table">
+		<tr>
+			<th>Channel key</th>
+			<th>Description</th>
+			<th>Type</th>
+			<th>Provider</th>
+		</tr>
+		{{ range $info := sort $parameters "key" }}
+			<tr>
+				<td><code>{{ index $info "key" }}</code></td>
+				<td>{{ index $info "description" | markdownify }}</td>
+				<td><code>{{ index $info "type" }}</code></td>
+				<td>
+					{{ $args := dict "user"    (dict "colour" "orange" "icon" "user")
+					                 "default" (dict "colour" "green" "icon" "dog")
+					                 "process" (dict "colour" "blue" "icon" "cogs")}}
+
+					{{ if $info.providers }}
+						{{ range $provider := slice "user" "default" "process" }}
+							{{ if $provider_value := index $info.providers $provider }}
+								{{ $colour := index (index $args $provider) "colour" }}
+								{{ $icon := index (index $args $provider) "icon" }}
+
+								{{ $hover := $provider }}
+								{{ if eq $provider "user" }}
+									{{ $hover = printf "scamp-file parameter: %s" $provider_value }}
+								{{ else if eq $provider "default" }}
+									{{ $hover = printf "default value: %s" $provider_value }}
+								{{ else if eq $provider "process" }}
+									{{ $hover = printf "provided by upstream process: %s" $provider_value }}
+								{{ end }}
+
+								{{ $args := dict
+									"context" $page_context
+									"title" " "
+									"style" $colour
+									"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon))
+									"hover" $hover }}
+
+								{{ partial "shortcodes/badge.html" $args }}
+							{{ end }}
+						{{ end }}
+					{{ end }}
+				</td>
+			</tr>
+		{{ end }}
+	</table>
 {{ end }}
 
 <!-- show outputs table -->
@@ -105,3 +119,4 @@
 		{{ end }}
 	</table>
 {{ end }}
+
