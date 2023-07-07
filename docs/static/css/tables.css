@@ -19,3 +19,9 @@ table code {
     border: 0;
 }
 
+/* prevent wrapping in the last column of a parameters table */
+
+.parameters-table th:last-child, td:last-child {  
+    white-space: nowrap;
+    text-align: center;
+}
