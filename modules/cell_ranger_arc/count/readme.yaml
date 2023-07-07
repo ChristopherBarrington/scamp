@@ -27,6 +27,9 @@ input:
   - name: id
     type: string
     description: Directory-safe name for the output directory.
+  - name: description
+    type: string
+    description: A short description of the sample.
   - name: samples
     type: string array
     description: "An array of length two: RNA and chromatin assay sample names."

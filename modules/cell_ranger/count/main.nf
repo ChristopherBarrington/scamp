@@ -9,6 +9,7 @@ process count {
 		val opt
 		val tag
 		val id
+		val description
 		val sample
 		path 'fastq_path_?'
 		path 'index_path'

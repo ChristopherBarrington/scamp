@@ -11,7 +11,7 @@ tags:
 steps:
   - name: Create missing indexes
     description: For datasets that do not have an `index path`, an index is created using the information in the `genome` stanza. The unique set of required indexes are created.
-    anchor: 30
+    anchor: 29
     parameters:
       - key: genome
         description: Name of the genome, used for the task's tag.
@@ -38,7 +38,7 @@ steps:
       - cell_ranger_arc/mkref
   - name: Create project sample sheet
     description: Write a formatted configuration file that includes all libraries in this project which will be subset for libraries in a dataset.
-    anchor: 67
+    anchor: 66
     parameters:
       - key: fastq paths
         description: Directories containing FastQ files for this project that will match `(.*)_S[0-9]+_L[0-9]+_R1_001.fastq.gz`.
@@ -51,13 +51,16 @@ steps:
 
   - name: Quantify assays
     description: Use the FastQ files to quantify RNA expression and chromatin accessibility in single cells.
-    anchor: 89
+    anchor: 91
     parameters:
       - key: unique id
         description: Identifier used for the task's tag.
         type: string
       - key: id
         description: Output directory name
+        type: string
+      - key: description
+        description: A short description of the sample.
         type: string
       - key: limsid
         description: Collection of LIMS IDs relevant to a dataset.
