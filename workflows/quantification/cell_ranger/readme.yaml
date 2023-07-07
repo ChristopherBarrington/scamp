@@ -17,7 +17,7 @@ steps:
 output:
   - name: result
     type: channel
-    description: A channel of maps that are the same as the input parameters sets but now include `index path` _and_ `quantification path` parameters.
+    description: A channel of maps that are the same as the input parameters sets but now include `quantification method` and `quantification path` keys.
 
 parameters:
   - key: unique id
@@ -52,6 +52,11 @@ parameters:
     providers:
       user: dataset id
       default: parsed dataset name
+
+channel tags:
+  - ':datasets_to_quantify': Dataset parameters passed into the workflow, subset for relevant keys.
+  - ':quantified_datasets': After quantifiaction, the `quantification path` key is added to the parameters.
+  - ':final_results': The new parameters from the workflow are merged back into the input parameters, with a `quantification method` key added. The channel is emitted from the workflow as `result`.
 
 authors:
   - "@ChristopherBarrington"

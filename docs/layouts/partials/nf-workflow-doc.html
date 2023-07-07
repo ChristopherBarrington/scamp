@@ -47,9 +47,36 @@
 	{{ end }}
 {{ end }}
 
+<!-- show dumped channel tags table -->
+
+{{ if $channel_tags := index .Params "channel tags" }}
+	{{ $tag_root := replace $pagePath "workflows/" "" | replaceRE "/" ":" }}
+
+	{{ $ex_tag := "first tag" }}
+	{{ $ex_value := "first value" }}
+	{{ range $ex_value,$ex_tag = index $channel_tags (sub (len $channel_tags) 1) }}{{ end }}
+
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "tree") }} Printable channels</h2>
+	<p>These channels can be dumped to the output device using the `-dump-channels` Nextflow option with the workflow root tag and the channel tag, for example: <code>{{ $tag_root }}{{ $ex_tag }}</code>.</p>
+	<table class="channel-tags-table">
+		<tr>
+			<th>Tag</th>
+			<th>Description</th>
+		</tr>
+		{{ range $channel_tag := $channel_tags }}
+			{{ range $tag,$description := $channel_tag }}
+				<tr>
+					<td><code>{{ $tag }}</code></td>
+					<td>{{ $description | markdownify }}</td>
+				</tr>
+			{{ end }}
+		{{ end }}
+	</table>
+{{ end }}
+
 <!-- show parameters table -->
 
-{{ if $parameters := .Params.parameters }}
+{{ if $parameters := .Params.parameters_disabled }}
 	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "cubes") }} Workflow parameters</h2>
 	<table class="parameters-table">
 		<tr>
@@ -102,15 +129,15 @@
 
 <!-- show outputs table -->
 
-{{ with .Params.output }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Emitted objects</h2>
-	<table>
+{{ if $output := .Params.output_disabled }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "sign-out-alt") }} Emitted objects</h2>
+	<table class="outputs-table">
 		<tr>
 			<th>Emission name</th>
 			<th>Description</th>
 			<th>Type</th>
 		</tr>
-		{{ range $info := . }}
+		{{ range $info := $output }}
 		<tr>
 			<td><code>{{ index $info "name" }}</code></td>
 			<td>{{ index $info "description" | markdownify }}</td>
@@ -119,4 +146,3 @@
 		{{ end }}
 	</table>
 {{ end }}
-
