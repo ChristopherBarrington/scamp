@@ -1,5 +1,5 @@
 ---
-title: usage-guide
+title: usage guide
 weight: 1
 
 headingPre: |
@@ -13,13 +13,112 @@ headingPre: |
 [workflow docs]: {{< ref "/workflows" >}}
 [scamp releases]: https://github.com/ChristopherBarrington/scamp/releases
 
-These notes illustrate how to setup an analysis using {scamp}. The structure of the parameters file and the command line usage is described. Detailed descriptions of the parameters can be found in the [modules][module docs] or [workflows][workflow docs] documentation.
+These notes illustrate how to setup an analysis using {scamp}. The [Running the pipeline](#running-the-pipeline) section is a quickstart guide that should get the pipeline running in most situations. A more detailed description of the structure of the parameters file and the command line usage is [then described](#analysis-configuration). Detailed descriptions of the parameters can be found in the [modules][module docs] or [workflows][workflow docs] documentation.
 
 <!--more-->
 
+## Running the pipeline
+
+{{% notice style="warning" title=" " icon=" " %}}
+For now, the processes are __not__ containerised. All software, packages and libraries __must__ be available from the shell. The {scamp} conda environment provides Nextflow, R and all R packages.
+
+{{< highlight bash >}}
+module load CellRanger-ARC/2.0.1
+module load CellRanger/7.1.0
+conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
+{{< /highlight >}}
+{{% /notice %}}
+
+{scamp} can be used to generate a best-guess parameters file. The file it creates is dependent on the sample sheet and directory structure on Nemo of the ASF's `data` directory in `babs/inputs`. The file it creates should be checked - especially for cases where multiple libraries contribute to individual samples, such as 10X multiome projects.
+
+(It is currently a bit of a faff though it may move into a container)
+
+The following snippet will use the `guess_scamp_file.py` script that is included in {scamp} to find the data directory for the project and parse the accompanying design file. First, we need to ensure that the Nextflow environment is configured with `NXF_HOME` set to the path that Nextflow uses to store downloaded pipelines (and other things). The following snippet will check if `NXF_HOME` is defined already and assign it to a reasonable default if it is undefined. But really, `NXF_HOME` should be defined in your `.bashrc` alongside the other Nextflow environment variables. If you want to, a path under `working` could be used, for example `/nemo/stp/babs/working/${USER}/nextflow`.
+
+{scamp} must be pulled and its `bin` added to your `PATH` so that the `guess_scamp_file.py` executable can be found in your shell. In the following chunk, {scamp} is downloaded into `NXF_HOME` and the path to {scamp} executables added to the `PATH`.
+
+{{< tab title="bash" >}}
+{{< highlight bash >}}
+if [[ -n ${NXF_HOME} ]]; then
+  export NXF_HOME=/nemo/project/home/{$USER}/.nextflow
+fi
+
+nextflow pull ChristopherBarrington/scamp -revision main
+export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
+{{< /highlight >}}
+{{< /tab >}}
+
+`guess_scamp_file.py` includes a set of default parameters, which will need to be updated as we include new protocols. Example usage is shown below, where we indicate the genome that we want to use for the project, the LIMS ID under which the data was produced and the name of the output YAML file. For command line options, use `guess_scamp_file.py --help`.
+
+{{< tabs title="guess_scamp_file.py usage examples" >}}
+
+{{< tab title="lims id" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --lims-id SC22034 \
+  --genome mm10 \
+  --output-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< tab title="data directory" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --data-path /nemo/stp/babs/inputs/sequencing/data/morisn/christopher.cooke/SC22034 \
+  --genome mm10 \
+  --output-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< tab title="lab, scientist and lims id" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --lab morisn \
+  --scientist christopher.cooke \
+  --lims-id SC22034 \
+  --genome mm10 \
+  --output-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< tab title="help" >}}
+{{< highlight bash >}}
+guess_scamp_file.py --help
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< /tabs >}}
+
+{{% notice style="warning" title=" " icon=" " %}}
+Check the guessed parameters file! Pay particular attention to the LIMS IDs associated to dataset, the feature types and sample names!
+{{% /notice %}}
+
+Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched using a [specific release][scamp releases] such as `23.07.02` or the current version using `main`. Using a specific tag is recommended for reproducibility.
+
+If you want to test you configuration file without running any real analysis, you can run Nextflow in `stub-run` mode:
+
+{{< tab title="bash" >}}
+{{< highlight bash >}}
+nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
+  -stub-run -profile stub_run \
+  --scamp-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though! Once you are confident, you can run the pipeline:
+
+{{< tab title="bash" >}}
+{{< highlight bash >}}
+nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
+  --scamp-file scamp-file.yaml
+{{< /highlight >}}
+{{< /tab >}}
+
+This should now start the pipeline and show the processes being run for each of the analysis `stages` detailed in your configuration file.
+
 ## Analysis configuration
 
-A `parameters.yaml` file is used to described all aspects of a project and should serve as a record for parameters used in the pipeline. Passing Nextflow parameters on the command line via `--parameter` mechanism should be avoided; this would create an unexpected structure in the parameters object that may not be accounted for and prevent the pipeline launching.
+A `parameters.yaml` file is used to described all aspects of a project and should serve as a record for parameters used in the pipeline. It will be passed to Nextflow as a parameter using `--scamp-file`.
 
 The structure of `parameters.yaml` allows aspects of a project to be recorded alongside multiple analyses that can contain multiple datasets in a plain text and human readable format. `parameters.yaml` keys that being with underscores are reserved by {scamp} and should not be used in other keys. At the first level, the project (`_project`) and analysis stanzas are specified, the latter can have any name but should be reasonably filename-safe. Within analysis stanzas there are datasets which can also be freely (but sensibly) named.
 
@@ -31,7 +130,7 @@ In this example for a scRNA-seq project, there are four datasets that will be qu
 
 {{< tabs title="Example parameters" >}}
 {{< tab title="scRNA-seq" >}}
-{{< shepherd_tour tour="scrna" lang="yaml" btn_msg="Take the input parameters tour" >}}
+{{< shepherd_tour tour="scrna" lang="yaml" btn_msg="Take a tour of the input parameters" >}}
 {{< /tab >}}
 
 {{< tab title="snRNA+ATAC-seq" >}}
@@ -65,52 +164,3 @@ As with the project-level default parameters, the parameters defined here are a 
 
 A set of datasets are defined with unique names. The parameters defined here are the highest priority and override the analysis- and project-level `_defaults`. The name of a dataset is free but should be sensible, {scamp} will attempt to make the name directory-safe by replacing non `a-z`, `0-9` or `.` characters to underscores.
 
-## Running the pipeline
-
-{{% notice style="warning" title=" " icon=" " %}}
-For now, the processes are __not__ containerised. All software, packages and libraries __must__ be available from the shell. The {scamp} conda environment provides Nextflow, R and all R packages.
-
-{{< highlight bash >}}
-module load CellRanger-ARC/2.0.1
-module load CellRanger/7.1.0
-conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
-{{< /highlight >}}
-{{% /notice %}}
-
-{scamp} can be used to generate a best-guess parameters file. The file it creates is dependent on the sample sheet and directory structure on Nemo of the ASF's `data` directory in `babs/inputs`. The file it creates should be checked - especially for cases where multiple libraries contribute to individual samples, such as 10X multiome projects.
-
-(It is currently a bit of a faff though it may move into a container) The following snippet will use the `guess_scamp_file.py` script that is included in {scamp} to find the directory for the project and parse the accompanying design file. First, {scamp} must be pulled and its `bin` added to your `PATH`. For command line options, use `guess_scamp_file.py --help`. The script includes a set of default parameters, which will need to be updated as we include new protocols.
-
-{{< tab title="bash" >}}
-{{< highlight bash >}}
-export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
-
-nextflow pull ChristopherBarrington/scamp -revision main
-guess_scamp_file.py --genome mm10 --lims-id SC22051 --output-file scamp-file.yaml
-{{< /highlight >}}
-{{< /tab >}}
-
-{{% notice style="warning" title=" " icon=" " %}}
-Check the guessed parameters file! Pay particular attention to the LIMS IDs associated to dataset, the feature types and sample names!
-{{% /notice %}}
-
-Once the pipeline parameters are encoded in the parameters file, the pipeline can be launched using a [specific release][scamp releases] such as `23.07.02` or the current version using `main`. Using a specific tag is recommended for reproducibility.
-
-{{< tab title="bash" >}}
-{{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
-  --scamp-file scamp-file.yaml
-{{< /highlight >}}
-{{< /tab >}}
-
-If you want to test you configuration file without running any real analysis, you can use:
-
-{{< tab title="bash" >}}
-{{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
-  -stub-run -profile stub_run \
-  --scamp-file scamp-file.yaml
-{{< /highlight >}}
-{{< /tab >}}
-
-This will create empty files instead of analysing data but will produce errors if there is a configuration problem. Your analysis may still fail when it runs though!

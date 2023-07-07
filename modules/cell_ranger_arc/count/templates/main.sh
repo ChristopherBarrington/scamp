@@ -4,9 +4,9 @@
 awk --assign FS=',' 'NR==1{print} ; \$2~/^($samples_regex)\$/{print}' all_libraries.csv > libraries.csv
 
 # run cell ranger arc count
-cellranger-arc count \\
-	$count_args \\
+cellranger-arc count $count_args \\
 	--id=$id \\
+	--description="$description" \\
 	--libraries=libraries.csv \\
 	--reference=index_path \\
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
@@ -32,7 +32,9 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
+	id: $id
     samples: $samples
+    description: $description
     index_path: `realpath index_path`
 	complete_libraries `realpath all_libraries.csv`
     task_index: ${task.index}

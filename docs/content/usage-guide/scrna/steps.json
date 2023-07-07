@@ -69,12 +69,16 @@
 		"title": "genome",
 		"text": "The key that was used in <code>genomes</code> to identify a set of genome parameters. Multiple genomes can be used in the same project, but are likely best separated into different analyses."},
 
-	"limsid" : {
+	"description" : {
 		"target": 36,
+		"title": "description",
+		"text": "A short description of this sample."},
+	"limsid" : {
+		"target": 37,
 		"title": "LIMS ID",
 		"text": "The name(s) of libraries used to describe the dataset. In snRNA+ATAC for example, this would be an array of two libraries: one for the RNA-seq and another for the ATAC-seq."},
 	"dataset_tag" : {
-		"target": 37,
+		"target": 38,
 		"title": "dataset tag",
 		"text": "A short tag to describe a dataset that can be appended to cell barcodes to quickly discriminate originating dataset and uniquely identify cells in integrated objects."}
 }

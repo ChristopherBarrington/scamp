@@ -22,12 +22,20 @@ parser = argparse.ArgumentParser(
 group = parser.add_mutually_exclusive_group(required=True)
 
 group.add_argument(
-	"--lims-id", type=str, required=False, dest='lims_id',
-	help="A LIMS ID that could be found in the `data` directory.")
+	'--lims-id', type=str, required=False, dest='lims_id',
+	help='A LIMS ID that could be found in the `data` directory.')
 
 group.add_argument(
-	"--data-path", type=str, required=False, dest='data_path',
-	help="Path to the data directory for a project, it should contain `primary_data` and `{lims-id}_design.csv`.")
+	'--data-path', type=str, required=False, dest='data_path',
+	help='Path to the data directory for a project, it should contain `primary_data` and `{lims-id}_design.csv`.')
+
+parser.add_argument(
+	'--lab', type=str, required=False, dest='lab',
+	help='<lastname><initial> format for the lab.')
+
+parser.add_argument(
+	'--scientist', type=str, required=False, dest='scientist',
+	help='<firstname>.<lastname> format for the scientist')
 
 parser.add_argument(
 	'--genomes', type=str, nargs='+', required=True, dest='genomes',
@@ -47,7 +55,7 @@ parser.add_argument(
 parser.add_argument(
 	'--project-type', type=str, required=False, dest='project_type',
 	help='Protocol used to generate these datasets.',
-	choices=['10X-3prime', '10X-Multiomics', '10X-FeatureBarcoding'])
+	choices=['10X-3prime', '10X-Multiomics', '10X-FeatureBarcoding', 'hive'])
 
 parser.add_argument(
 	'--design-file', type=str, required=False, dest='design_file',
@@ -74,17 +82,14 @@ def validate_arguments():
 		print('`data_path` was provided but does not exist!')
 		exit_early = True
 
-	if os.path.exists(args.data_root) is False:
-		print('`data_root` does not exist!')
-		exit_early = True
-
 	if exit_early == True:
 		sys.exit()
 
-	args.data_root = re.sub('/$', '', args.data_root)
 
-	if args.data_path is None: get_data_path_from_lims_id()
+	if args.data_path is None: get_data_path()
+	if args.lab is None: get_lab_from_data_path()
 	if args.lims_id is None: get_lims_id_from_data_path()
+	if args.scientist is None: get_scientist_from_data_path()
 	if args.design_file is None: get_design_file_path()
 	if args.project_type is None: get_project_type_from_sample_sheet()
 
@@ -92,33 +97,50 @@ def validate_arguments():
 	args.genome = args.genomes[0]
 
 # if only given a lims id, find that directory
-def get_data_path_from_lims_id():
-	print('searching for {}/*/*/{}'.format(args.data_root, args.lims_id))
+def get_data_path():
 	if args.lims_id is None:
 		print('cannot find a lims directory without `lims_id`!')
 		sys.exit()
+	
+	elif args.lab is not None and args.scientist is not None:
+		args.data_path = os.path.join(args.data_root, args.lab, args.scientist, args.lims_id)
+
 	else:
-		path = find_data_path_from_lims_id()
+		path = find_data_path()
 		if path is None:
 			print('no path found to {} via {}'.format(args.lims_id, args.data_root))
 			sys.exit()
 		else:
 			args.data_path = path
 
-def find_data_path_from_lims_id():
-	step = 1
-	labs = glob.glob(os.path.join(args.data_root, '*'))
-	for lab in labs:
-		scientists = glob.glob(os.path.join(lab, '*'))
-		for scientist in scientists:
-			print('serached: {}'.format(step), end='\r')
-			path = os.path.join(lab, scientist, args.lims_id)
-			if os.path.exists(path): return(path)
-		else: step = step + 1
+def find_data_path():
+	search_path = args.data_root
 
-# if lims id is not provided, get it from the data path
+	if args.lab is None:
+		search_path = os.path.join(search_path, '*')
+	else:
+		search_path = os.path.join(search_path, args.lab)
+
+	if args.scientist is None:
+		search_path = os.path.join(search_path, '*')
+	else:
+		search_path = os.path.join(search_path, args.scientist)
+
+	search_paths = glob.glob(os.path.join(search_path, args.lims_id))
+
+	for path in search_paths:
+		if os.path.exists(path):
+			return(path)
+
+# if lab, scientist or lims id are not provided, get them from the data path
 def get_lims_id_from_data_path():
-	args.lims_id = os.path.basename(args.data_path)
+	args.lims_id = args.data_path.split(os.path.sep)[-1]
+
+def get_scientist_from_data_path():
+	args.scientist = args.data_path.split(os.path.sep)[-2]
+
+def get_lab_from_data_path():
+	args.lab = args.data_path.split(os.path.sep)[-3]
 
 # get design file path
 def get_design_file_path():
@@ -145,13 +167,13 @@ def get_genome_parameters():
 			'assembly': 'mm10',
 			'ensembl release': 98,
 			'non-nuclear contigs': ['chrM'],
-			'mitochondrial features': 'inputs/mm10_mitochondrial_genes.yaml'},
+			'mitochondrial features': 'undefined'},
 		'GRCh38': {
 			'organism': 'homo sapiens',
 			'assembly': 'GRCh38',
 			'ensembl release': 98,
 			'non-nuclear contigs': ['chrM'],
-			'mitochondrial features': 'inputs/GRCh38_mitochondrial_genes.yaml'}}
+			'mitochondrial features': 'undefined'}}
 
 	genomes = {k:defaults[k] for k in args.genomes if k in defaults}
 	return(genomes)
@@ -164,16 +186,6 @@ def get_fastq_paths_from_data_path():
 	paths = glob.glob(args.fastq_paths_glob)
 	paths.sort(key=natural_keys)
 	return(paths)
-
-# ------------------------------------------------------------------------------------------------
-# get the lab and scientist from data_path
-# ------------------------------------------------------------------------------------------------
-
-def get_names_from_data_path():
-	who = args.data_path.split(os.path.sep)
-	lab = who[-3]
-	scientist = who[-2]
-	return(lab, scientist)
 
 # ------------------------------------------------------------------------------------------------
 # read and filter a sample sheet, checking that required columns exist
@@ -196,8 +208,8 @@ def read_design_file():
 def get_feature_types_to_search_terms():
 	# dictionary of search terms in `sample_name` and their feature type
 	return({
-		'Gene Expression': ['_GEX$', '_mxGEX$'],
-		'Chromatin Accessibility': ['_ATAC$', '_mxATAC$'],
+		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$'],
+		'Chromatin Accessibility': ['^ATAC_', '_ATAC$', '_mxATAC$'],
 		'CMO': ['_CMO$']})
 
 def get_library_types():
@@ -254,21 +266,31 @@ def get_library_types():
 # ------------------------------------------------------------------------------------------------
 
 def get_dataset_index():
+	indexes_root = '/flask/reference/Genomics'
+	indexes_10x_root = os.path.join(indexes_root, '10x')
+	indexes_10x_3prime_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
+	indexes_10x_multiomics_root = os.path.join(indexes_10x_root, '10x_arc')
+
 	match args.project_type:
 		case '10X-3prime':
 			return({
-				'mm10': 'inputs/refdata-gex-mm10-2020-A',
-				'GRCh38': 'inputs/refdata-gex-GRCh38-2020-A'}.get(args.genome))
+				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
+				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
 
 		case '10X-Multiomics':
 			return({
-				'mm10': 'inputs/refdata-cellranger-arc-mm10-2020-A-2.0.0',
-				'GRCh38': 'inputs/refdata-cellranger-arc-GRCh38-2020-A-2.0.0'}.get(args.genome))
+				'mm10': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-mm10-2020-A-2.0.0'),
+				'GRCh38': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-GRCh38-2020-A-2.0.0')}.get(args.genome))
 
 		case '10X-FeatureBarcoding':
 			return({
-				'mm10': 'inputs/refdata-cellranger-arc-mm10-2020-A-2.0.0',
-				'GRCh38': 'inputs/refdata-cellranger-arc-GRCh38-2020-A-2.0.0'}.get(args.genome))
+				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
+				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
+
+		case 'hive':
+			return({
+				'GRCh38': 'unknown'
+				}.get(args.genome))
 
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
@@ -301,7 +323,7 @@ def get_datasets(sample_lims_ids):
 	for dataset,libraries in sample_lims_ids.items():
 		if len(libraries) == 1:
 			sample_lims_ids[dataset] = libraries.pop()
-	return({k:{'limsid': sample_lims_ids[k]} for k in sample_lims_ids})
+	return({k:{'description': k, 'limsid': sample_lims_ids[k]} for k in sample_lims_ids})
 
 # ------------------------------------------------------------------------------------------------
 # write the guessed parameters file
@@ -345,7 +367,6 @@ def main():
 	fastq_paths = get_fastq_paths_from_data_path()
 	dataset_index = get_dataset_index()
 	feature_types = get_feature_types()
-	lab,scientist = get_names_from_data_path()
 	library_types, sample_lims_ids = get_library_types()
 
 	# get parameters dependent on the above variables
@@ -354,8 +375,8 @@ def main():
 	# put the parameters together
 	params = {
 		'_project': {
-			'lab': lab,
-			'scientist': scientist,
+			'lab': args.lab,
+			'scientist': args.scientist,
 			'lims id': args.lims_id,
 			'babs id': 'unknown',
 			'type': args.project_type,

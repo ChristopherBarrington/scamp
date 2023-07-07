@@ -39,18 +39,21 @@ cell ranger arc and seurat:
         genome: mm10_mcherry
 
     8 weeks sample1:
+        description: 8 weeks old, replicate 1
         limsid:
             - AHM4688A1
             - AHM4688A4
         dataset tag: 8WS1
 
     8 weeks sample2:
+        description: 8 weeks old, replicate 2
         limsid:
             - AHM4688A2
             - AHM4688A5
         dataset tag: 8WS2
 
     8 weeks sample3:
+        description: 8 weeks old, replicate 3
         limsid:
             - AHM4688A3
             - AHM4688A6

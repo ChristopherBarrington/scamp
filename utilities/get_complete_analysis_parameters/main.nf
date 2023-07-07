@@ -38,6 +38,9 @@ def get_complete_analysis_parameters(stage=null) {
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params.get(it.get('analysis key')) + it}
 
+		// if `description` is not provided, use the `dataset name`
+		.collect{it + ['description': it.get('description', it.get('dataset name'))]}
+
 		// convert strings to file paths for expected keys
 		// - makes a relative path absolute
 		.collect{convert_map_keys_to_files(it, possible_file_keys)}
