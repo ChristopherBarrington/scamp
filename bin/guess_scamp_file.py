@@ -86,7 +86,7 @@ def validate_arguments():
 		sys.exit()
 
 
-	if args.data_path is None: get_data_path_from_lims_id()
+	if args.data_path is None: get_data_path()
 	if args.lab is None: get_lab_from_data_path()
 	if args.lims_id is None: get_lims_id_from_data_path()
 	if args.scientist is None: get_scientist_from_data_path()
@@ -97,7 +97,7 @@ def validate_arguments():
 	args.genome = args.genomes[0]
 
 # if only given a lims id, find that directory
-def get_data_path_from_lims_id():
+def get_data_path():
 	if args.lims_id is None:
 		print('cannot find a lims directory without `lims_id`!')
 		sys.exit()
