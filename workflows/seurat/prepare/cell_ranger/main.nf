@@ -51,7 +51,7 @@ workflow cell_ranger {
 			.map{make_map(it.split('###'), ['genome', 'index path'])}
 			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf')]}
 			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
-			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty:  true)
+			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty: true)
 			.set{gtf_files_to_convert_to_granges}
 
 		tags      = gtf_files_to_convert_to_granges.map{it.get('genome')}
@@ -65,7 +65,7 @@ workflow cell_ranger {
 		// make a channel of newly created GRanges rds files
 		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag: 'seurat:prepare:cell_ranger:granges_files', pretty:  true)
+			.dump(tag: 'seurat:prepare:cell_ranger:granges_files', pretty: true)
 			.set{granges_files}
 
 		// -------------------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ workflow cell_ranger {
 			.map{it.values().join('###')}
 			.unique()
 			.map{make_map(it.split('###'), ['genome', 'organism', 'ensembl release'])}
-			.dump(tag: 'seurat:prepare:cell_ranger:biomart_connections_to_make', pretty:  true)
+			.dump(tag: 'seurat:prepare:cell_ranger:biomart_connections_to_make', pretty: true)
 			.set{biomart_connections_to_make}
 
 		tags             = biomart_connections_to_make.map{it.get('genome')}
