@@ -70,7 +70,7 @@
 
 <!-- show parameters table -->
 
-{{ if $parameters := .Params.parameters }}
+{{ if $parameters := .Params.parameters_disabled }}
 	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "cubes") }} Workflow parameters</h2>
 	<table class="parameters-table">
 		<tr>
@@ -123,15 +123,15 @@
 
 <!-- show outputs table -->
 
-{{ with .Params.output }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "sign-out-alt") }} Emitted objects</h2>
-	<table>
+{{ if $output := .Params.output_disabled }}
+	<h2>{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" "sign-out-alt") }} Emitted objects</h2>
+	<table class="outputs-table">
 		<tr>
 			<th>Emission name</th>
 			<th>Description</th>
 			<th>Type</th>
 		</tr>
-		{{ range $info := . }}
+		{{ range $info := $output }}
 		<tr>
 			<td><code>{{ index $info "name" }}</code></td>
 			<td>{{ index $info "description" | markdownify }}</td>
@@ -140,4 +140,3 @@
 		{{ end }}
 	</table>
 {{ end }}
-
