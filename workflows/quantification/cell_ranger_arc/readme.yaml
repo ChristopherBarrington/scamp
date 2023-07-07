@@ -29,7 +29,7 @@ steps:
 output:
   - name: result
     type: channel
-    description: A channel of maps that are the same as the input parameters sets but now include `index path` _and_ `quantification path` parameters.
+    description: A channel of maps that are the same as the input parameter sets but now include `index path`, `quantification method` and `quantification path` keys.
 
 parameters:
   - key: genome
@@ -106,6 +106,15 @@ parameters:
     providers:
       user: index path
       process: quantification/cell_ranger_arc/mkref
+
+channel tags:
+  - ':genome_indexes.missing': Datasets for which the `index path` is missing, indexes will be created for these.
+  - ':genome_indexes.provided': Datasets for which the `index path` has been provided.
+  - ':index_paths': The indexes that have been created or provided.
+  - ':feature_type_params': A channel that collates the project-wide information required to make the Cell Ranger ARC sample sheet.
+  - ':datasets_to_quantify': Parameter sets for datasets that will be quantified.
+  - ':quantified_datasets': Parameter sets of datasets that were quantified.
+  - ':final_results': Input parameters with the `index path` (if applicable), `libraries_csv`, `quantification method` and `quantification path` keys added.
 
 authors:
   - "@ChristopherBarrington"

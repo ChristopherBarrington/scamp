@@ -101,5 +101,19 @@ parameters:
       user: dataset name
       default: parsed dataset name
 
+channel tags:
+  - ':gtf_files_to_convert_to_granges': A channel of paths to GTF files from unique indexes in the workflow's parameters.
+  - ':granges_files': The created GTF GRanges object for each index.
+  - ':biomart_connections_to_make': Parameters used to make biomaRt connections.
+  - ':mart_files': Paths to the created biomaRt connection objects.
+  - ':barcoded_matrices_to_read': Parameters to read filtered expression matrices in both accession or name modes using.
+  - ':barcoded_matrices': Paths to the created matrix objects that will be used to write assays.
+  - ':rna_assays_branched.accession': Paths to assays created using accessions.
+  - ':rna_assays_branched.name': Paths to assays created using names.
+  - ':rna_assays': Merge of accession- and name-indexed assays.
+  - ':objects_to_create': Parameters used to create Seurat objects.
+  - ':objects': Paths to created Seurat objects.
+  - ':final_results': Input parameters with `seurat path` key added.
+
 authors:
   - "@ChristopherBarrington"
