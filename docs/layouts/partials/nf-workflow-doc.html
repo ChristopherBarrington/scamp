@@ -50,8 +50,14 @@
 <!-- show dumped channel tags table -->
 
 {{ if $channel_tags := index .Params "channel tags" }}
+	{{ $tag_root := replace $pagePath "workflows/" "" | replaceRE "/" ":" }}
+
+	{{ $ex_tag := "first tag" }}
+	{{ $ex_value := "first value" }}
+	{{ range $ex_value,$ex_tag = index $channel_tags (sub (len $channel_tags) 1) }}{{ end }}
+
 	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "tree") }} Printable channels</h2>
-	<p>These channels can be dumped to the output device using the `-dump-channels` Nextflow option.</p>
+	<p>These channels can be dumped to the output device using the `-dump-channels` Nextflow option with the workflow root tag and the channel tag, for example: <code>{{ $tag_root }}{{ $ex_tag }}</code>.</p>
 	<table class="channel-tags-table">
 		<tr>
 			<th>Tag</th>
