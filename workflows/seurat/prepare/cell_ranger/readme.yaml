@@ -45,6 +45,16 @@ parameters:
     type: string
     providers:
       user: genome
+  - key: gtf
+    description: Path to GTF file used to create the index.
+    type: file
+    providers:
+      default: from Cell Ranger index
+  - key: fai
+    description: Genome FastA index.
+    type: file
+    providers:
+      default: from Cell Ranger index.
   - key: index path
     description: Path to the index that against which the dataset was quantified, which provides the genes GTF file and genome FastA index. If not provided in the parameters, it should have been created by the `quantification/cell_ranger` workflow.
     type: path

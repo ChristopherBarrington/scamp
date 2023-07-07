@@ -26,12 +26,6 @@ parameters:
     providers:
       user: unique id
       default: stage name and dataset name
-  - key: id
-    description: Output directory name.
-    type: string
-    providers:
-      user: dataset id
-      default: parsed dataset name
   - key: description
     description: A short description of the sample. If missing, the `dataset name` value will be used.
     type: string
@@ -58,5 +52,6 @@ parameters:
     providers:
       user: dataset id
       default: parsed dataset name
+
 authors:
   - "@ChristopherBarrington"
