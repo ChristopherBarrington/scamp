@@ -2,7 +2,7 @@
 # this is a required setting for this theme to appear on https://themes.gohugo.io/
 # change this to a value appropriate for you; if your site is served from a subdirectory
 # set it like "https://example.com/mysite/"
-baseURL = "https://example.com/"
+# baseURL = "https://example.com/"
 
 # canonicalization will only be used for the sitemap.xml and index.xml files;
 # if set to false, a site served from a subdirectory will generate wrong links
@@ -67,7 +67,7 @@ disableHugoGeneratorInject = true
   [Languages.en]
     title = "scamp"
     [Languages.en.params]
-      landingPageName = "<i class='fas fa-home'></i> Home"
+      landingPageName = "<i class='fas fa-home'></i> home"
 
 [menu]
   [[menu.shortcuts]]
