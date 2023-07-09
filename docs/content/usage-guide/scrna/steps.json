@@ -1,7 +1,4 @@
 
-// targets must start `line-`
-// these will be replaced by regex for the tour name
-
 {
 	"project" : {
 		"target": 1,
@@ -28,7 +25,7 @@
 	"project_type": {
 		"target": 6,
 		"title": "project type",
-		"text": "A curated identifier for the project type which should be the same as used by ASF. This is included in the project design file in the `data` directory or in the LIMS."},
+		"text": "A curated identifier for the project type which should be the same as used by ASF. This is included in the project design file in the <code>data</code> directory or in the LIMS."},
 	"genomes" : {
 		"target": 7,
 		"title": "genomes in the project",
