@@ -14,15 +14,10 @@
 
 {{ if fileExists $steps_file }}
 	<!-- get the javascript elements and replace placeholders -->
-	{{ $steps := readFile $steps_file | transform.Unmarshal }}
-	{{ $updated_steps := newScratch }}
-	{{ range $k,$v := $steps }}
-		{{ $v = merge $v (dict "target" (printf "%s-%d" $anchor (int $v.target))) }}
-		{{ $updated_steps.SetInMap "steps" $k $v }}
-	{{ end }}
+	{{ $steps := readFile $steps_file | replaceRE `("target":\s+)(\d+)` (printf "%s\"%s-%s\"" "$1" $anchor "$2") | safeJS }}
 
 	<!-- prepare a script to make a shepherd tour -->
-	{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour_name ($updated_steps.Get "steps" | jsonify)) | safeJS }}
+	{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour_name $steps) | safeJS }}
 
 	<!-- output the parsed javascript(s) -->
 	<script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
