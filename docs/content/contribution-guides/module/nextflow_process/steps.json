@@ -1,7 +1,4 @@
 
-// targets must start `line-`
-// these will be replaced by regex
-
 {
 	"process" : {
 		"target": 1,
