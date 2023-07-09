@@ -1,10 +1,6 @@
 ---
 title: modules
 weight: 1
-
-headingPre: |
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
-  <link rel="stylesheet" href="/css/shepherd.css"/>
 ---
 
 Modules represent specific steps of a pipeline that can be reused in multiple instances. A module should be written to be generic and not specifically tied to a pipeline, workflow or subworkflow (etc). Each module performs a specific task and usually includes only a few different programs.

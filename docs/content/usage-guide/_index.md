@@ -1,10 +1,6 @@
 ---
 title: usage guide
 weight: 1
-
-headingPre: |
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
-  <link rel="stylesheet" href="/css/shepherd.css"/>
 ---
 
 [module docs]: {{< ref "/modules" >}}
