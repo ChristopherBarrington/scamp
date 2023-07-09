@@ -1,12 +1,12 @@
 
 /* shepherd box */
 
-.btn {
+.shepherd-highlight .btn {
 	width: 100%;
 	text-align: center;
 }
 
-.btn > * {
+.shepherd-highlight .btn > * {
 	width: 100%
 }
 

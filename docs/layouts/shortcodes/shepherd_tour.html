@@ -30,9 +30,13 @@
 	<script type="text/javascript">{{ $shepherd }}</script>
 
 	<!-- make a button to start the tour -->
-	<p>{{ partial "shortcodes/button.html" (dict "context" .
-	                                             "style" "primary"
-	                                             "icon" $icon
-	                                             "href" (printf "javascript:%s.start();" $tour_name)
-	                                             "content" $btn_msg) }}</p>
+	<div class="shepherd-highlight">
+		<p>
+			{{ partial "shortcodes/button.html" (dict "context" .
+		                                                "style" "primary"
+		                                                "icon" $icon
+		                                                "href" (printf "javascript:%s.start();" $tour_name)
+		                                                "content" $btn_msg) }}</p>
+	</div>
 {{ end }}
+
