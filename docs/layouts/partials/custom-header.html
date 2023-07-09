@@ -1,4 +1,10 @@
 <!-- Partial intended to be overwritten to add custom headers, like CSS or any other info-->
 
-<link rel="stylesheet" href="/css/code-chunks.css"/>
-<link rel="stylesheet" href="/css/tables.css"/>
+<!-- add css from static -->
+{{ range readDir "/static/css" }}
+	{{ if hasSuffix .Name ".css" }} <link rel="stylesheet" href='{{ path.Join "/css" .Name }}'/> {{ end }}
+{{ end }}
+
+<!-- shepherd css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
+

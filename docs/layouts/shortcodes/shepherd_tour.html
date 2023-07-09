@@ -14,16 +14,29 @@
 
 {{ if fileExists $steps_file }}
 	<!-- get the javascript elements and replace placeholders -->
-	{{ $steps_json := readFile $steps_file | replaceRE `("target":\s+)(\d+)` (printf "%s\"%s-%s\"" "$1" $anchor "$2") | safeJS }}
-	{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour_name $steps_json) | safeJS }}
+	{{ $steps := readFile $steps_file | transform.Unmarshal }}
+	{{ $updated_steps := newScratch }}
+	{{ range $k,$v := $steps }}
+		{{ $v = merge $v (dict "target" (printf "%s-%d" $anchor (int $v.target))) }}
+		{{ $updated_steps.SetInMap "steps" $k $v }}
+	{{ end }}
+
+	<!-- prepare a script to make a shepherd tour -->
+	{{ $shepherd := (printf "%s = make_default_tour(%s);" $tour_name ($updated_steps.Get "steps" | jsonify)) | safeJS }}
 
 	<!-- output the parsed javascript(s) -->
+	<script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
+	<script src="/js/shepherd-tours.js"></script>
 	<script type="text/javascript">{{ $shepherd }}</script>
 
 	<!-- make a button to start the tour -->
-	<p>{{ partial "shortcodes/button.html" (dict "context" .
-	                                             "style" "primary"
-	                                             "icon" $icon
-	                                             "href" (printf "javascript:%s.start();" $tour_name)
-	                                             "content" $btn_msg) }}</p>
+	<div class="shepherd-highlight">
+		<p>
+			{{ partial "shortcodes/button.html" (dict "context" .
+		                                                "style" "primary"
+		                                                "icon" $icon
+		                                                "href" (printf "javascript:%s.start();" $tour_name)
+		                                                "content" $btn_msg) }}</p>
+	</div>
 {{ end }}
+
