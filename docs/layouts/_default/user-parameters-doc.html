@@ -1,5 +1,5 @@
 {{- partialCached "page-meta.hugo" . .RelPermalink }}
 {{- $outputFormat := partial "output-format.hugo" . }}
 {{- partial "output-partial.hugo" (dict "base" "header" "page" . "parameter" . "outputFormat" $outputFormat) }}
-{{- partial "output-partial.hugo" (dict "base" "body" "page" . "parameter" (dict "page" . "content" (partial "output-partial.hugo" (dict "base" "scamp-parameters-summary-doc" "page" . "parameter" . "outputFormat" $outputFormat))) "outputFormat" $outputFormat) }}
+{{- partial "output-partial.hugo" (dict "base" "body" "page" . "parameter" (dict "page" . "content" (partial "output-partial.hugo" (dict "base" "user-parameters-doc" "page" . "parameter" . "outputFormat" $outputFormat))) "outputFormat" $outputFormat) }}
 {{- partial "output-partial.hugo" (dict "base" "footer" "page" . "parameter" . "outputFormat" $outputFormat) }}

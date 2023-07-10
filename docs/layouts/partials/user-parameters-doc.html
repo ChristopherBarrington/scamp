@@ -3,14 +3,14 @@
 
 <!-- print tables for each group of parameters -->
 
-{{ range $parameter_set := .Params.scamp_parameters }}
+{{ range $parameter_set := .Params.user_parameters }}
 	{{ $name := index $parameter_set "title"}}
 	{{ $icon := index $parameter_set "icon" }}
 	<h2 id="steps">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon) }} {{ $name }}</h2>
 	<p>{{ index $parameter_set "description" }}</p>
 
 	<!-- make a table of parameters -->
-	<table class="scamp-parameters-summary-table">
+	<table class="user-parameters-table">
 		<tr>
 			<th>Tag</th>
 			<th>Description</th>
@@ -42,6 +42,7 @@
 								{{ else if eq $provider "process" }}
 									{{ $hover = printf "provided by upstream process: %s" $provider_value }}
 								{{ end }}
+								{{ $hover = replaceRE "\n" "" $hover }}
 
 								{{ $args := dict
 									"context" $page_context
@@ -59,7 +60,7 @@
 							"title" " "
 							"style" "red"
 							"content" "required"
-							"hover" "Must be user-provided!") }}
+							"hover" "must be user-provided!") }}
 					{{ end }}
 				</td>
 			</tr>

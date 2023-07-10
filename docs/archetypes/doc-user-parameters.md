@@ -1,9 +1,9 @@
 ---
 title: user-configurable parameters
-layout: scamp-parameters-summary-doc
+layout: user-parameters-doc
 weight: 10
 
-scamp_parameters:
+user_parameters:
 {{ if $doc := (getenv "SCAMP_DOC") -}}
 	{{ os.ReadFile $doc | replaceRE "^" "  " | replaceRE "\n" "\n  " | strings.TrimSuffix "  " -}}
 {{ else -}}
