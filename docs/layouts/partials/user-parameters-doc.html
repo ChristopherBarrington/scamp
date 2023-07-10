@@ -28,39 +28,23 @@
 					                 "default" (dict "colour" "green" "icon" "dog")
 					                 "process" (dict "colour" "blue" "icon" "cogs")}}
 
-					{{ if $info.providers }}
-						{{ range $provider := slice "user" "default" "process" }}
-							{{ if $provider_value := index $info.providers $provider }}
-								{{ $colour := index (index $args $provider) "colour" }}
-								{{ $icon := index (index $args $provider) "icon" }}
+					{{ if $provider := $info.provider }}
+						{{ $colour := index (index $args $provider) "colour" }}
+						{{ $icon := index (index $args $provider) "icon" }}
 
-								{{ $hover := $provider }}
-								{{ if eq $provider "user" }}
-									{{ $hover = printf "scamp-file parameter: %s" $provider_value }}
-								{{ else if eq $provider "default" }}
-									{{ $hover = printf "default value: %s" $provider_value }}
-								{{ else if eq $provider "process" }}
-									{{ $hover = printf "provided by upstream process: %s" $provider_value }}
-								{{ end }}
-								{{ $hover = replaceRE "\n" "" $hover }}
+						{{ $args := dict
+							"context" $page_context
+							"title" " "
+							"style" $colour
+							"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon)) }}
 
-								{{ $args := dict
-									"context" $page_context
-									"title" " "
-									"style" $colour
-									"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon))
-									"hover" $hover }}
-
-								{{ partial "shortcodes/badge.html" $args }}
-							{{ end }}
-						{{ end }}
+						{{ partial "shortcodes/badge.html" $args }}
 					{{ else }}
 						{{ partial "shortcodes/badge.html" (dict
 							"context" $page_context
 							"title" " "
 							"style" "red"
-							"content" "required"
-							"hover" "must be user-provided!") }}
+							"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" "user"))) }}
 					{{ end }}
 				</td>
 			</tr>
