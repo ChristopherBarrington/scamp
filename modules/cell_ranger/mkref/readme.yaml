@@ -1,0 +1,50 @@
+name: mkref
+
+description: |
+  Creates an index for use with Cell Ranger. It can produce custom genomes if provided with the relevant (and correctly formatted) FastA and GTF files.
+
+tags:
+  - 10x
+  - rna
+  - create index
+
+tools:
+  cell ranger:
+    description: Cell Ranger is a set of analysis pipelines that process Chromium single cell data to align reads, generate feature-barcode matrices, perform clustering and other secondary analysis, and more.
+    homepage: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger
+    documentation: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+    ext: mkref
+    features:
+      - multithreaded
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: tag
+    type: string
+    description: An identifier to use in the tag directive.
+  - name: assembly
+    type: string
+    description: Genome assembly (eg. mm10)
+  - name: path to FastAs
+    type: path
+    description: Path to directory containing FastA files to index. These will be concatenated into a single FastA file.
+  - name: path to GTFs
+    type: path
+    description: Path to directory containing GTF files. These will be concatenated into a single GTF file.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+  - name: path
+    type: path
+    description: Path to the newly created index.
+
+authors:
+  - "@ChristopherBarrington"
