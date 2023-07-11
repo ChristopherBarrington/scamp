@@ -130,3 +130,8 @@
         The root directory (default: `results`) under which task results will be published.
       type: path
       provider: default
+    - name: scamp-file
+      description: |
+        YAML file (default: `scamp-file.yaml`) that contains the configuration parameters for the analyses.
+      type: file
+      provider: default
