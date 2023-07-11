@@ -1,5 +1,5 @@
 - title: Analysis parameters
-  description: Any {scamp} parameter that ca be provided in an analysis stanza, under the analysis or project `_defaults` or under a specific dataset's stanza.
+  description: Any {scamp} parameter that can be provided in an analysis stanza, under the analysis or project `_defaults` or under a specific dataset's stanza.
   icon: edit
   parameters:
     - name: fastq paths
