@@ -16,6 +16,6 @@ user_parameters:
 [quickstart]: {{< ref "usage-guides/quickstart" >}}
 [analysis configuration]: {{< ref "usage-guides/analysis-configuration" >}}
 
-This post contains a more-detailed description of the parameters that may be defined in a `scamp-file`. Some parameters are required, others may be defined from defaults while some may be provided by upstream {scamp} processes.
+This post contains a more-detailed description of the parameters that are available to configure {scamp}. Some parameters are required, others may be defined from defaults while some may be provided by upstream {scamp} processes.
 
 <!--more-->

@@ -50,7 +50,7 @@ export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
 guess_scamp_file.py \
   --lims-id SC22034 \
   --genome mm10 \
-  --output-file scamp-file.yaml
+  --output-file scamp_file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -59,7 +59,7 @@ guess_scamp_file.py \
 guess_scamp_file.py \
   --data-path /nemo/stp/babs/inputs/sequencing/data/morisn/christopher.cooke/SC22034 \
   --genome mm10 \
-  --output-file scamp-file.yaml
+  --output-file scamp_file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -70,7 +70,7 @@ guess_scamp_file.py \
   --scientist christopher.cooke \
   --lims-id SC22034 \
   --genome mm10 \
-  --output-file scamp-file.yaml
+  --output-file scamp_file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -86,7 +86,7 @@ guess_scamp_file.py --help
 Check the guessed parameters file! Pay particular attention to the LIMS IDs associated to dataset, the feature types and sample names!
 {{% /notice %}}
 
-The parameters in the guessed `scamp-file.yaml` should now be checked, the values may need to be corrected and/or amended or new information included. For example, certain samples may need to be removed or different analysis stages my be required. Examples of analysis parameters files can be found in the [analysis configuration][analysis configuration] post.
+The parameters in the guessed `scamp_file.yaml` should now be checked, the values may need to be corrected and/or amended or new information included. For example, certain samples may need to be removed or different analysis stages my be required. Examples of analysis parameters files can be found in the [analysis configuration][analysis configuration] post.
 
 Once the pipeline parameters are encoded in the parameters file, the pipeline can then be launched using a [specific release][scamp releases] such as `23.07.02` or the current version using `main`. Using a specific tag is recommended for reproducibility.
 
@@ -96,7 +96,7 @@ If you want to test you configuration file without running any real analysis, yo
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
   -stub-run -profile stub_run \
-  --scamp_file scamp-file.yaml
+  --scamp_file scamp_file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -105,7 +105,7 @@ This will create empty files instead of analysing data but will produce errors i
 {{< tab title="bash" >}}
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
-  --scamp_file scamp-file.yaml
+  --scamp_file scamp_file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 

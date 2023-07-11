@@ -103,7 +103,7 @@
 
 								{{ $hover := $provider }}
 								{{ if eq $provider "user" }}
-									{{ $hover = printf "scamp-file parameter: %s" $provider_value }}
+									{{ $hover = printf "{scamp} parameter: %s" $provider_value }}
 								{{ else if eq $provider "default" }}
 									{{ $hover = printf "default value: %s" $provider_value }}
 								{{ else if eq $provider "process" }}
