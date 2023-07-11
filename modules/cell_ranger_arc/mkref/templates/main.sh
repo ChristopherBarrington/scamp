@@ -11,17 +11,19 @@ cat gtf/*.gtf > features.gtf
 sed --in-place 's/ gene_biotype / gene_type /' features.gtf
 
 # reformat non-nuclear contigs
-NON_NUCLEAR_CONTIGS=`echo -n $non_nuclear_contigs | sed --regexp-extended 's/\\[|,|\\]//g' | jq -R -s -c 'split(\" \")'`
+NON_NUCLEAR_CONTIGS=`echo -n $non_nuclear_contigs | sed --regexp-extended 's/\\[|,|\\]//g' | jq -R -s -c 'split(" ")'`
 
 # write the json-ish config file
-echo \"\"\"{
-    organism: \\"$organism\\"
-    genome: [\\"$assembly\\"]
-    input_fasta: [\\"assembly.fasta\\"]
-    input_gtf: [\\"features.gtf\\"]
-    input_motifs: \\"motifs.txt\\"
-    non_nuclear_contigs: \$NON_NUCLEAR_CONTIGS
-}\"\"\" > config
+cat <<-CONFIG > config
+{
+    organism: "$organism"
+    genome: ["$assembly"]
+    input_fasta: ["assembly.fasta"]
+    input_gtf: ["features.gtf"]
+    input_motifs: "motifs.txt"
+    non_nuclear_contigs: \${NON_NUCLEAR_CONTIGS}
+}
+CONFIG
 
 # create the index
 cellranger-arc mkref \\
