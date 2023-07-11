@@ -86,21 +86,21 @@ seurat:
         quantification method: cell ranger arc
 
     8 weeks sample1:
-        description: 8 week's old, replicate 1
+        description: 8 week old, replicate 1
         limsid:
             - AHM4688A1
             - AHM4688A4
         # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
 
     8 weeks sample2:
-        description: 8 week's old, replicate 2
+        description: 8 week old, replicate 2
         limsid:
             - AHM4688A2
             - AHM4688A5
         # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
 
     8 weeks sample3:
-        description: 8 week's old, replicate 3
+        description: 8 week old, replicate 3
         limsid:
             - AHM4688A3
             - AHM4688A6

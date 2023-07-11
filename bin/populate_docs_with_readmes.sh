@@ -17,6 +17,7 @@ find scamp/utilities -name 'main.yaml' |
 find content/{modules,workflows,utilities} -mindepth 0 -type d |
 	xargs -I @ sh -c "hugo new --kind docs-group --force @/_index.md"
 
+SCAMP_DOC=scamp/main.yaml hugo new --kind doc-user-parameters --force usage-guides/user-parameters/_index.md
 
 if [[ $OSTYPE == 'darwin'* ]]; then
 	sed -i .sed 's/weight: /weight: 101/' content/modules/_index.md

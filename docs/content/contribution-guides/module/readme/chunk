@@ -42,5 +42,9 @@ output:
     description: YAML-formatted file of software versions used by the task.
     pattern: versions.yaml
 
+channel tags:
+  - ':channel_1': Description of channel 1, without the shared root in the tag.
+  - ':channel_2': Description of channel 2.
+
 authors:
   - "@ChristopherBarrington"
