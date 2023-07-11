@@ -11,7 +11,7 @@ process mkref {
 		val organism
 		val assembly
 		val non_nuclear_contigs
-		path motifs
+		path 'motifs.txt'
 		path 'fasta'
 		path 'gtf'
 
