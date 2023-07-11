@@ -62,11 +62,11 @@
       type: string
       provider: process
     - name: fasta files
-      description: A collection of FastA files that can be used to create a genome index. No default is provided but is probably only needed to build an index.
-      type: files
+      description: A directory with FastA files that can be used to create a genome index. No default is provided but is probably only needed to build an index.
+      type: path
     - name: gtf files
-      description: A collection of GTF files that can be used to quantify activity of features. No default is provided but is probably only needed to build an index.
-      type: files
+      description: A directory with GTF files that can be used to quantify activity of features. No default is provided but is probably only needed to build an index.
+      type: path
     - name: motifs
       description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
       type: file
