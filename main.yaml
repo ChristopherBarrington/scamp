@@ -102,7 +102,6 @@
 
 - title: Genome parameters
   description: A dictionary of parameters that define a genome. This can be used to define the parameters for a custom genome.
-  type: dictionary
   icon: vial
   parameters:
     - name: organism
@@ -117,3 +116,17 @@
     - name: non-nuclear contigs
       description: A collection of chromosomes in the `genome` that may be treated differently - for example by Cell Ranger ARC to created an index.
       type: strings
+
+- title: Nextflow parameters
+  description: Parameters used by the pipeline but are not directly part of {scamp} and specified with the `--` command line option. Default values are defined in `params.config`.
+  icon: globe
+  parameters:
+    - name: publish_mode
+      description: How results of tasks are outuput, defaults to `copy`. Other modes may affect the pipeline so the only alterantive to `copy` is `symlink`.
+      type: string
+      provider: default
+    - name: publish_dir
+      description: |
+        The root directory (default: `results`) under which task results will be published.
+      type: path
+      provider: default
