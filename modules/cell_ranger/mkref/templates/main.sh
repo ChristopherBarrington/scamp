@@ -24,7 +24,6 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    organism: $organism
     assembly: $assembly
     assembly_fasta: `pwd`/assembly.fasta
     features_gtf: `pwd`/features.gtf
