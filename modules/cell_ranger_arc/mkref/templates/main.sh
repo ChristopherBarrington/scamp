@@ -1,7 +1,7 @@
 #! bash
 
 # get software version(s)
-VERSION=`cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc-//'`
+VERSION=`cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc cellranger-arc-//'`
 
 # create input files
 cat $path_to_fastas/*.fa > assembly.fasta
@@ -27,8 +27,7 @@ echo \"\"\"{
 cellranger-arc mkref \\
 	--config config \\
 	--nthreads ${task.cpus} \\
-	--memgb ${task.memory.toGiga()} \\
-	--ref-version \${VERSION}
+	--memgb ${task.memory.toGiga()}
 
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
