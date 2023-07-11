@@ -12,8 +12,8 @@ process mkref {
 		val assembly
 		val non_nuclear_contigs
 		path motifs
-		path path_to_fastas
-		path path_to_gtfs
+		path 'fasta' path_to_fastas
+		path 'gtf' path_to_gtfs
 
 	output:
 		val opt, emit: opt

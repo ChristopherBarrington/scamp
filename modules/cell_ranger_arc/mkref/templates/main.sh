@@ -4,8 +4,8 @@
 VERSION=`cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc cellranger-arc-//'`
 
 # create input files
-cat $path_to_fastas/*.fa > assembly.fasta
-cat $path_to_gtfs/*.gtf > features.gtf
+cat fasta/*.fa > assembly.fasta
+cat gtf/*.gtf > features.gtf
 
 # rename any gene_biotype keys to gene_type
 sed --in-place 's/ gene_biotype / gene_type /' features.gtf
