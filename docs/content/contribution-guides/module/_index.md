@@ -75,7 +75,7 @@ An R script could be used here too, specifying `Rscript` instead of `bash` in th
 Nextflow will interpolate variables using `$variable` so any scripts using `$` may have unexpected behaviour. Where possible use non-dollar alternatives or delimit the symbol.
 {{% /notice %}}
 
-{{< tabs title="Process scripts" >}}
+{{< tabs title="process scripts" >}}
 {{< tab title="main.sh" >}}
 {{< shepherd_tour tour="template_bash" lang="bash" btn_msg="Take the bash script tour" >}}
 {{< /tab >}}
@@ -104,7 +104,7 @@ Each module should be documented using the `readme.yaml` file. This file will be
 
 A template module documentation file can be created using `hugo`. Suppose we wanted to add documentation to a new module for `cellranger count`, stored in `scamp/modules/cell_ranger/count`. Setting the environment variable `MODULE_PATH=modules/cell_ranger/count` and using Hugo as below will create a template `readme.md` in the module, which is subsequently renamed to a YAML file.
 
-{{< tabs >}}
+{{< tabs title="create module documentation" >}}
 {{% tab title="mac os" %}}
 {{< highlight bash >}}
 hugo new --kind module-readme \

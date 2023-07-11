@@ -1,0 +1,53 @@
+
+{{ $page_context := .Page }} <!-- not sure how this works, needed for the badges in the for loop... -->
+
+<!-- print tables for each group of parameters -->
+
+{{ range $parameter_set := .Params.user_parameters }}
+	{{ $name := index $parameter_set "title"}}
+	{{ $icon := index $parameter_set "icon" }}
+	<h2 id="steps">{{ partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon) }} {{ $name }}</h2>
+	<p>{{ index $parameter_set "description" }}</p>
+
+	<!-- make a table of parameters -->
+	<table class="user-parameters-table">
+		<tr>
+			<th>Tag</th>
+			<th>Description</th>
+			<th>Type</th>
+			<th>Provider</th>
+		</tr>
+
+		{{ range $info := sort $parameter_set.parameters "name" }}
+			<tr>
+				<td><code>{{ index $info "name" }}</code></td>
+				<td>{{ index $info "description" | markdownify }}</td>
+				<td><code>{{ index $info "type" }}</code></td>
+				<td>
+					{{ $args := dict "user"    (dict "colour" "orange" "icon" "user")
+					                 "default" (dict "colour" "green" "icon" "dog")
+					                 "process" (dict "colour" "blue" "icon" "cogs")}}
+
+					{{ if $provider := $info.provider }}
+						{{ $colour := index (index $args $provider) "colour" }}
+						{{ $icon := index (index $args $provider) "icon" }}
+
+						{{ $args := dict
+							"context" $page_context
+							"title" " "
+							"style" $colour
+							"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon)) }}
+
+						{{ partial "shortcodes/badge.html" $args }}
+					{{ else }}
+						{{ partial "shortcodes/badge.html" (dict
+							"context" $page_context
+							"title" " "
+							"style" "red"
+							"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" "user"))) }}
+					{{ end }}
+				</td>
+			</tr>
+		{{ end }}
+	</table>
+{{ end }}

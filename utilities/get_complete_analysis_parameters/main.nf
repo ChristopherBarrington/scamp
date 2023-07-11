@@ -35,11 +35,11 @@ def get_complete_analysis_parameters(stage=null) {
 		.collect{it + ['analysis id': make_string_directory_safe(it.get('analysis id', it.get('analysis name')))]}
 		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]}
 
-		// add default values to each set of dataset parameters
-		.collect{default_dataset_params.get(it.get('analysis key')) + it}
-
 		// if `description` is not provided, use the `dataset name`
 		.collect{it + ['description': it.get('description', it.get('dataset name'))]}
+
+		// add default values to each set of dataset parameters
+		.collect{default_dataset_params.get(it.get('analysis key')) + it}
 
 		// convert strings to file paths for expected keys
 		// - makes a relative path absolute
