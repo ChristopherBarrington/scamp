@@ -12,7 +12,7 @@ These notes illustrate how to configure an analysis using {scamp}. Detailed desc
 
 ## Analysis configuration
 
-A `parameters.yaml` file is used to described all aspects of a project and should serve as a record for parameters used in the pipeline. It will be passed to Nextflow as a parameter using `--scamp-file`.
+A `parameters.yaml` file is used to described all aspects of a project and should serve as a record for parameters used in the pipeline. It will be passed to Nextflow as a parameter using `--scamp_file`.
 
 The structure of `parameters.yaml` allows aspects of a project to be recorded alongside multiple analyses that can contain multiple datasets in a plain text and human readable format. `parameters.yaml` keys that being with underscores are reserved by {scamp} and should not be used in other keys. At the first level, the project (`_project`) and analysis stanzas are specified, the latter can have any name but should be reasonably filename-safe. Within analysis stanzas there are datasets which can also be freely (but sensibly) named.
 

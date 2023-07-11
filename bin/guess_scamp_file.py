@@ -50,7 +50,7 @@ parser.add_argument(
 parser.add_argument(
 	'--output-file', type=str, required=False, dest='output_file',
 	help='Name of the output file that will be written (or overwritten).',
-	default='scamp-file.yaml')
+	default='scamp_file.yaml')
 
 parser.add_argument(
 	'--project-type', type=str, required=False, dest='project_type',
