@@ -22,6 +22,7 @@ process mkref {
 		path assembly, emit: path
 
 	script:
+		mkref_args = task.ext.mkref ?: ''
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }
 
