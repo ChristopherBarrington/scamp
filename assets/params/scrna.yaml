@@ -5,14 +5,6 @@ _project:
     scientist: scientist.b
     lims id: SC23002
     babs id: sn002
-    feature types:
-        Gene Expression:
-            - COO4671A1
-            - COO4671A2
-            - COO4671A3
-            - COO4671A4
-            - COO4671A5
-            - COO4671A6
     genomes:
         mm10:
             organism: mus musculus
@@ -31,6 +23,14 @@ _defaults:
         - inputs/data_nm322/220818_A01366_0266_BHCJK7DMXY/fastq
         - inputs/data_nm322/230221_A01366_0353_AHNH37DSX5/fastq
     feature identifiers: name
+    feature types:
+        Gene Expression:
+            - COO4671A1
+            - COO4671A2
+            - COO4671A3
+            - COO4671A4
+            - COO4671A5
+            - COO4671A6
 
 cell ranger and seurat:
     _defaults:
