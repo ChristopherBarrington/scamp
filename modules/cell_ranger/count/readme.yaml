@@ -27,6 +27,9 @@ input:
   - name: id
     type: string
     description: Directory-safe name for the output directory.
+  - name: description
+    type: string
+    description: A short description of the sample.
   - name: sample
     type: string
     description: Name of sample used in FastQ file name.

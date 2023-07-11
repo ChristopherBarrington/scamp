@@ -12,32 +12,51 @@ steps:
   - name: Quantify expression
     description: Run `cellranger count` to align and quantify gene expression using the FastQ files and a genome index.
     anchor: 34
-    parameters:
-      - key: unique id
-        description: For the `tags` channel, to output in the Nextflow log.
-        type: string
-      - key: id
-        description: Output directory name
-        type: string
-      - key: limsid
-        description: Sample name, used in the module to search `fastq paths` for the relevant FastQ files.
-        type: string
-      - key: fastq paths
-        description: Collection of directories that are search for `limsid` samples.
-        type: paths
-      - key: index path
-        description: Path to the index against which expression will be quantified.
-        type: path
-      - key: dataset id
-        description: Filename-safe name for the dataset that can be used to publish results. This will be derived from the key if not provided.
-        type: string
     modules:
       - cell_ranger/count
-
 output:
   - name: result
     type: channel
-    description: A channel of maps that are the same as the input parameters sets but now include `index path` _and_ `quantification path` parameters.
+    description: A channel of maps that are the same as the input parameters sets but now include `quantification method` and `quantification path` keys.
+
+parameters:
+  - key: unique id
+    description: For the `tags` channel, to output in the Nextflow log.
+    type: string
+    providers:
+      user: unique id
+      default: stage name and dataset name
+  - key: description
+    description: A short description of the sample. If missing, the `dataset name` value will be used.
+    type: string
+    providers:
+      user: description
+  - key: limsid
+    description: Sample name, used in the module to search `fastq paths` for the relevant FastQ files.
+    type: string
+    providers:
+      user: limsid
+  - key: fastq paths
+    description: Collection of directories that are search for `limsid` samples.
+    type: paths
+    providers:
+      user: fastq paths
+  - key: index path
+    description: Path to the index against which expression will be quantified.
+    type: path
+    providers:
+      user: index path
+  - key: dataset id
+    description: Filename-safe name for the dataset that can be used to publish results. This will be derived from the key if not provided.
+    type: string
+    providers:
+      user: dataset id
+      default: parsed dataset name
+
+channel tags:
+  - ':datasets_to_quantify': Dataset parameters passed into the workflow, subset for relevant keys.
+  - ':quantified_datasets': After quantifiaction, the `quantification path` key is added to the parameters.
+  - ':final_results': The new parameters from the workflow are merged back into the input parameters, with a `quantification method` key added. The channel is emitted from the workflow as `result`.
 
 authors:
   - "@ChristopherBarrington"

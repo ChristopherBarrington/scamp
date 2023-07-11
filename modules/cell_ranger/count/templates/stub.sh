@@ -7,8 +7,9 @@ FASTQ_PATHS=`find -L fastq_path_* -mindepth 1 -maxdepth 1 -name "${sample}_S*_L*
 	awk '{printf "%s%s", sep, \$1 ; sep=","} END{print ""}'`
 
 # run cell ranger count
-cellranger count \\
+cellranger count $count_args \\
 	--id=$id \\
+	--description="$description" \\
 	--transcriptome=`realpath index_path` \\
 	--fastqs=\${FASTQ_PATHS} \\
 	--sample=$sample \\
@@ -30,6 +31,7 @@ END_VERSIONS
 cat <<-END_TASK > task.yaml
 "${task.process}":
     id: $id
+    description: $description
     sample: $sample
     index_path: `realpath index_path`
     task_index: ${task.index}

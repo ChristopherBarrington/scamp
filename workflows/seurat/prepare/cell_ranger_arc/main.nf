@@ -50,7 +50,7 @@ workflow cell_ranger_arc {
 			.map{make_map(it.split('###'), ['genome', 'index path'])}
 			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf.gz')]}
 			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
-			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty:  true)
+			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty: true)
 			.set{gtf_files_to_convert_to_granges}
 
 		tags      = gtf_files_to_convert_to_granges.map{it.get('genome')}
@@ -194,15 +194,15 @@ workflow cell_ranger_arc {
 		// add the new objects into the parameters channel
 		merge_process_emissions(make_object, ['opt', 'seurat'])
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag: 'seurat:prepare:cell_ranger_arc:seurat_objects', pretty: true)
-			.set{seurat_objects}
+			.dump(tag: 'seurat:prepare:cell_ranger_arc:objects', pretty: true)
+			.set{objects}
 
 		// -------------------------------------------------------------------------------------------------
 		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
 		parameters
-			.combine(seurat_objects)
+			.combine(objects)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + ['seurat path': it.last().subMap(['seurat'])]}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:final_results', pretty: true)

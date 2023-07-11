@@ -1,12 +1,6 @@
 ---
 title: modules
 weight: 1
-
-headingPre: |
-  <script src="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/js/shepherd.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@10.0.1/dist/css/shepherd.css"/>
-  <script src="/js/shepherd-tours.js"></script>
-  <link rel="stylesheet" href="/css/shepherd.css"/>
 ---
 
 Modules represent specific steps of a pipeline that can be reused in multiple instances. A module should be written to be generic and not specifically tied to a pipeline, workflow or subworkflow (etc). Each module performs a specific task and usually includes only a few different programs.
@@ -81,7 +75,7 @@ An R script could be used here too, specifying `Rscript` instead of `bash` in th
 Nextflow will interpolate variables using `$variable` so any scripts using `$` may have unexpected behaviour. Where possible use non-dollar alternatives or delimit the symbol.
 {{% /notice %}}
 
-{{< tabs title="Process scripts" >}}
+{{< tabs title="process scripts" >}}
 {{< tab title="main.sh" >}}
 {{< shepherd_tour tour="template_bash" lang="bash" btn_msg="Take the bash script tour" >}}
 {{< /tab >}}
@@ -110,7 +104,7 @@ Each module should be documented using the `readme.yaml` file. This file will be
 
 A template module documentation file can be created using `hugo`. Suppose we wanted to add documentation to a new module for `cellranger count`, stored in `scamp/modules/cell_ranger/count`. Setting the environment variable `MODULE_PATH=modules/cell_ranger/count` and using Hugo as below will create a template `readme.md` in the module, which is subsequently renamed to a YAML file.
 
-{{< tabs >}}
+{{< tabs title="create module documentation" >}}
 {{% tab title="mac os" %}}
 {{< highlight bash >}}
 hugo new --kind module-readme \

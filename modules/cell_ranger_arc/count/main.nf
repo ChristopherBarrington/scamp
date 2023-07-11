@@ -1,7 +1,7 @@
 process count {
 	tag "$tag"
 
-	cpus 8
+	cpus 16
 	memory '64GB'
 	time '3d'
 
@@ -9,6 +9,7 @@ process count {
 		val opt
 		val tag
 		val id
+		val description
 		val samples
 		path 'index_path'
 		file 'all_libraries.csv'

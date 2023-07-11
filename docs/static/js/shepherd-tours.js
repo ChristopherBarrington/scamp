@@ -1,3 +1,4 @@
+console.log('loaded shepherd-tours.js from static')
 
 // define a generic shepherd tour
 function make_default_tour(steps_json) {

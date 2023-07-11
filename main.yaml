@@ -1,0 +1,137 @@
+- title: Analysis parameters
+  description: Any {scamp} parameter that can be provided in an analysis stanza, under the analysis or project `_defaults` or under a specific dataset's stanza.
+  icon: edit
+  parameters:
+    - name: fastq paths
+      description: Paths to any directory (non-recursively) containing FastQ files for the project. Default value is a path in Nemo using the `lab`, `scientist` and `lims id` from the `_project` stanza.
+      type: paths
+      provider: default
+    - name: feature types
+      description: A dictionary of assay types in the project and the relevant LIMS IDs.
+      type: dictionary
+    - name: feature identifiers
+      description: Whether to use `accession` or `name` as the feature index. In the Seurat workflows, the non-selected identifier may be saved into an `RNA_alt` assay in the object. The default is to use feature names.
+      type: string
+      provider: default
+    - name: stages
+      description: A collection of (unordered) workflows to apply in an analysis. These are a curated list of workflows available in {scamp} and should be specified as a path. (Spaces will be converted to underscores). Omitting this parameter will prevent workflows from launching but will not cause {scamp} to fail.
+      type: strings
+      provider: default
+    - name: index path
+      description: The path to an index for the analysis. If omitted, it is assumed that an index is to be created and will be provided by a {scamp} process.
+      type: path
+      provider: process
+    - name: genome
+      description: Name of the genome for an analysis; must be one of `genomes`. The default value will be the first genome in `genomes`.
+      type: string
+      provider: default
+    - name: description
+      description: A short textual description of the dataset, mainly as an aide-memoire. A default value of `dataset name` is used if missing.
+      type: string
+      provider: default
+    - name: limsid
+      description: Identifier(s) for the sample in the project. This will be used to identify FastQ files for the dataset/sample. No default value can be provided. Some samples provide multiple libraries, so this may be a collection of strings in certain cases.
+      type: string(s)
+    - name: dataset tag
+      description: A very short name for the dataset. This will be appended to cell barcodes so should be _very_ short and concise with no spaces or funny characters. An unhelpful default will be provided but should not be trusted.
+      type: string
+      provider: default
+    - name: analysis name
+      description: A human-readable name for an analysis. This should not be applied at the dataset-level within an analysis stanza but could be specified in the `_defaults` for an analysis. The default is the YAML key used in the {scamp} parameters file.
+      type: string
+      provider: default
+    - name: analysis id
+      description: A directory safe identifier for the analysis. The default value is an attempt to make the `dataset name` directory-safe.
+      type: string
+      provider: default
+    - name: dataset name
+      description: Human readable name for a dataset in an analysis. The YAML key will be used if omitted.
+      type: string
+      provider: default
+    - name: dataset id
+      description: A directory-safe name for a dataset, taken from the `dataset name` if omitted.
+      type: string
+      provider: default
+    - name: quantification path
+      description: Path to quantified data that can be read and used by an analysis stage. Can be provided by a {scamp} stage.
+      type: path
+      provider: process
+    - name: quantification method
+      description: |
+        The method used to create the data in `quantification path`. This is a curated set of methods and depends on the analysis stages: `cell_ranger` and `cell_ranger_arc` for example. This will be provided by {scamp} if a quantification stage is applied, otherwise it is required.
+      type: string
+      provider: process
+    - name: fasta files
+      description: A collection of FastA files that can be used to create a genome index. No default is provided but is probably only needed to build an index.
+      type: files
+    - name: gtf files
+      description: A collection of GTF files that can be used to quantify activity of features. No default is provided but is probably only needed to build an index.
+      type: files
+    - name: motifs
+      description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
+      type: file
+    - name: unique id
+      description: A unique identifer for this combination of analysis and dataset. By default, the analysis and dataset keys are joined together by " / ".
+      type: string
+      provider: default
+
+- title: Project parameters
+  description: A reserved stanza that defines the project, rather than specifc data.
+  icon: rocket
+  parameters:
+    - name: lab
+      description: The `<last name><first initial>` formatted name of the lab. This is used to find data, if possible.
+      type: string
+    - name: scientist
+      description: The `<first name>.<last name>` formatted name of the scientist, which may help find data in the filesystem. Be careful with double-barraled or multiple last names.
+      type: string
+    - name: lims id
+      description: Unique identifier for the project.
+      type: string
+    - name: babs id
+      description: Unique identifier for the project.
+      type: string
+    - name: type
+      description: |
+        Type of project as recorded by ASF. This is a curated list of: "10X-3prime", "10X-multiome" etc. The default value is `10X-3prime`.
+      type: string
+      provider: default
+    - name: genomes
+      description: A dictionary of genomes included in the project. These should be very similar across projects and use standard values. The values may be dependent on other project parameters; the index used for alignment and quantification may be linked to `ensembl release` for example.
+      type: dictionary
+
+- title: Genome parameters
+  description: A dictionary of parameters that define a genome. This can be used to define the parameters for a custom genome.
+  icon: vial
+  parameters:
+    - name: organism
+      description: Latin name for the species, such as "mus musculus".
+      type: string
+    - name: assembly
+      description: Name of the genome assembly, such as "mm10".
+      type: string
+    - name: ensembl release
+      description: Number of Ensembl release, such as 98.
+      type: string
+    - name: non-nuclear contigs
+      description: A collection of chromosomes in the `genome` that may be treated differently - for example by Cell Ranger ARC to created an index.
+      type: strings
+
+- title: Nextflow parameters
+  description: Parameters used by the pipeline but are not directly part of {scamp} and specified with the `--` command line option. Default values are defined in `params.config`.
+  icon: globe
+  parameters:
+    - name: publish_mode
+      description: How results of tasks are outuput, defaults to `copy`. Other modes may affect the pipeline so the only alterantive to `copy` is `symlink`.
+      type: string
+      provider: default
+    - name: publish_dir
+      description: |
+        The root directory (default: `results`) under which task results will be published.
+      type: path
+      provider: default
+    - name: scamp_file
+      description: |
+        YAML file (default: `scamp_file.yaml`) that contains the configuration parameters for the analyses.
+      type: file
+      provider: default
