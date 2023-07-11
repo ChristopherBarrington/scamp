@@ -1,8 +1,8 @@
 #! bash
 
 # create input files
-cat $path_to_fastas/*.fa > assembly.fasta
-cat $path_to_gtfs/*.gtf > features.gtf
+cat fasta/*.fa > assembly.fasta
+cat gtf/*.gtf > features.gtf
 
 # rename any gene_biotype keys to gene_type
 sed --in-place 's/ gene_biotype / gene_type /' features.gtf
@@ -24,9 +24,10 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    id: $id
-    samples: $organism
-    description: $assembly
+    organism: $organism
+    assembly: $assembly
+    assembly_fasta: `pwd`/assembly.fasta
+    features_gtf: `pwd`/features.gtf
     task_index: ${task.index}
     ext:
         mkref: ${mkref_args}
