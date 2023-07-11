@@ -96,7 +96,7 @@ If you want to test you configuration file without running any real analysis, yo
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
   -stub-run -profile stub_run \
-  --scamp-file scamp-file.yaml
+  --scamp_file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -105,7 +105,7 @@ This will create empty files instead of analysing data but will produce errors i
 {{< tab title="bash" >}}
 {{< highlight bash >}}
 nextflow run ChristopherBarrington/scamp -revision 23.07.02 \
-  --scamp-file scamp-file.yaml
+  --scamp_file scamp-file.yaml
 {{< /highlight >}}
 {{< /tab >}}
 

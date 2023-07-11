@@ -93,7 +93,7 @@ def get_scamp_params() {
 	try {
 		@Grab('org.apache.groovy:groovy-yaml')
 		def yamlslurper = new groovy.yaml.YamlSlurper()
-		yamlslurper.parse(file(params.get('scamp-file')))
+		yamlslurper.parse(file(params.get('scamp_file')))
 	} catch(Exception e) {
 		System.exit(0)
 	}
