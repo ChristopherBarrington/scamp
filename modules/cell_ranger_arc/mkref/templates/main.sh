@@ -1,8 +1,5 @@
 #! bash
 
-# get software version(s)
-VERSION=`cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc cellranger-arc-//'`
-
 # create input files
 cat fasta/*.fa > assembly.fasta
 cat gtf/*.gtf > features.gtf
@@ -34,5 +31,17 @@ cellranger-arc mkref \\
 # write software versions used in this module
 cat <<-END_VERSIONS > versions.yaml
 "${task.process}":
-    cell ranger arc: \${VERSION}
+    cell ranger arc: `cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc cellranger-arc-//'`
 END_VERSIONS
+
+# write parameters to a (yaml) file
+cat <<-END_TASK > task.yaml
+"${task.process}":
+    id: $id
+    samples: $organism
+    description: $assembly
+    task_index: ${task.index}
+    ext:
+        mkref: ${mkref_args}
+    work_dir: `pwd`
+END_TASK
