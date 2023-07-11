@@ -41,10 +41,6 @@ def get_complete_analysis_parameters(stage=null) {
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params.get(it.get('analysis key')) + it}
 
-		// convert strings to file paths for expected keys
-		// - makes a relative path absolute
-		.collect{convert_map_keys_to_files(it, possible_file_keys)}
-
 		// add in the genome parameters for each dataset
 		.collect{it + ['genome parameters': genomes_params.get(it.get('genome'))]}
 
@@ -53,6 +49,10 @@ def get_complete_analysis_parameters(stage=null) {
 
 		// if `quantification method` is provided, make it safe
 		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])}
+
+		// convert strings to file paths for expected keys
+		// - makes a relative path absolute
+		.collect{convert_map_keys_to_files(it, possible_file_keys)}
 
 		// filter for datasets that contain a specific processing stage
 		.findAll{it.get('stages', []).contains(stage) | stage==null}
