@@ -9,6 +9,7 @@ def get_complete_analysis_parameters(stage=null) {
 	def genomes_params = get_genomes_params()
 	def default_dataset_params = get_default_dataset_params()
 	def possible_file_keys = get_possible_file_keys()
+	def project_parameters = get_project_parameters()
 
 	get_analysis_params()
 		// remove the default dataset parameters
@@ -24,19 +25,27 @@ def get_complete_analysis_parameters(stage=null) {
 		.collect{k,v -> v.values()}
 		.flatten()
 
-		// add default analysis and dataset names
-		// - use key if not provided
-		// - may be superfluous
+		// add default values where parameters are omitted
+
+		// dataset and analysis names
 		.collect{it + ['analysis name': it.get('analysis name', it.get('analysis key'))]}
 		.collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}
 
-		// add default analysis and dataset id
-		// - if missing, these are directory-safe versions of the names
+		// analysis and dataset ids
 		.collect{it + ['analysis id': make_string_directory_safe(it.get('analysis id', it.get('analysis name')))]}
 		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]}
 
-		// if `description` is not provided, use the `dataset name`
+		// dataset tags
+		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}
+
+		// dataset descriptions
 		.collect{it + ['description': it.get('description', it.get('dataset name'))]}
+
+		// feature identifiers
+		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}
+
+		// genome
+		.collect{it + ['genome': it.get('genome', genomes_params.keySet().first())]}
 
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params.get(it.get('analysis key')) + it}
@@ -85,6 +94,12 @@ def get_default_dataset_params() {
 
 def get_analysis_params() {
 	get_scamp_params().findAll{!it.key.startsWith('_')}
+}
+
+// get a hash of _project parameters
+
+def get_project_parameters() {
+	[type: '10X-3prime'] + get_scamp_params().get('_project', [:])
 }
 
 // read and parse the scamp parameters
