@@ -13,16 +13,6 @@ _project:
             - COO4671A4
             - COO4671A5
             - COO4671A6
-            - COO4671A7
-            - COO4671A8
-            - COO4671A9
-            - COO4671A10
-            - COO4671A11
-            - COO4671A12
-            - COO4671A13
-            - COO4671A14
-            - COO4671A15
-            - COO4671A16
     genomes:
         mm10:
             organism: mus musculus
