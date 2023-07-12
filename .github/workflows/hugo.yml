@@ -61,6 +61,8 @@ jobs:
           cd docs
           export SCAMP_TAG=`git tag --list | tail -n 1`
           export SCAMP_COMMIT=`git rev-parse HEAD`
+          echo $SCAMP_COMMIT
+          echo $SCAMP_TAG
           hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
