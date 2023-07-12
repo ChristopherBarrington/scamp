@@ -5,14 +5,6 @@ _project:
     scientist: scientist.b
     lims id: SC23002
     babs id: sn002
-    feature types:
-        Gene Expression:
-            - COO4671A1
-            - COO4671A2
-            - COO4671A3
-            - COO4671A4
-            - COO4671A5
-            - COO4671A6
     genomes:
         mm10:
             organism: mus musculus
@@ -22,6 +14,9 @@ _project:
                 - chrM
             mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
             cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
+            fasta files: inputs/genome
+            gtf files: inputs/genome
+            motifs: inputs/genome/motifs
 
 _defaults:
     genome: mm10
@@ -29,11 +24,19 @@ _defaults:
 
 cell ranger and seurat:
     _defaults:
+        feature types:
+            Gene Expression:
+                - COO4671A1
+                - COO4671A2
+                - COO4671A3
+                - COO4671A4
+                - COO4671A5
+                - COO4671A6
         stages:
             - quantification/cell ranger
             - seurat/prepare/cell ranger
         quantification method: cell ranger
-        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
+        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
         fastq paths:
             - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
             - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
@@ -127,7 +130,7 @@ cell ranger arc and seurat:
         stages:
             - quantification/cell_ranger_arc
             - seurat/prepare/cell_ranger_arc
-        index path: inputs/cellranger_arc_ref
+        # index path: inputs/cellranger_arc_ref
         feature identifiers: name
         quantification method: cell ranger arc
 
