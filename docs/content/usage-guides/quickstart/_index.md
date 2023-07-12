@@ -36,7 +36,7 @@ if [[ -n ${NXF_HOME} ]]; then
   export NXF_HOME=/nemo/project/home/{$USER}/.nextflow
 fi
 
-nextflow pull ChristopherBarrington/scamp -revision main
+nextflow pull ChristopherBarrington/scamp -revision {{% getenv "SCAMP_TAG" %}}
 export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
 {{< /highlight >}}
 {{< /tab >}}
@@ -88,13 +88,13 @@ Check the guessed parameters file! Pay particular attention to the LIMS IDs asso
 
 The parameters in the guessed `scamp_file.yaml` should now be checked, the values may need to be corrected and/or amended or new information included. For example, certain samples may need to be removed or different analysis stages my be required. Examples of analysis parameters files can be found in the [analysis configuration][analysis configuration] post.
 
-Once the pipeline parameters are encoded in the parameters file, the pipeline can then be launched using a [specific release][scamp releases] such as `23.07.12` or the current version using `main`. Using a specific tag is recommended for reproducibility.
+Once the pipeline parameters are encoded in the parameters file, the pipeline can then be launched using a [specific release][scamp releases] such as `{{% getenv "SCAMP_TAG" %}}` or the current version using `main`. Using a specific tag is recommended for reproducibility.
 
 If you want to test you configuration file without running any real analysis, you can run Nextflow in `stub-run` mode:
 
 {{< tab title="bash" >}}
 {{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision 23.07.12 \
+nextflow run ChristopherBarrington/scamp -revision {{% getenv "SCAMP_TAG" %}} \
   -stub-run -profile stub_run \
   --scamp_file scamp_file.yaml
 {{< /highlight >}}
@@ -104,7 +104,7 @@ This will create empty files instead of analysing data but will produce errors i
 
 {{< tab title="bash" >}}
 {{< highlight bash >}}
-nextflow run ChristopherBarrington/scamp -revision 23.07.12 \
+nextflow run ChristopherBarrington/scamp -revision {{% getenv "SCAMP_TAG" %}} \
   --scamp_file scamp_file.yaml
 {{< /highlight >}}
 {{< /tab >}}
