@@ -3,9 +3,8 @@
   icon: edit
   parameters:
     - name: fastq paths
-      description: Paths to any directory (non-recursively) containing FastQ files for the project. Default value is a path in Nemo using the `lab`, `scientist` and `lims id` from the `_project` stanza.
+      description: Paths to any directory (non-recursively) containing FastQ files for the project.
       type: paths
-      provider: default
     - name: feature types
       description: A dictionary of assay types in the project and the relevant LIMS IDs.
       type: dictionary

@@ -8,10 +8,7 @@ process mkref {
 	input:
 		val opt
 		val tag
-		val organism
 		val assembly
-		val non_nuclear_contigs
-		path 'motifs.txt'
 		path 'fasta'
 		path 'gtf'
 
@@ -26,4 +23,4 @@ process mkref {
 		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }
 
-// https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/pipelines/latest/advanced/references
+// https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/references

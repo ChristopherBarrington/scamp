@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ github.ref_name }}
-          submodules: recursive
+          fetch-depth: 0
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
@@ -59,7 +59,9 @@ jobs:
           HUGO_ENV: production
         run: |
           cd docs
-          SCAMP_COMMIT=`git rev-parse HEAD` hugo \
+          export SCAMP_TAG=`git tag --list | tail -n 1`
+          export SCAMP_COMMIT=`git rev-parse HEAD`
+          hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact

@@ -43,16 +43,16 @@ workflow cell_ranger_arc {
 		genome_indexes.provided.dump(tag: 'quantification:cell_ranger_arc:genome_indexes.provided', pretty: true)
 
 		// make channels of parameters for genomes that need indexes to be created
-		tags                = genome_indexes.missing.map{it.get('genome')}
+		tags                = genome_indexes.missing.map{it.get('key')}
 		organisms           = genome_indexes.missing.map{it.get('organism')}
 		assemblies          = genome_indexes.missing.map{it.get('assembly')}
 		non_nuclear_contigs = genome_indexes.missing.map{it.get('non-nuclear contigs')}
 		motifs              = genome_indexes.missing.map{it.get('motifs')}
-		path_to_fastas      = genome_indexes.missing.map{it.get('fasta files')}
-		path_to_gtfs        = genome_indexes.missing.map{it.get('gtf files')}
+		paths_to_fastas     = genome_indexes.missing.map{it.get('fasta files')}
+		paths_to_gtfs       = genome_indexes.missing.map{it.get('gtf files')}
 
 		// create cell ranger arc indexes
-		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs, path_to_fastas, path_to_gtfs)
+		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs, paths_to_fastas, paths_to_gtfs)
 
 		// make a channel of newly created genome indexes, each defined in a map
 		merge_process_emissions(mkref, ['opt', 'path'])
