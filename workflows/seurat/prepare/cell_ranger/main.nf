@@ -49,7 +49,7 @@ workflow cell_ranger {
 			.map{it.values().join('###')}
 			.unique()
 			.map{make_map(it.split('###'), ['genome', 'index path'])}
-			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf')]}
+			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes').listFiles().first()]}
 			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
 			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty: true)
 			.set{gtf_files_to_convert_to_granges}
