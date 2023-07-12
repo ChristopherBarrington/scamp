@@ -62,7 +62,7 @@
       description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
       type: file
     - name: unique id
-      description: A unique identifer for this combination of analysis and dataset. By default, the dataset name is used.
+      description: A unique identifer for this combination of analysis and dataset. By default, the dataset key is used.
       type: string
       provider: default
 
