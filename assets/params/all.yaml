@@ -21,137 +21,157 @@ _project:
 _defaults:
     genome: mm10
     feature identifiers: name
+    feature types:
+        Gene Expression:
+            - COO4671A1
+            - COO4671A2
+            - COO4671A3
+            - COO4671A4
+            - COO4671A5
+            - COO4671A6
+            - AHM4688A1
+            - AHM4688A2
+            - AHM4688A3
+            - AHM4688A7
+            - AHM4688A9
+            - AHM4688A11
+            - AHM4688A15
+            - AHM4688A17
+            - AHM4688A19
+            - AHM4688A21
+            - AHM4688A23
+            - AHM4688A25
+            - AHM4688A27
+        Chromatin Accessibility:
+            - AHM4688A4
+            - AHM4688A5
+            - AHM4688A6
+            - AHM4688A8
+            - AHM4688A10
+            - AHM4688A12
+            - AHM4688A16
+            - AHM4688A18
+            - AHM4688A20
+            - AHM4688A22
+            - AHM4688A24
+            - AHM4688A26
+            - AHM4688A28
 
-cell ranger and seurat:
-    _defaults:
-        feature types:
-            Gene Expression:
-                - COO4671A1
-                - COO4671A2
-                - COO4671A3
-                - COO4671A4
-                - COO4671A5
-                - COO4671A6
-        stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
-        quantification method: cell ranger
-        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
-        fastq paths:
-            - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
-            - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
-            - inputs/data_nm322/220818_A01366_0266_BHCJK7DMXY/fastq
-            - inputs/data_nm322/230221_A01366_0353_AHNH37DSX5/fastq
+    fastq paths:
+        - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
+        - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
+        - inputs/data_nm322/220818_A01366_0266_BHCJK7DMXY/fastq
+        - inputs/data_nm322/230221_A01366_0353_AHNH37DSX5/fastq
+        - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY/fastq
+        - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2/fastq
+        - inputs/data_sa154/220420_A01366_0179_BH72WWDMXY/fastq
+        - inputs/data_sa154/220422_A01366_0180_BHJLLNDSX3/fastq
+        - inputs/data_sa154/220425_A01366_0182_BH7HJ3DMXY/fastq
+        - inputs/data_sa154/220428_A01366_0187_BHCFHLDMXY/fastq
+        - inputs/data_sa154/220505_A01366_0193_BHKC3MDSX3/fastq
+        - inputs/data_sa154/220526_A01366_0207_BHCGLCDMXY/fastq
+        - inputs/data_sa154/220531_A01366_0211_AHCGNYDMXY/fastq
+        - inputs/data_sa154/220615_A01366_0219_AHK7WHDSX3/fastq
+        - inputs/data_sa154/220726_A01366_0242_BHN3GKDSX3/fastq
+        - inputs/data_sa154/220726_A01366_0243_AH5KL2DRX2/fastq
+        - inputs/data_sa154/220823_A01366_0268_AH5HJJDRX2/fastq
+        - inputs/data_sa154/220826_A01366_0270_BHGFMVDMXY/fastq
+        - inputs/data_sa154/220907_A01366_0275_AHGFV2DMXY/fastq
+        - inputs/data_sa154/220920_A01366_0282_AHCMHFDRX2/fastq
+        - inputs/data_sa154/220922_A01366_0283_AHF7FYDMXY/fastq
+        - inputs/data_sa154/221117_A01366_0317_BHGG3KDMXY/fastq
+        - inputs/data_sa154/221118_A01366_0319_AH7GYHDRX2/fastq
+        - inputs/data_sa154/221215_A01366_0329_AH7VKTDSX5/fastq
+        - inputs/data_sa154/221215_A01366_0330_BHNGLVDRX2/fastq
+        - inputs/data_sa154/221222_A01366_0333_AHGMKHDMXY/fastq
+        - inputs/data_sa154/230105_A01366_0334_BHJJ5VDSX5/fastq
+        - inputs/data_sa154/230106_A01366_0336_AHKFGJDSX5/fastq
+        - inputs/data_sa154/230201_A01366_0347_AHVLN5DRX2/fastq
+        - inputs/data_sa154/230420_A01366_0377_AHNFLGDRX2/fastq
+        - inputs/data_sa154/230511_A01366_0386_AHKC5TDMXY/fastq
+        - inputs/data_sa154/230526_A01366_0392_AHF3LVDSX7/fastq
 
+_datasets:
     stella 120h rep1:
         description: PGCLC sorted by STELLA at 120 hours
         limsid: COO4671A1
         dataset tag: ST120R1
+        stages:
+            - quantification/cell ranger
+            - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A1/outs
+        quantification method: cell ranger
+        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     pecam1 120h rep1:
         description: PGCLC sorted by PECAM1 at 120 hours
         limsid: COO4671A2
         dataset tag: P120R1
+        stages:
+            - quantification/cell ranger
+            - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A2/outs
+        quantification method: cell ranger
+        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     ssea1 120h rep1:
         description: PGCLC sorted by SSEA1 at 120 hours
         limsid: COO4671A3
         dataset tag: SS120R1
+        stages:
+            - quantification/cell ranger
+            - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A3/outs
+        quantification method: cell ranger
+        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     blimp1 + ssea1 120h rep1:
         description: PGCLC sorted by BLIMP1 and SSEA1 at 120 hours
         limsid: COO4671A4
         dataset tag: BS120R1
-        # quantification path: inputs/cellranger_nm322/COO4671A4/outs
-
-cell ranger arc and seurat:
-    _defaults:
-        fastq paths:
-            - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY/fastq
-            - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2/fastq
-            - inputs/data_sa154/220420_A01366_0179_BH72WWDMXY/fastq
-            - inputs/data_sa154/220422_A01366_0180_BHJLLNDSX3/fastq
-            - inputs/data_sa154/220425_A01366_0182_BH7HJ3DMXY/fastq
-            - inputs/data_sa154/220428_A01366_0187_BHCFHLDMXY/fastq
-            - inputs/data_sa154/220505_A01366_0193_BHKC3MDSX3/fastq
-            - inputs/data_sa154/220526_A01366_0207_BHCGLCDMXY/fastq
-            - inputs/data_sa154/220531_A01366_0211_AHCGNYDMXY/fastq
-            - inputs/data_sa154/220615_A01366_0219_AHK7WHDSX3/fastq
-            - inputs/data_sa154/220726_A01366_0242_BHN3GKDSX3/fastq
-            - inputs/data_sa154/220726_A01366_0243_AH5KL2DRX2/fastq
-            - inputs/data_sa154/220823_A01366_0268_AH5HJJDRX2/fastq
-            - inputs/data_sa154/220826_A01366_0270_BHGFMVDMXY/fastq
-            - inputs/data_sa154/220907_A01366_0275_AHGFV2DMXY/fastq
-            - inputs/data_sa154/220920_A01366_0282_AHCMHFDRX2/fastq
-            - inputs/data_sa154/220922_A01366_0283_AHF7FYDMXY/fastq
-            - inputs/data_sa154/221117_A01366_0317_BHGG3KDMXY/fastq
-            - inputs/data_sa154/221118_A01366_0319_AH7GYHDRX2/fastq
-            - inputs/data_sa154/221215_A01366_0329_AH7VKTDSX5/fastq
-            - inputs/data_sa154/221215_A01366_0330_BHNGLVDRX2/fastq
-            - inputs/data_sa154/221222_A01366_0333_AHGMKHDMXY/fastq
-            - inputs/data_sa154/230105_A01366_0334_BHJJ5VDSX5/fastq
-            - inputs/data_sa154/230106_A01366_0336_AHKFGJDSX5/fastq
-            - inputs/data_sa154/230201_A01366_0347_AHVLN5DRX2/fastq
-            - inputs/data_sa154/230420_A01366_0377_AHNFLGDRX2/fastq
-            - inputs/data_sa154/230511_A01366_0386_AHKC5TDMXY/fastq
-            - inputs/data_sa154/230526_A01366_0392_AHF3LVDSX7/fastq
-        feature types:
-            Gene Expression:
-                - AHM4688A1
-                - AHM4688A2
-                - AHM4688A3
-                - AHM4688A7
-                - AHM4688A9
-                - AHM4688A11
-                - AHM4688A15
-                - AHM4688A17
-                - AHM4688A19
-                - AHM4688A21
-                - AHM4688A23
-                - AHM4688A25
-                - AHM4688A27
-            Chromatin Accessibility:
-                - AHM4688A4
-                - AHM4688A5
-                - AHM4688A6
-                - AHM4688A8
-                - AHM4688A10
-                - AHM4688A12
-                - AHM4688A16
-                - AHM4688A18
-                - AHM4688A20
-                - AHM4688A22
-                - AHM4688A24
-                - AHM4688A26
-                - AHM4688A28
         stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
-        # index path: inputs/cellranger_arc_ref
-        feature identifiers: name
-        quantification method: cell ranger arc
+            - quantification/cell ranger
+            - seurat/prepare/cell ranger
+        # quantification path: inputs/cellranger_nm322/COO4671A4/outs
+        quantification method: cell ranger
+        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     8 weeks sample1:
         description: 8 week old, replicate 1
+        dataset tag: 8WS1
         limsid:
             - AHM4688A1
             - AHM4688A4
+        stages:
+            - quantification/cell_ranger_arc
+            - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
+        quantification method: cell ranger arc
+        # index path: inputs/cellranger_arc_ref
 
     8 weeks sample2:
         description: 8 week old, replicate 2
+        dataset tag: 8WS2
         limsid:
             - AHM4688A2
             - AHM4688A5
+        stages:
+            - quantification/cell_ranger_arc
+            - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
+        quantification method: cell ranger arc
+        # index path: inputs/cellranger_arc_ref
 
     8 weeks sample3:
         description: 8 week old, replicate 3
+        dataset tag: 8WS3
         limsid:
             - AHM4688A3
             - AHM4688A6
+        stages:
+            - quantification/cell_ranger_arc
+            - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
+        quantification method: cell ranger arc
+        # index path: inputs/cellranger_arc_ref
 

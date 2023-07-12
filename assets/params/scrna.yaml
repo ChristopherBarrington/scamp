@@ -31,15 +31,13 @@ _defaults:
             - COO4671A4
             - COO4671A5
             - COO4671A6
+    stages:
+        - quantification/cell ranger
+        - seurat/prepare/cell ranger
+    quantification method: cell ranger
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
-cell ranger and seurat:
-    _defaults:
-        stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
-        quantification method: cell ranger
-        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
-
+_datasets:
     stella 120h rep1:
         description: PGCLC sorted by STELLA at 120 hours
         limsid: COO4671A1
