@@ -1,5 +1,5 @@
 - title: Analysis parameters
-  description: Any {scamp} parameter that can be provided in an analysis stanza, under the analysis or project `_defaults` or under a specific dataset's stanza.
+  description: Any {scamp} parameter that can be provided in the project `_defaults` stanza or under a specific dataset's stanza.
   icon: edit
   parameters:
     - name: fastq paths
@@ -35,14 +35,6 @@
       description: A very short name for the dataset. This will be appended to cell barcodes so should be _very_ short and concise with no spaces or funny characters. An unhelpful default will be provided but should not be trusted.
       type: string
       provider: default
-    - name: analysis name
-      description: A human-readable name for an analysis. This should not be applied at the dataset-level within an analysis stanza but could be specified in the `_defaults` for an analysis. The default is the YAML key used in the {scamp} parameters file.
-      type: string
-      provider: default
-    - name: analysis id
-      description: A directory safe identifier for the analysis. The default value is an attempt to make the `dataset name` directory-safe.
-      type: string
-      provider: default
     - name: dataset name
       description: Human readable name for a dataset in an analysis. The YAML key will be used if omitted.
       type: string
@@ -70,7 +62,7 @@
       description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
       type: file
     - name: unique id
-      description: A unique identifer for this combination of analysis and dataset. By default, the analysis and dataset keys are joined together by " / ".
+      description: A unique identifer for this combination of analysis and dataset. By default, the dataset name is used.
       type: string
       provider: default
 
