@@ -31,7 +31,7 @@ workflow cell_ranger_arc {
 
 		// branch parameters into two channels: {missing,provided} according to the presence of the 'index path' key
 		parameters
-			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta file', 'gtf file']) + it.subMap('index path')}
+			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs file', 'fasta file', 'gtf file']) + it.subMap('index path')}
 			.unique()
 			.branch{
 				def index_provided = it.containsKey('index path')
@@ -47,7 +47,7 @@ workflow cell_ranger_arc {
 		organisms           = genome_indexes.missing.map{it.get('organism')}
 		assemblies          = genome_indexes.missing.map{it.get('assembly')}
 		non_nuclear_contigs = genome_indexes.missing.map{it.get('non-nuclear contigs')}
-		motifs_files        = genome_indexes.missing.map{it.get('motifs')}
+		motifs_files        = genome_indexes.missing.map{it.get('motifs file')}
 		fasta_files         = genome_indexes.missing.map{it.get('fasta file')}
 		gtf_files           = genome_indexes.missing.map{it.get('gtf file')}
 
