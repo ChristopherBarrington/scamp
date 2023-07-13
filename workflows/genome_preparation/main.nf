@@ -10,6 +10,9 @@ import java.nio.file.Paths
 
 include { cat as cat_fastas } from '../../modules/cat'
 include { cat as cat_gtfs }   from '../../modules/cat'
+
+include { faidx } from '../../modules/samtools/faidx'
+
 include { check_for_matching_key_values }     from '../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../utilities/concat_workflow_emissions'
 include { concatenate_maps_list }             from '../../utilities/concatenate_maps_list'
