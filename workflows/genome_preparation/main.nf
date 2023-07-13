@@ -58,6 +58,7 @@ workflow genome_preparation {
 			.map{rename_map_keys(it, 'path', 'fasta file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(fasta_paths.to_skip)
+			.map{it.subMap(['key','fasta file'])}
 			.dump(tag: 'genome_preparation:fasta_files', pretty: true)
 			.set{fasta_files}
 
@@ -161,13 +162,15 @@ workflow genome_preparation {
 		// -------------------------------------------------------------------------------------------------
 
 		fasta_files
-			// .combine(gtf_files)
-			// .filter{check_for_matching_key_values(it, ['key'])}
-			// .map{concatenate_maps_list(it)}
-			// .combine(parameters)
-			// .filter{it.first().get('key') == it.last().get('genome')}
-		 	// .map{it.last().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last().get('genome parameters') + it.first()]}
-		  // .dump(tag: 'genome_preparation:final_results', pretty: true)
+			.combine(indexed_fasta_files)
+			.combine(gtf_files)
+			.combine(granges_files)
+			.filter{check_for_matching_key_values(it, ['key'])}
+			.map{concatenate_maps_list(it)}
+			.combine(parameters)
+			.filter{it.first().get('key') == it.last().get('genome')}
+			.map{it.last().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last().get('genome parameters') + it.first()]}
+			.dump(tag: 'genome_preparation:final_results', pretty: true)
 			.set{final_results}
 
 	emit:
