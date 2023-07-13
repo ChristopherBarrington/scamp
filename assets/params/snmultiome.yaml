@@ -75,16 +75,14 @@ _defaults:
             - AHM4688A24
             - AHM4688A26
             - AHM4688A28
+    stages:
+        - quantification/cell_ranger_arc
+        - seurat/prepare/cell_ranger_arc
+    index path: inputs/cellranger_arc_ref
+    feature identifiers: name
+    quantification method: cell ranger arc
 
-seurat:
-    _defaults:
-        stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
-        index path: inputs/cellranger_arc_ref
-        feature identifiers: name
-        quantification method: cell ranger arc
-
+_datasets:
     8 weeks sample1:
         description: 8 week old, replicate 1
         limsid:

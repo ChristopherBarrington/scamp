@@ -386,10 +386,9 @@ def main():
 			'fastq paths': fastq_paths,
 			'feature types': library_types,
 			'index path': dataset_index,
-			'stages': stages},
-		'analysis': {
-			'_defaults': {
-				'feature identifiers': 'name'}} | datasets}
+			'stages': stages,
+			'feature identifiers': 'name'},
+		'_datasets': datasets}
 
 	# write the above structure to a yaml file
 	write_formatted_scamp_file(params)

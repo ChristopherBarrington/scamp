@@ -11,56 +11,38 @@ def get_complete_analysis_parameters(stage=null) {
 	def possible_file_keys = get_possible_file_keys()
 	def project_parameters = get_project_parameters()
 
-	get_analysis_params()
+	get_dataset_params()
 		// remove the default dataset parameters
 		// - these are collected above
-		.collectEntries{analysis_key, datasets -> [analysis_key, remove_keys_from_map(datasets, '_defaults')]}
+		// .collectEntries{analysis_key, datasets -> [analysis_key, remove_keys_from_map(datasets, '_defaults')]}
 
 		// add key information to the parameters stanza
 		// - copy across: analysis and dataset key
-		// - make an unique identifier for the parameter set in the analysis+dataset keys
-		.collectEntries{analysis_key, datasets -> [analysis_key, datasets.collectEntries{dataset_key, parameters -> [dataset_key, ['analysis key': analysis_key, 'dataset key': dataset_key, 'unique id': [analysis_key, dataset_key].join(' / ')] + parameters]}]}
+		// - make an unique identifier for the parameter set
+		.collectEntries{dataset_key, parameters -> [dataset_key, ['dataset key': dataset_key, 'unique id': dataset_key] + parameters]}
 
 		// collect hashes into a collection of maps
-		.collect{k,v -> v.values()}
-		.flatten()
+		.collect{k,v -> v}
 
 		// add default values where parameters are omitted
-
-		// dataset and analysis names
-		.collect{it + ['analysis name': it.get('analysis name', it.get('analysis key'))]}
-		.collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}
-
-		// analysis and dataset ids
-		.collect{it + ['analysis id': make_string_directory_safe(it.get('analysis id', it.get('analysis name')))]}
-		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]}
-
-		// dataset tags
-		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}
-
-		// dataset descriptions
-		.collect{it + ['description': it.get('description', it.get('dataset name'))]}
-
-		// feature identifiers
-		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}
-
-		// genome
-		.collect{it + ['genome': it.get('genome', genomes_params.keySet().first())]}
+		.collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}                          // dataset names
+		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]} // dataset ids
+		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}                             // dataset tags
+		.collect{it + ['description': it.get('description', it.get('dataset name'))]}                           // dataset descriptions
+		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}                           // feature identifiers
+		.collect{it + ['genome': it.get('genome', genomes_params.keySet().first())]}                            // genome
 
 		// add default values to each set of dataset parameters
-		.collect{default_dataset_params.get(it.get('analysis key')) + it}
+		.collect{default_dataset_params + it}
 
 		// add in the genome parameters for each dataset
 		.collect{it + ['genome parameters': genomes_params.get(it.get('genome'))]}
 
-		// reformat the stages collection to lower-case, non-space
-		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}
+		// try to make parameters safe by regex
+		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]} // reformat the stages collection to lower-case, non-space
+		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])} // if `quantification method` is provided, make it safe
 
-		// if `quantification method` is provided, make it safe
-		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])}
-
-		// convert strings to file paths for expected keys
-		// - makes a relative path absolute
+		// convert strings to absolute file paths for expected keys
 		.collect{convert_map_keys_to_files(it, possible_file_keys)}
 
 		// filter for datasets that contain a specific processing stage
@@ -84,16 +66,13 @@ def get_genomes_params() {
 // - default parameters stanzas are called '_defaults'
 
 def get_default_dataset_params() {
-	def default_analysis_params = get_scamp_params().get('_defaults', [:])
-	get_analysis_params()
-		.collectEntries{analysis_key, datasets -> [analysis_key, default_analysis_params + datasets.get('_defaults', [:])]}
+	get_scamp_params().get('_defaults')
 }
 
-// get a hash of analysis parameters
-// - analysis parameter stanzas do not start with underscore
+// get a hash of dataset parameters
 
-def get_analysis_params() {
-	get_scamp_params().findAll{!it.key.startsWith('_')}
+def get_dataset_params() {
+	get_scamp_params().get('_datasets')
 }
 
 // get a hash of _project parameters

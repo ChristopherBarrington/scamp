@@ -1,4 +1,3 @@
-
 {
 	"project" : {
 		"target": 1,
@@ -9,10 +8,9 @@
 		"title": "project defaults",
 		"text": "A set of parameters that are the same for <i>all</i> datasets in <i>all</i> analyses."},
 	"analysis" : {
-		"target": 27,
-		"title": "an analysis",
-		"text": "One or more analysis groups are defined. Each analysis can contain multiple datasets. These cannot start with underscores!"},
-
+		"target": 32,
+		"title": "project datasets",
+		"text": "Descriptions of each dataset to include in the analysis stages."},
 
 	"people" : {
 		"target": 2,
@@ -43,39 +41,33 @@
 		"target": 25,
 		"title": "identifiers",
 		"text": "Which feature identifier should be used as the default: probably <code>name</code> or <code>accession</code>."},
-
-	"analysis_defaults" : {
-		"target": 28,
-		"title": "analysis defaults",
-		"text": "As with project defaults, these parameters are applied to all datasets <emph>within this analysis</emph>."},
-	"dataset" : {
-		"target": 35,
-		"title": "a dataset",
-		"text": "The first (of four) datasets. Each dataset is specified in separate stanzas of the analysis. Dataset names should not start with underscores!"},
-
 	"stages" : {
-		"target": 29,
+		"target": 26,
 		"title": "analysis stages",
 		"text": "A list of workflows that should be applied to a dataset. In this example, these two workflows will be applied to all four datasets in the analysis."},
 	"index" : {
-		"target": 32,
+		"target": 29,
 		"title": "genome index",
 		"text": "The index against which the dataset(s) were quantified. This can be used by modules to get paths to GTF, FastA and FastA index files, for example."},
 	"genome" : {
-		"target": 33,
+		"target": 30,
 		"title": "genome",
 		"text": "The key that was used in <code>genomes</code> to identify a set of genome parameters. Multiple genomes can be used in the same project, but are likely best separated into different analyses."},
 
+	"dataset" : {
+		"target": 33,
+		"title": "a dataset",
+		"text": "The first (of four) datasets. Each dataset is specified in a separate stanza of <code>_datasets</code>."},
 	"description" : {
-		"target": 36,
+		"target": 34,
 		"title": "description",
 		"text": "A short description of this sample."},
 	"limsid" : {
-		"target": 37,
+		"target": 35,
 		"title": "LIMS ID",
-		"text": "The name(s) of libraries used to describe the dataset. In snRNA+ATAC for example, this would be an array of two libraries: one for the RNA-seq and another for the ATAC-seq."},
+		"text": "The name(s) of libraries used to describe the dataset. In snRNA+ATAC for example, this would be a collection of two libraries: one for the RNA-seq and another for the ATAC-seq."},
 	"dataset_tag" : {
-		"target": 38,
+		"target": 36,
 		"title": "dataset tag",
-		"text": "A short tag to describe a dataset that can be appended to cell barcodes to quickly discriminate originating dataset and uniquely identify cells in integrated objects."}
+		"text": "A short tag to describe a dataset that can be appended to cell barcodes to quickly discriminate originating dataset and uniquely identify cells in (Seurat) integrated objects."}
 }

@@ -30,14 +30,12 @@ _defaults:
             - AHM4688A5
             - AHM4688A6
     feature identifiers: name
+    stages:
+        - quantification/cell ranger arc
+        - seurat/prepare/cell ranger arc
+    genome: mm10_mcherry
 
-cell ranger arc and seurat:
-    _defaults:
-        stages:
-            - quantification/cell ranger arc
-            - seurat/prepare/cell ranger arc
-        genome: mm10_mcherry
-
+_datasets:
     8 weeks sample1:
         description: 8 weeks old, replicate 1
         limsid:
