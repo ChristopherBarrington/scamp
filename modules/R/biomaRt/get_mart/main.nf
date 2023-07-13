@@ -1,5 +1,5 @@
 process get_mart {
-	tag "$tag"
+	tag "$organism release $release"
 
 	cpus 1
 	memory '2GB'
@@ -7,7 +7,6 @@ process get_mart {
 
 	input:
 		val opt
-		val tag
 		val organism
 		val release
 
