@@ -15,5 +15,5 @@ process faidx {
 		path '*.fai', emit: path
 
 	script:
-		template workflow.stubRun ? 'stub.sh' : 'main.Rscript'
+		template workflow.stubRun ? 'stub.sh' : 'main.sh'
 }
