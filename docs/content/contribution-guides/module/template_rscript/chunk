@@ -1,4 +1,4 @@
-#! /bin/env Rscript
+#! Rscript
 
 library(magrittr)
 library(scampr)
