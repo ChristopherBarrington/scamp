@@ -31,7 +31,7 @@ workflow cell_ranger_arc {
 
 		// branch parameters into two channels: {missing,provided} according to the presence of the 'index path' key
 		parameters
-			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta files', 'gtf files']) + it.subMap('index path')}
+			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta file', 'gtf file']) + it.subMap('index path')}
 			.unique()
 			.branch{
 				def index_provided = it.containsKey('index path')
@@ -47,12 +47,12 @@ workflow cell_ranger_arc {
 		organisms           = genome_indexes.missing.map{it.get('organism')}
 		assemblies          = genome_indexes.missing.map{it.get('assembly')}
 		non_nuclear_contigs = genome_indexes.missing.map{it.get('non-nuclear contigs')}
-		motifs              = genome_indexes.missing.map{it.get('motifs')}
-		paths_to_fastas     = genome_indexes.missing.map{it.get('fasta files')}
-		paths_to_gtfs       = genome_indexes.missing.map{it.get('gtf files')}
+		motifs_files        = genome_indexes.missing.map{it.get('motifs')}
+		fasta_files         = genome_indexes.missing.map{it.get('fasta file')}
+		gtf_files           = genome_indexes.missing.map{it.get('gtf file')}
 
 		// create cell ranger arc indexes
-		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs, paths_to_fastas, paths_to_gtfs)
+		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs_files, fasta_files, gtf_files)
 
 		// make a channel of newly created genome indexes, each defined in a map
 		merge_process_emissions(mkref, ['opt', 'path'])
