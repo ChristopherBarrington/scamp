@@ -13,6 +13,8 @@ include { cat as cat_gtfs }   from '../../modules/cat'
 
 include { faidx } from '../../modules/samtools/faidx'
 
+include { convert_gtf_to_granges } from '../../modules/R/GenomicRanges/convert_gtf_to_granges'
+
 include { check_for_matching_key_values }     from '../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../utilities/concat_workflow_emissions'
 include { concatenate_maps_list }             from '../../utilities/concatenate_maps_list'
