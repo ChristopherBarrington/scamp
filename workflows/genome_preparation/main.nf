@@ -129,4 +129,36 @@ workflow genome_preparation {
 			.dump(tag: 'genome_preparation:gtf_files', pretty: true)
 			.set{gtf_files}
 
+		// -------------------------------------------------------------------------------------------------
+		// make GRanges objects for gene annotations of the genomes
+		// -------------------------------------------------------------------------------------------------
+
+		// merge the fasta and gtf process outputs
+		indexed_fasta_files
+			.combine(gtf_files)
+			.filter{check_for_matching_key_values(it, ['key'])}
+			.map{concatenate_maps_list(it)}
+			.dump(tag: 'genome_preparation:fasta_and_gtf_files', pretty: true)
+		 	.set{fasta_and_gtf_files}
+
+		// create the channels for the process to make GRanges objects
+		fasta_and_gtf_files
+			.map{it.subMap(['key', 'gtf file', 'fasta index file'])}
+			.dump(tag: 'genome_preparation:gtf_files_to_convert_to_granges', pretty: true)
+			.set{gtf_files_to_convert_to_granges}
+
+		genomes   = gtf_files_to_convert_to_granges.map{it.get('key')}
+		gtf_files = gtf_files_to_convert_to_granges.map{it.get('gtf file')}
+		fai_files = gtf_files_to_convert_to_granges.map{it.get('fasta index file')}
+
+		// make the granges rds files from gtf files
+		convert_gtf_to_granges(gtf_files_to_convert_to_granges, genomes, gtf_files, fai_files)
+
+		// make a channel of newly created GRanges rds files
+		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
+			.map{rename_map_keys(it, 'granges', 'granges file')}
+			.map{merge_metadata_and_process_output(it).subMap(['key','granges file'])}
+			.dump(tag: 'genome_preparation:granges_files', pretty: true)
+			.set{granges_files}
+
 }
