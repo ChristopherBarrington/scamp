@@ -72,7 +72,7 @@
     - name: fasta file
       description: Genomic sequence in FastA format. Can be provided by the `fasta path` option. This parameter takes precedence over the `fasta path` parameter.
       type: file
-      provider: default
+      provider: process
 
     - name: gtf path
       description: A directory with GTF files that can be used to quantify activity of features. The files in this directory will be concatenated into a single GTF file and the result used in `gtf file`. No default is provided but is probably only needed to build an index.
@@ -80,6 +80,7 @@
 
     - name: gtf file
       description: GTF file of features in the genome. This parameter will be used in preference to the `gtf path`.
+      provider: process
 
     - name: motifs file
       description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
