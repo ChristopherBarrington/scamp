@@ -3,8 +3,9 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { quantification } from './workflows/quantification'
-include { seurat }         from './workflows/seurat'
+include { genome_preparation } from './workflows/genome_preparation'
+include { quantification }     from './workflows/quantification'
+include { seurat }             from './workflows/seurat'
 
 include { print_as_json } from './utilities/print_as_json'
 
@@ -26,18 +27,26 @@ workflow {
 		// collect a list of parameter maps for every analysis in the parameters file
 		// -------------------------------------------------------------------------------------------------
 
-		complete_analysis_parameters = get_complete_analysis_parameters()
 		channel
-			.fromList(complete_analysis_parameters)
+			.fromList(get_complete_analysis_parameters())
+			.dump(tag: 'parsed_scamp_parameters', pretty: true)
+			.set{parsed_scamp_parameters}
+
+		// -------------------------------------------------------------------------------------------------
+		// run genome workflow, independent of dataset parameters
+		// -------------------------------------------------------------------------------------------------
+
+		genome_preparation(parsed_scamp_parameters)
+			.result
 			.dump(tag: 'complete_analysis_parameters', pretty: true)
+			.set{complete_analysis_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// run quantification workflows
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into two channels: {provided,required} according to presence of the 'quantification path' key
-		channel
-			.fromList(complete_analysis_parameters)
+		complete_analysis_parameters
 			.branch{
 				def has_a_quantification_stage = it.get('stages').collect{it.startsWith('quantification:')}.any()
 				def quantification_provided = it.containsKey('quantification path')
