@@ -14,9 +14,9 @@ _project:
                 - chrM
             mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
             cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
-            fasta files: inputs/genome
-            gtf files: inputs/genome
-            motifs: inputs/genome/motifs
+            fasta path: inputs/fasta
+            gtf path: inputs/gtfs
+            motifs: inputs/motifs.txt
 
 _defaults:
     genome: mm10
@@ -56,7 +56,6 @@ _defaults:
             - AHM4688A24
             - AHM4688A26
             - AHM4688A28
-
     fastq paths:
         - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
         - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
