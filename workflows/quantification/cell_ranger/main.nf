@@ -69,7 +69,7 @@ workflow cell_ranger {
 			.filter{it.first().get('genome') == it.last().get('key')}
 			.map{it.first() + it.last().subMap('index path')}
 			.map{it.subMap(['unique id', 'dataset id', 'description', 'limsid', 'fastq paths', 'index path'])}
-			.dump(tag:'quantification:cell_ranger:datasets_to_quantify', pretty:true)
+			.dump(tag: 'quantification:cell_ranger:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
@@ -87,7 +87,7 @@ workflow cell_ranger {
 		merge_process_emissions(count, ['opt', 'quantification_path'])
 			.map{rename_map_keys(it, ['quantification_path'], ['quantification path'])}
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag:'quantification:cell_ranger:quantified_datasets', pretty:true)
+			.dump(tag: 'quantification:cell_ranger:quantified_datasets', pretty: true)
 			.set{quantified_datasets}
 
 		// -------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ workflow cell_ranger {
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + it.last().subMap(['index path', 'quantification path'])}
 			.map{it + ['quantification method': 'cell_ranger']}
-			.dump(tag:'quantification:cell_ranger:final_results', pretty:true)
+			.dump(tag: 'quantification:cell_ranger:final_results', pretty: true)
 			.set{final_results}
 
 		// -------------------------------------------------------------------------------------------------
