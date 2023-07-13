@@ -9,8 +9,8 @@ process mkref {
 		val opt
 		val tag
 		val assembly
-		path 'fasta'
-		path 'gtf'
+		path 'assembly.fasta'
+		path 'features.gtf'
 
 	output:
 		val opt, emit: opt
