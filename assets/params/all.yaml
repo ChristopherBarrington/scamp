@@ -174,4 +174,3 @@ _datasets:
         # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
-
