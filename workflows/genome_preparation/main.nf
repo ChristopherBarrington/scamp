@@ -1,8 +1,23 @@
 // -------------------------------------------------------------------------------------------------
+// import any java/groovy libraries as required
+// -------------------------------------------------------------------------------------------------
+
+import java.nio.file.Paths
+
+// -------------------------------------------------------------------------------------------------
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
 include { cat as cat_fastas } from '../../modules/cat'
+include { cat as cat_gtfs }   from '../../modules/cat'
+include { check_for_matching_key_values }     from '../../utilities/check_for_matching_key_values'
+include { concat_workflow_emissions }         from '../../utilities/concat_workflow_emissions'
+include { concatenate_maps_list }             from '../../utilities/concatenate_maps_list'
+include { make_map }                          from '../../utilities/make_map'
+include { merge_metadata_and_process_output } from '../../utilities/merge_metadata_and_process_output'
+include { merge_process_emissions }           from '../../utilities/merge_process_emissions'
+include { rename_map_keys }                   from '../../utilities/rename_map_keys'
+
 // -------------------------------------------------------------------------------------------------
 // define the workflow
 // -------------------------------------------------------------------------------------------------
@@ -76,5 +91,39 @@ workflow genome_preparation {
 			.map{it.subMap(['key', 'fasta index file'])}
 			.dump(tag: 'genome_preparation:indexed_fasta_files', pretty: true)
 			.set{indexed_fasta_files}
+
+		// -------------------------------------------------------------------------------------------------
+		// merge genome gtf files, if provided by `gtf path`
+		// -------------------------------------------------------------------------------------------------
+
+		// branch parameters into multiple channels according to the 'quantification method' key
+		parameters
+			.map{it.get('genome parameters').subMap(['key', 'id', 'gtf file', 'gtf path'])}
+			.unique()
+			.branch{
+				def has_gtf_file = it.containsKey('gtf file')
+				def has_gtf_path = it.containsKey('gtf path')
+				to_merge: has_gtf_file == false & has_gtf_path == true
+				to_skip: has_gtf_file == true | has_gtf_path == false}
+			.set{gtf_paths}
+
+		gtf_paths.to_merge.dump(tag: 'genome_preparation:gtf_paths.to_merge', pretty: true)
+		gtf_paths.to_skip.dump(tag: 'genome_preparation:gtf_paths.to_skip', pretty: true)
+
+		// make channels of parameters for genomes that need indexes to be created
+		input_paths  = gtf_paths.to_merge.map{it.get('gtf path')}
+		output_files = fasta_paths.to_merge.map{it.get('id') + '.gtf'}
+
+		// create cell ranger arc indexes
+		cat_gtfs(gtf_paths.to_merge, input_paths, output_files)
+
+		// make a channel of newly created genome indexes, each defined in a map
+		merge_process_emissions(cat_gtfs, ['opt', 'path'])
+			.map{rename_map_keys(it, 'path', 'gtf file')}
+			.map{merge_metadata_and_process_output(it)}
+			.concat(gtf_paths.to_skip)
+			.map{it.subMap(['key', 'gtf file'])}
+			.dump(tag: 'genome_preparation:gtf_files', pretty: true)
+			.set{gtf_files}
 
 }
