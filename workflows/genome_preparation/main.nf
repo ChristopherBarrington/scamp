@@ -2,8 +2,8 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_fastas } from '../../modules/cat'
-include { cat as cat_gtfs }   from '../../modules/cat'
+include { cat as cat_fastas } from '../../modules/tools/cat'
+include { cat as cat_gtfs }   from '../../modules/tools/cat'
 
 include { faidx } from '../../modules/samtools/faidx'
 
