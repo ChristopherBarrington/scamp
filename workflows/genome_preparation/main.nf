@@ -186,7 +186,7 @@ workflow genome_preparation {
 		merge_process_emissions(get_mart, ['opt', 'mart'])
 			.map{rename_map_keys(it, 'mart', 'biomart connection')}
 			.map{merge_metadata_and_process_output(it)}
-			.dump(tag: 'seurat:prepare:cell_ranger:mart_files', pretty: true)
+			.dump(tag: 'genome_preparation:mart_files', pretty: true)
 			.set{mart_files}
 
 		// -------------------------------------------------------------------------------------------------
