@@ -8,12 +8,9 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { get_mart } from '../../../../modules/R/biomaRt/get_mart'
-
 include { make_assay }                from '../../../../modules/R/Seurat/make_assay'
 include { make_object }               from '../../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices } from '../../../../modules/R/Seurat/write_10x_counts_matrices'
-// include { percentage_feature_set as mt_percent } from '../../../../modules/R/Seurat/percentage_feature_set'
 
 include { check_for_matching_key_values }     from '../../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../../utilities/concat_workflow_emissions'
