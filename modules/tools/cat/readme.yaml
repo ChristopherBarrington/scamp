@@ -1,0 +1,26 @@
+name: cat
+
+description: |
+  Concatenate multiple files into a single output file.
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: input_?
+    type: files
+    description: A collection of files that will be concatenated.
+  - name: output_file
+    type: file
+    description: File that will be written.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: path
+    type: file
+    description: Concatenation of input files.
+
+authors:
+  - "@ChristopherBarrington"
