@@ -1,0 +1,61 @@
+name: Prepare genome information
+
+description: |
+  These processes can be executed independently of datassets, their parameters do not depend on the data but on the genome used in the analysis.
+
+tags:
+  - genomics
+
+steps:
+  - name: Merge FastA files
+    description: If provided and required, the FastA files in `fasta path` can be  merged to provide a reference `fasta file`. Only used when `fasta file` is not already provided.
+    anchor: 42
+    modules:
+      - tools/cat
+
+  - name: Make FastA index
+    description: If not provided by the `fasta index file` parameter, the `fasta file` will be indexed using `samtools faidx`.
+    anchor: 76
+    modules:
+      - samtools/faidx
+
+  - name: Merge GTF files
+    description: If provided and required, the GTF files in `gtf path` can be merged to provide the `gtf file` parameter. This is only used when `gtf file` is not already provided.
+    anchor: 106
+    modules:
+      - tools/cat
+
+  - name: Make GRanges object
+    description: Create a GRanges object using `genome`, `gtf file` and `fasta index file`.
+    anchor: 139
+    modules:
+      - R/GenomicRanges/convert_gtf_to_granges
+
+  - name: Connect to biomaRt
+    description: Creates a `mart` object to connect to the `organism` and `ensembl release` for the genome.
+    anchor: 171
+    modules:
+      - R/biomaRt/get_mart
+
+output:
+  - name:  final_results
+    type: channel
+    description: A parameters channel with datasets now including `fasta file`, `fasta index file`, `gtf file`, `granges` and `biomart connection` parameters.
+
+channel tags:
+  - ':genome_parameters': The unique set of genome parameters used by datasets in the project.
+  - ':fasta_paths.{to_merge,to_skip}': Genomes that provide `fasta path` but not `fasta file` or genomes that provide `fasta file` or lack `fasta path`.
+  - ':fasta_files': Genomes with `fasta file` provided, by some method.
+  - ':fasta_index_files.{missing,provided}': Genomes that do/not provide `fasta index file`.
+  - ':indexed_fasta_files': Genomes with `fasta index file`.
+  - ':gtf_paths.{to_merge,to_skip}': Genomes that provide `gtf path` but not `gtf file` or genomes that provide `gtf file` or lack `gtf path`.
+  - ':gtf_files': Genomes with `gtf file` provided, by some method.
+  - ':fasta_and_gtf_files': A combination channel of `fasta index file` and `gtf file` for genomes, from which a GRanges object can be made.
+  - ':gtf_files_to_convert_to_granges': Parameters used to create GRanges objects.
+  - ':granges_files': Channel of created GRanges object files.
+  - ':biomart_connections_to_make': Parameters used to make biomaRt connections.
+  - ':mart_files': Channel of `mart` objects.
+  - ':final_results': Channel containing all of the parameters with these new parameters added.
+
+authors:
+  - "@ChristopherBarrington"
