@@ -99,8 +99,8 @@ def get_possible_file_keys() {
 	['index path',
 	 'quantification path',
 	 'fastq paths',
-	 'fasta files',
-	 'gtf files',
+	 'fasta file', 'fasta path',
+	 'gtf file', 'gtf path',
 	 'motifs',
 	 'mitochondrial features',
 	 'cell cycle genes']
