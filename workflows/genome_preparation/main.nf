@@ -153,7 +153,7 @@ workflow genome_preparation {
 		granges_file.to_skip.dump(tag: 'genome_preparation:granges_file.to_skip', pretty: true)
 
 		// make channels of parameters
-		genomes = granges_file.to_make.map{it.get('name')}
+		genomes = granges_file.to_make.map{it.get('assembly')}
 		gtfs    = granges_file.to_make.map{it.get('gtf file')}
 		fais    = granges_file.to_make.map{it.get('fasta index file')}
 

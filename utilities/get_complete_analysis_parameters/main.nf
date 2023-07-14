@@ -24,7 +24,7 @@ def get_complete_analysis_parameters(stage=null) {
 		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]} // dataset ids
 		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}                             // dataset tags
 		.collect{it + ['description': it.get('description', it.get('dataset name'))]}                           // dataset descriptions
-		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}                           // feature identifiers
+		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name') ?: 'name']}                           // feature identifiers
 
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params + it}
@@ -48,7 +48,7 @@ def get_complete_analysis_parameters(stage=null) {
 def get_genome_params() {
 	def genome_params = get_scamp_params().get('_genome')
 	genome_params
-		.plus(['id': make_string_directory_safe(genome_params.get('id', genome_params.get('name')))])
+		.plus(['id': make_string_directory_safe(genome_params.get('id', genome_params.get('assembly')))])
 }
 
 // get a hash of default parameters to use in all datasets
