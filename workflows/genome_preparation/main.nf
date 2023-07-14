@@ -176,22 +176,30 @@ workflow genome_preparation {
 		// make a biomaRt object for the genome
 		// -------------------------------------------------------------------------------------------------
 
-		// create the channels for the process to make biomaRt objects
+		// branch parameters into multiple channels using key(s)
 		genome_parameters
 			.map{it.subMap(['key', 'id', 'organism', 'ensembl release'])}
-			.dump(tag: 'genome_preparation:biomart_connections_to_make', pretty: true)
-			.set{biomart_connections_to_make}
+			.branch{
+				def has_ensembl_release = it.containsKey('ensembl release')
+				to_make: has_ensembl_release
+				to_skip: !has_ensembl_release}
+			.set{mart_files}
 
-		organisms        = biomart_connections_to_make.map{it.get('organism')}
-		ensembl_releases = biomart_connections_to_make.map{it.get('ensembl release')}
+		mart_files.to_make.dump(tag: 'genome_preparation:mart_files.to_make', pretty: true)
+		mart_files.to_skip.dump(tag: 'genome_preparation:mart_files.to_skip', pretty: true)
 
-		// make the mart rds files
-		get_mart(biomart_connections_to_make, organisms, ensembl_releases)
+		// make channels of parameters
+		organisms        = mart_files.to_make.map{it.get('organism')}
+		ensembl_releases = mart_files.to_make.map{it.get('ensembl release')}
 
-		// make a channel of newly created GRanges rds files
+		// run the process
+		get_mart(mart_files.to_make, organisms, ensembl_releases)
+
+		// make a channel of newly created parameters
 		merge_process_emissions(get_mart, ['opt', 'mart'])
 			.map{rename_map_keys(it, 'mart', 'biomart connection')}
 			.map{merge_metadata_and_process_output(it)}
+			.concat(mart_files.to_skip)
 			.map{it.subMap(['key', 'id', 'biomart connection'])}
 			.dump(tag: 'genome_preparation:mart_files', pretty: true)
 			.set{mart_files}
