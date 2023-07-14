@@ -14,6 +14,7 @@ steps:
     anchor: 29
     modules:
       - cell_ranger_arc/mkref
+
   - name: Create project sample sheet
     description: Write a formatted configuration file that includes all libraries in this project which will be subset for libraries in a dataset.
     anchor: 66
@@ -32,13 +33,13 @@ output:
     description: A channel of maps that are the same as the input parameter sets but now include `index path`, `quantification method` and `quantification path` keys.
 
 channel tags:
-  - ':genome_indexes.missing': Datasets for which the `index path` is missing, indexes will be created for these.
+  - ':genome_indexes.missing': Datasets for which the `index path` is missing; indexes will be created for these.
   - ':genome_indexes.provided': Datasets for which the `index path` has been provided.
   - ':index_paths': The indexes that have been created or provided.
   - ':feature_type_params': A channel that collates the project-wide information required to make the Cell Ranger ARC sample sheet.
   - ':datasets_to_quantify': Parameter sets for datasets that will be quantified.
   - ':quantified_datasets': Parameter sets of datasets that were quantified.
-  - ':final_results': Input parameters with the `index path` (if applicable), `libraries_csv`, `quantification method` and `quantification path` keys added.
+  - ':final_result': Input parameters with the `index path` (if applicable), `libraries_csv`, `quantification method` and `quantification path` keys added.
 
 authors:
   - "@ChristopherBarrington"
