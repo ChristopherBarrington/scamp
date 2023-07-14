@@ -44,16 +44,16 @@ output:
 
 channel tags:
   - ':genome_parameters': The unique set of genome parameters used by datasets in the project.
-  - ':fasta_paths.{to_make,to_skip}': Genomes that provide `fasta path` but not `fasta file` or genomes that provide `fasta file` or lack `fasta path`.
-  - ':fasta_files': Genomes with `fasta file` provided, by some method.
-  - ':fasta_index_files.{to_make,to_skip}': Genomes that do/not provide `fasta index file`.
-  - ':indexed_fasta_files': Genomes with `fasta index file`.
-  - ':gtf_files.{to_make,to_skip}': Genomes that provide `gtf path` but not `gtf file` or genomes that provide `gtf file` or lack `gtf path`.
-  - ':gtf_files': Genomes with `gtf file` provided, by some method.
-  - ':granges_files.{to_make,to_skip}': Genomes that provide both `fasta index file` and `gtf file` will have a GRanges object created.
-  - ':granges_files': Channel of created GRanges object files.
-  - ':mart_files.{to_make,to_skip}': Genomes that provide an `ensembl release` will have a biomaRt connection created.
-  - ':mart_files': Channel of `mart` objects.
+  - ':fasta_file.{to_make,to_skip}': Genomes that provide `fasta path` but not `fasta file` or genomes that provide `fasta file` or lack `fasta path`.
+  - ':fasta_file': Genomes with `fasta file` provided, by some method.
+  - ':fasta_index_file.{to_make,to_skip}': Genomes that do/not provide `fasta index file`.
+  - ':fasta_index_file': Genomes with `fasta index file`.
+  - ':gtf_file.{to_make,to_skip}': Genomes that provide `gtf path` but not `gtf file` or genomes that provide `gtf file` or lack `gtf path`.
+  - ':gtf_file': Genomes with `gtf file` provided, by some method.
+  - ':granges_file.{to_make,to_skip}': Genomes that provide both `fasta index file` and `gtf file` will have a GRanges object created.
+  - ':granges_file': Channel of created GRanges object files.
+  - ':mart_file.{to_make,to_skip}': Genomes that provide an `ensembl release` will have a biomaRt connection created.
+  - ':mart_file': Channel of `mart` objects.
   - ':result': Channel containing all of the parameters with these new keys added.
 
 authors:
