@@ -19,12 +19,18 @@ def get_complete_analysis_parameters(stage=null) {
 		// collect hashes into a collection of maps
 		.collect{k,v -> v}
 
+		// add genome parameters to each dataset
+		.collect{it + ['genome parameters': genome_params]}
+
+		// add default values to each set of dataset parameters
+		.collect{default_dataset_params + it}
+
 		// add default values where parameters are omitted
 		.collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}                          // dataset names
 		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]} // dataset ids
 		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}                             // dataset tags
 		.collect{it + ['description': it.get('description', it.get('dataset name'))]}                           // dataset descriptions
-		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name') ?: 'name']}                           // feature identifiers
+		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}                           // feature identifiers
 
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params + it}
