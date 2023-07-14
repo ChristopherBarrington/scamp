@@ -5,22 +5,22 @@ _project:
     scientist: scientist.a
     lims id: SC23001
     babs id: sn001
-    genomes:
-        mm10 + mcherry:
-            organism: mus musculus
-            assembly: mm10_mcherry
-            ensembl release: 98
-            non-nuclear contigs:
-                - chrM
-            mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
-            cell cycle genes: inputs/cell_cycle_genes.yaml
-            fasta path: inputs/fastas
-            gtf path: inputs/gtfs
-            motifs file: inputs/motifs
-            # fasta file: inputs/fasta
+
+_genome:
+    name: mm10 + mCherry
+    organism: mus musculus
+    assembly: mm10_mcherry
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    cell cycle genes: inputs/cell_cycle_genes.yaml
+    fasta path: inputs/fastas
+    gtf path: inputs/gtfs
+    motifs file: inputs/motifs
+    # fasta file: inputs/fasta
 
 _defaults:
-    genome: mm10 + mcherry
     fastq paths:
         - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY/fastq
         - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2/fastq
