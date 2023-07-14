@@ -85,7 +85,6 @@ def validate_arguments():
 	if exit_early == True:
 		sys.exit()
 
-
 	if args.data_path is None: get_data_path()
 	if args.lab is None: get_lab_from_data_path()
 	if args.lims_id is None: get_lims_id_from_data_path()
@@ -313,7 +312,6 @@ def get_stages():
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
-
 
 # ------------------------------------------------------------------------------------------------
 # get datasets parameter from sample to lims id dictionary
