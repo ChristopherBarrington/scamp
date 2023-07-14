@@ -313,6 +313,22 @@ def get_stages():
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
 
+def get_genome_files(dataset_index):
+	match args.project_type:
+		case '10X-3prime': return({
+			'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
+			'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
+			'gtf file': os.path.join(dataset_index, 'genes/genes.gtf')})
+
+		case '10X-Multiomics': return({
+				'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
+				'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
+				'gtf file': os.path.join(dataset_index, 'genes/genes.gtf.gz')})
+
+		case _:
+			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
+			sys.exit()
+
 # ------------------------------------------------------------------------------------------------
 # get datasets parameter from sample to lims id dictionary
 # ------------------------------------------------------------------------------------------------
@@ -369,6 +385,7 @@ def main():
 
 	# get parameters dependent on the above variables
 	datasets = get_datasets(sample_lims_ids)
+	genomes = {G:genomes[G] | get_genome_files(dataset_index) for G in genomes}
 
 	# put the parameters together
 	params = {
