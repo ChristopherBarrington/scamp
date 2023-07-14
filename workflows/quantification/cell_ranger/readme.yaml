@@ -10,10 +10,11 @@ tags:
 
 steps:
   - name: Make genome index
-    description: Use `cellranger mkref` to make an index against which expression can be quantified using `fasta file` and `gtf file`.
+    description: Use `cellranger mkref` to make an index against which expression can be quantified using `fasta file` and `gtf file`. The output index is named using the `id` key.
     anchor: 29
     modules:
       - cell_ranger/mkref
+
   - name: Quantify expression
     description: Run `cellranger count` to align and quantify gene expression using the FastQ files and a genome index.
     anchor: 63
