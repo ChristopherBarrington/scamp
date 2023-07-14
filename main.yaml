@@ -60,11 +60,6 @@
       type: string
       provider: process
 
-    - name: unique id
-      description: A unique identifer for this combination of analysis and dataset. By default, the dataset key is used.
-      type: string
-      provider: default
-
 - title: Project parameters
   description: A reserved stanza that defines the project, rather than specifc data.
   icon: rocket
