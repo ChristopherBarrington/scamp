@@ -6,7 +6,7 @@ include { pluck }                      from '../pluck'
 include { remove_keys_from_map }       from '../remove_keys_from_map'
 
 def get_complete_analysis_parameters(stage=null) {
-	def genomes_params = get_genomes_params()
+	def genome_params = get_genome_params()
 	def default_dataset_params = get_default_dataset_params()
 	def possible_file_keys = get_possible_file_keys()
 	def project_parameters = get_project_parameters()
@@ -30,16 +30,15 @@ def get_complete_analysis_parameters(stage=null) {
 		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}                             // dataset tags
 		.collect{it + ['description': it.get('description', it.get('dataset name'))]}                           // dataset descriptions
 		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}                           // feature identifiers
-		.collect{it + ['genome': it.get('genome', genomes_params.keySet().first())]}                            // genome
 
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params + it}
 
-		// add in the genome parameters for each dataset
-		.collect{it + ['genome parameters': genomes_params.get(it.get('genome'))]}
+		// add genome parameters to each dataset
+		.collect{it + ['genome parameters': genome_params]}
 
 		// try to make parameters safe by regex
-		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]} // reformat the stages collection to lower-case, non-space
+		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}                                          // reformat the stages collection to lower-case, non-space
 		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])} // if `quantification method` is provided, make it safe
 
 		// convert strings to absolute file paths for expected keys
@@ -49,21 +48,16 @@ def get_complete_analysis_parameters(stage=null) {
 		.findAll{it.get('stages', []).contains(stage) | stage==null}
 }
 
-// create a list of genomes used in this project
-// -- returns a list of maps, one for each genome
-// ++ find a genome: genomes.find{it.'key'=='mouse'}
-// ++ add an element to a specific genome: genomes.find{it.'key'=='mouse'}.put('foo','bar')
+// get a hash of genome parameters
 
-def get_genomes_params() {
-	pluck(get_scamp_params(), ['_project', 'genomes'])
-		// .collectEntries{key, parameters -> [key, parameters + ['genome': key, 'unique id': key]]}
-		.collectEntries{key, parameters -> [key, parameters + ['key': key]]}
-		.collectEntries{key, parameters -> [key, parameters + ['id': make_string_directory_safe(parameters.get('id', parameters.get('key')))]]}
-		.collectEntries{key, parameters -> [key, parameters + ['unique id': parameters.get('unique id', parameters.get('key'))]]}
+def get_genome_params() {
+	def genome_params = get_scamp_params().get('_genome')
+	genome_params
+		.plus(['name': genome_params.get('name', 'genome')])
+		.plus(['id': make_string_directory_safe(genome_params.get('id', genome_params.get('name')))])
 }
 
-// get a hash of default parameters to use in dataset stanzas
-// - default parameters stanzas are called '_defaults'
+// get a hash of default parameters to use in all datasets
 
 def get_default_dataset_params() {
 	get_scamp_params().get('_defaults')
@@ -78,7 +72,7 @@ def get_dataset_params() {
 // get a hash of _project parameters
 
 def get_project_parameters() {
-	[type: '10X-3prime'] + get_scamp_params().get('_project', [:])
+	[type: '10X-3prime'] + get_scamp_params().get('_project')
 }
 
 // read and parse the scamp parameters
