@@ -140,29 +140,34 @@ workflow genome_preparation {
 		// -------------------------------------------------------------------------------------------------
 
 		// merge the fasta and gtf process outputs
+		// branch parameters into multiple channels using key(s)
 		indexed_fasta_files
 			.combine(gtf_files)
 			.filter{check_for_matching_key_values(it, ['key'])}
 			.map{concatenate_maps_list(it)}
-			.dump(tag: 'genome_preparation:fasta_and_gtf_files', pretty: true)
-		 	.set{fasta_and_gtf_files}
-
-		// create the channels for the process to make GRanges objects
-		fasta_and_gtf_files
 			.map{it.subMap(['key', 'id', 'gtf file', 'fasta index file'])}
-			.dump(tag: 'genome_preparation:gtf_files_to_convert_to_granges', pretty: true)
-			.set{gtf_files_to_convert_to_granges}
+			.branch{
+				def has_fasta_index_file = it.containsKey('fasta index file')
+				def has_gtf_file = it.containsKey('gtf file')
+				to_make: has_fasta_index_file & has_gtf_file
+				to_skip: !has_fasta_index_file | !has_gtf_file}
+		 	.set{granges_files}
 
-		genomes = gtf_files_to_convert_to_granges.map{it.get('id')}
-		gtfs    = gtf_files_to_convert_to_granges.map{it.get('gtf file')}
-		fais    = gtf_files_to_convert_to_granges.map{it.get('fasta index file')}
+		granges_files.to_make.dump(tag: 'genome_preparation:granges_files.to_make', pretty: true)
+		granges_files.to_skip.dump(tag: 'genome_preparation:granges_files.to_skip', pretty: true)
 
-		// make the granges rds files from gtf files
-		convert_gtf_to_granges(gtf_files_to_convert_to_granges, genomes, gtfs, fais)
+		// make channels of parameters
+		genomes = granges_files.to_make.map{it.get('id')}
+		gtfs    = granges_files.to_make.map{it.get('gtf file')}
+		fais    = granges_files.to_make.map{it.get('fasta index file')}
 
-		// make a channel of newly created GRanges rds files
+		// run the process
+		convert_gtf_to_granges(granges_files.to_make, genomes, gtfs, fais)
+
+		// make a channel of newly created parameters
 		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
 			.map{merge_metadata_and_process_output(it)}
+			.concat(granges_files.to_skip)
 			.map{it.subMap(['key', 'id', 'granges'])}
 			.dump(tag: 'genome_preparation:granges_files', pretty: true)
 			.set{granges_files}
