@@ -106,27 +106,27 @@ workflow genome_preparation {
 		// merge genome gtf files, if provided by `gtf path`
 		// -------------------------------------------------------------------------------------------------
 
-		// branch parameters into multiple channels according to the 'gtf file' and 'gtf path' keys
+		// branch parameters into multiple channels using key(s)
 		genome_parameters
 			.map{it.subMap(['key', 'id', 'gtf file', 'gtf path'])}
 			.branch{
 				def has_gtf_file = it.containsKey('gtf file')
 				def has_gtf_path = it.containsKey('gtf path')
-				to_merge: has_gtf_file == false & has_gtf_path == true
-				to_skip: has_gtf_file == true | has_gtf_path == false}
+				to_merge: !has_gtf_file & has_gtf_path
+				to_skip: has_gtf_file | !has_gtf_path}
 			.set{gtf_paths}
 
 		gtf_paths.to_merge.dump(tag: 'genome_preparation:gtf_paths.to_merge', pretty: true)
 		gtf_paths.to_skip.dump(tag: 'genome_preparation:gtf_paths.to_skip', pretty: true)
 
-		// make channels of parameters for genomes that need indexes to be created
+		// make channels of parameters
 		input_paths  = gtf_paths.to_merge.map{it.get('gtf path')}
 		output_files = fasta_paths.to_merge.map{it.get('id') + '.gtf'}
 
-		// create cell ranger arc indexes
+		// run the process
 		cat_gtfs(gtf_paths.to_merge, input_paths, output_files)
 
-		// make a channel of newly created genome indexes, each defined in a map
+		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'gtf file')}
 			.map{merge_metadata_and_process_output(it)}
