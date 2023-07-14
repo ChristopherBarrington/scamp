@@ -75,28 +75,29 @@ workflow genome_preparation {
 		// make fai for genomes
 		// -------------------------------------------------------------------------------------------------
 
-		// branch parameters into multiple channels according to the 'fasta index file' key
+		// branch parameters into multiple channels using key(s)
 		fasta_files
 			.branch{
+				def has_fasta_file = it.containsKey('fasta file')
 				def has_fasta_index_file = it.containsKey('fasta index file')
-				missing: has_fasta_index_file == false
-				provided: has_fasta_index_file == true}
+				to_make: has_fasta_file & !has_fasta_index_file
+				to_skip: !has_fasta_file | has_fasta_index_file}
 			.set{fasta_index_files}
 
-		fasta_index_files.missing.dump(tag: 'genome_preparation:fasta_index_files.missing', pretty: true)
-		fasta_index_files.provided.dump(tag: 'genome_preparation:fasta_index_files.provided', pretty: true)
+		fasta_index_files.to_make.dump(tag: 'genome_preparation:fasta_index_files.to_make', pretty: true)
+		fasta_index_files.to_skip.dump(tag: 'genome_preparation:fasta_index_files.to_skip', pretty: true)
 
-		// make channels of parameters for genomes that need indexes to be created
-		input_files = fasta_index_files.missing.map{it.get('fasta file')}
+		// make channels of parameters
+		input_files = fasta_index_files.to_make.map{it.get('fasta file')}
 
-		// create cell ranger arc indexes
-		faidx(fasta_index_files.missing, input_files)
+		// run the process
+		faidx(fasta_index_files.to_make, input_files)
 
-		// make a channel of newly created genome indexes, each defined in a map
+		// make a channel of newly created parameters
 		merge_process_emissions(faidx, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'fasta index file')}
 			.map{merge_metadata_and_process_output(it)}
-			.concat(fasta_index_files.provided)
+			.concat(fasta_index_files.to_skip)
 			.map{it.subMap(['key', 'id', 'fasta index file'])}
 			.dump(tag: 'genome_preparation:indexed_fasta_files', pretty: true)
 			.set{indexed_fasta_files}
