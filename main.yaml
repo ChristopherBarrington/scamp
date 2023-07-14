@@ -109,7 +109,7 @@
       type: strings
 
     - name: id
-      description: A deirectory-safe name of the genome, which will be converted from `assembly` if missing.
+      description: A directory-safe name of the genome, which will be converted from `assembly` if missing.
       type: string
       provider: default
 

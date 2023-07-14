@@ -48,7 +48,6 @@ def get_complete_analysis_parameters(stage=null) {
 def get_genome_params() {
 	def genome_params = get_scamp_params().get('_genome')
 	genome_params
-		.plus(['name': genome_params.get('name', 'genome')])
 		.plus(['id': make_string_directory_safe(genome_params.get('id', genome_params.get('name')))])
 }
 
