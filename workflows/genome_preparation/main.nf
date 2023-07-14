@@ -42,28 +42,27 @@ workflow genome_preparation {
 		// merge genome fasta files
 		// -------------------------------------------------------------------------------------------------
 
-		// branch parameters into multiple channels according to the 'fasta file' and 'fasta path' keys
-		// if 'fasta file' is provided, don't merge fasta files in 'fasta path'
+		// branch parameters into multiple channels using key(s)
 		genome_parameters
 			.map{it.subMap(['key', 'id', 'fasta file', 'fasta path', 'fasta index file'])}
 			.branch{
 				def has_fasta_file = it.containsKey('fasta file')
 				def has_fasta_path = it.containsKey('fasta path')
-				to_merge: has_fasta_file == false & has_fasta_path == true
-				to_skip: has_fasta_file == true | has_fasta_path == false}
+				to_merge: !has_fasta_file & has_fasta_path
+				to_skip: has_fasta_file | !has_fasta_path}
 			.set{fasta_paths}
 
 		fasta_paths.to_merge.dump(tag: 'genome_preparation:fasta_paths.to_merge', pretty: true)
 		fasta_paths.to_skip.dump(tag: 'genome_preparation:fasta_paths.to_skip', pretty: true)
 
-		// make channels of parameters for genomes that need indexes to be created
+		// make channels of parameters
 		input_paths = fasta_paths.to_merge.map{it.get('fasta path')}
 		output_files = fasta_paths.to_merge.map{it.get('id') + '.fa'}
 
-		// create cell ranger arc indexes
+		// run the process
 		cat_fastas(fasta_paths.to_merge, input_paths, output_files)
 
-		// make a channel of newly created genome indexes, each defined in a map
+		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'fasta file')}
 			.map{merge_metadata_and_process_output(it)}
