@@ -29,16 +29,15 @@ workflow {
 
 		channel
 			.fromList(get_complete_analysis_parameters())
-			.dump(tag: 'parsed_scamp_parameters', pretty: true)
+			.dump(tag: 'scamp:parsed_scamp_parameters', pretty: true)
 			.set{parsed_scamp_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// run genome workflow, independent of dataset parameters
 		// -------------------------------------------------------------------------------------------------
 
-		genome_preparation(parsed_scamp_parameters)
-			.result
-			.dump(tag: 'complete_analysis_parameters', pretty: true)
+		genome_preparation(parsed_scamp_parameters).result
+			.dump(tag: 'scamp:complete_analysis_parameters', pretty: true)
 			.set{complete_analysis_parameters}
 
 		// -------------------------------------------------------------------------------------------------
@@ -50,8 +49,8 @@ workflow {
 			.branch{
 				def has_a_quantification_stage = it.get('stages').collect{it.startsWith('quantification:')}.any()
 				def quantification_provided = it.containsKey('quantification path')
-				provided: quantification_provided == true
-				required: has_a_quantification_stage == true && quantification_provided == false}
+				provided: quantification_provided
+				required: has_a_quantification_stage & !quantification_provided}
 			.set{dataset_quantification}
 
 		dataset_quantification.required.dump(tag: 'scamp:dataset_quantification.required', pretty: true)
@@ -75,7 +74,7 @@ workflow {
 		quantification_results
 			.branch{
 				def has_a_seurat_stage = it.get('stages').collect{it.startsWith('seurat:')}.any()
-				seurat: has_a_seurat_stage == true
+				seurat: has_a_seurat_stage
 				unknown: true
 			}
 			.set{analysis_workflows}
