@@ -12,14 +12,9 @@ def get_complete_analysis_parameters(stage=null) {
 	def project_parameters = get_project_parameters()
 
 	get_dataset_params()
-		// remove the default dataset parameters
-		// - these are collected above
-		// .collectEntries{analysis_key, datasets -> [analysis_key, remove_keys_from_map(datasets, '_defaults')]}
 
 		// add key information to the parameters stanza
-		// - copy across: analysis and dataset key
-		// - make an unique identifier for the parameter set
-		.collectEntries{dataset_key, parameters -> [dataset_key, ['dataset key': dataset_key, 'unique id': dataset_key] + parameters]}
+		.collectEntries{dataset_key, parameters -> [dataset_key, ['dataset key': dataset_key] + parameters]}
 
 		// collect hashes into a collection of maps
 		.collect{k,v -> v}
