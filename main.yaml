@@ -25,11 +25,6 @@
       type: path
       provider: process
 
-    - name: genome
-      description: Name of the genome for an analysis; must be one of `genomes`. The default value will be the first genome in `genomes`.
-      type: string
-      provider: default
-
     - name: description
       description: A short textual description of the dataset, mainly as an aide-memoire. A default value of `dataset name` is used if missing.
       type: string
@@ -65,27 +60,6 @@
       type: string
       provider: process
 
-    - name: fasta path
-      description: A directory with FastA files that can be used to create a genome index. When provided, the files in the directory will be concatenated together into a genome FastA.No default is provided but is probably only needed to build an index.
-      type: path
-
-    - name: fasta file
-      description: Genomic sequence in FastA format. Can be provided by the `fasta path` option. This parameter takes precedence over the `fasta path` parameter.
-      type: file
-      provider: process
-
-    - name: gtf path
-      description: A directory with GTF files that can be used to quantify activity of features. The files in this directory will be concatenated into a single GTF file and the result used in `gtf file`. No default is provided but is probably only needed to build an index.
-      type: path
-
-    - name: gtf file
-      description: GTF file of features in the genome. This parameter will be used in preference to the `gtf path`.
-      provider: process
-
-    - name: motifs file
-      description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
-      type: file
-
     - name: unique id
       description: A unique identifer for this combination of analysis and dataset. By default, the dataset key is used.
       type: string
@@ -118,10 +92,6 @@
       type: string
       provider: default
 
-    - name: genomes
-      description: A dictionary of genomes included in the project. These should be very similar across projects and use standard values. The values may be dependent on other project parameters; the index used for alignment and quantification may be linked to `ensembl release` for example.
-      type: dictionary
-
 - title: Genome parameters
   description: A dictionary of parameters that define a genome. This can be used to define the parameters for a custom genome.
   icon: vial
@@ -142,6 +112,32 @@
     - name: non-nuclear contigs
       description: A collection of chromosomes in the `genome` that may be treated differently - for example by Cell Ranger ARC to created an index.
       type: strings
+
+    - name: id
+      description: A deirectory-safe name of the genome, which will be converted from `assembly` if missing.
+      type: string
+      provider: default
+
+    - name: fasta path
+      description: A directory with FastA files that can be used to create a genome index. When provided, the files in the directory will be concatenated together into a genome FastA.No default is provided but is probably only needed to build an index.
+      type: path
+
+    - name: fasta file
+      description: Genomic sequence in FastA format. Can be provided by the `fasta path` option. This parameter takes precedence over the `fasta path` parameter.
+      type: file
+      provider: process
+
+    - name: gtf path
+      description: A directory with GTF files that can be used to quantify activity of features. The files in this directory will be concatenated into a single GTF file and the result used in `gtf file`. No default is provided but is probably only needed to build an index.
+      type: path
+
+    - name: gtf file
+      description: GTF file of features in the genome. This parameter will be used in preference to the `gtf path`.
+      provider: process
+
+    - name: motifs file
+      description: A JASPAR-formatted file of motifs that can be used by Cell Ranger ARC to build an index. No default is provided.
+      type: file
 
 - title: Nextflow parameters
   description: Parameters used by the pipeline but are not directly part of {scamp} and specified with the `--` command line option. Default values are defined in `params.config`.
