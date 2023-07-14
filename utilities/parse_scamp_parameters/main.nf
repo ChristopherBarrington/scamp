@@ -5,7 +5,7 @@ include { make_string_directory_safe } from '../make_string_directory_safe'
 include { pluck }                      from '../pluck'
 include { remove_keys_from_map }       from '../remove_keys_from_map'
 
-def get_complete_analysis_parameters(stage=null) {
+def parse_scamp_parameters(stage=null) {
 	def genome_params = get_genome_params()
 	def default_dataset_params = get_default_dataset_params()
 	def possible_file_keys = get_possible_file_keys()

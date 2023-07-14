@@ -9,10 +9,10 @@ include { seurat }             from './workflows/seurat'
 
 include { print_as_json } from './utilities/print_as_json'
 
-include { concat_workflow_emissions }        from './utilities/concat_workflow_emissions'
-include { get_complete_analysis_parameters } from './utilities/get_complete_analysis_parameters'
-include { make_map }                         from './utilities/make_map'
-include { print_pipeline_title }             from './utilities/print_pipeline_title'
+include { concat_workflow_emissions } from './utilities/concat_workflow_emissions'
+include { make_map }                  from './utilities/make_map'
+include { parse_scamp_parameters }    from './utilities/parse_scamp_parameters'
+include { print_pipeline_title }      from './utilities/print_pipeline_title'
 
 print_pipeline_title()
 
@@ -28,7 +28,7 @@ workflow {
 		// -------------------------------------------------------------------------------------------------
 
 		channel
-			.fromList(get_complete_analysis_parameters())
+			.fromList(parse_scamp_parameters())
 			.dump(tag: 'scamp:parsed_scamp_parameters', pretty: true)
 			.set{parsed_scamp_parameters}
 
