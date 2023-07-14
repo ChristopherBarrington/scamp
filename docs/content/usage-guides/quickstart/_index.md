@@ -16,8 +16,6 @@ This is a quickstart guide that should get the pipeline running in most situatio
 For now, the processes are __not__ containerised. All software, packages and libraries __must__ be available from the shell. The {scamp} conda environment provides Nextflow, R and all R packages.
 
 {{< highlight bash >}}
-module load CellRanger-ARC/2.0.1
-module load CellRanger/7.1.0
 conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
 {{< /highlight >}}
 {{% /notice %}}

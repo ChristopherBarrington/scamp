@@ -1,0 +1,50 @@
+name: A new module
+
+description: |
+  A short description of the module's function.
+
+tags:
+  - lowercase
+  - strings
+
+tools:
+  name of software:
+    description: A markdown-ready description - pillaged from its website!
+    homepage: url, could be github
+    documentation: maybe a readthedocs
+    source: url to (eg) github
+    doi: doi
+    licence: eg MIT or GPL-3
+    ext: extra arguments identifier
+    multithreaded:
+      - list of features
+      - eg "multithreaded"
+      - that appear in module documentation
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: tag
+    type: string
+    description: A unique identifier to use in the tag directive.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters.
+    pattern: task.yaml
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+
+channel tags:
+  - ':channel_1': Description of channel 1, without the shared root in the tag.
+  - ':channel_2': Description of channel 2.
+
+authors:
+  - "@ChristopherBarrington"

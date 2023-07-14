@@ -1,0 +1,29 @@
+name: Seurat analyses
+
+description: |
+  Analysis of single cell data using Seurat-based methods.
+
+tags:
+  - Seurat
+
+steps:
+  - name: Create a Seurat object
+    description: Datasets are split into two channels according to presence of the `seurat file` parameter. The `seurat/prepare` workflow for the `quantification method` is used to create an object.
+    anchor: 23
+    workflows:
+      - prepare/cell_ranger
+      - prepare/cell_ranger_arc
+
+output:
+  - name:  final_results
+    type: channel
+    description: A parameters channel with datasets now including the parameters provided by subworkflows.
+
+channel tags:
+  - 'quantified_by.cell_ranger': Channel of datasets for which a Seurat oject is required and was quantified by Cell Ranger.
+  - 'quantified_by.cell_ranger_arc': Cell Ranger ARC-qauntified datasets that do not have a `seurat file`.
+  - 'quantified_by.unknown': Datasets that lack both `seurat file` and `quantification method`.
+  - 'final_results': The parameters channels with subworkflow parameters included.
+
+authors:
+  - "@ChristopherBarrington"

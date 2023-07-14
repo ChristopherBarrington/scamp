@@ -4,15 +4,15 @@ analysis_tool --sample $sample --database db --parameter 100 --output intermedia
 cat intermediate.file | parsing_tool > output.file
 
 # write software versions used in this module
-cat <<-END_VERSIONS > versions.yaml
+cat <<-VERSIONS > versions.yaml
 "${task.process}":
     analysis tool: `analysis_tool --version`
     parsing tool: `parsing_tool -v`
-END_VERSIONS
+VERSIONS
 
 # write parameters to a (yaml) file
-cat <<-END_TASK > task.yaml
+cat <<-TASK > task.yaml
 "${task.process}":
     sample: $sample
     work_dir: `pwd`
-END_TASK
+TASK

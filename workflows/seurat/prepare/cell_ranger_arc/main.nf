@@ -8,8 +8,6 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { convert_gtf_to_granges } from '../../../../modules/R/GenomicRanges/convert_gtf_to_granges'
-
 include { make_assay as make_rna_assay } from '../../../../modules/R/Seurat/make_assay'
 include { make_object }                  from '../../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices }    from '../../../../modules/R/Seurat/write_10x_counts_matrices'
@@ -38,35 +36,6 @@ workflow cell_ranger_arc {
 		parameters
 
 	main:
-		// -------------------------------------------------------------------------------------------------
-		// make GRanges objects for gene annotations of the genomes
-		// -------------------------------------------------------------------------------------------------
-
-		// create the channels for the process to make GRanges objects using Cell Ranger ARC indexes
-		parameters
-			.map{it.subMap(['genome', 'index path'])}
-			.map{it.values().join('###')}
-			.unique()
-			.map{make_map(it.split('###'), ['genome', 'index path'])}
-			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf.gz')]}
-			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
-			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty: true)
-			.set{gtf_files_to_convert_to_granges}
-
-		tags      = gtf_files_to_convert_to_granges.map{it.get('genome')}
-		genomes   = gtf_files_to_convert_to_granges.map{it.get('genome')}
-		gtf_files = gtf_files_to_convert_to_granges.map{it.get('gtf')}
-		fai_files = gtf_files_to_convert_to_granges.map{it.get('fai')}
-
-		// make the granges rds files from gtf files
-		convert_gtf_to_granges(gtf_files_to_convert_to_granges, tags, genomes, gtf_files, fai_files)
-
-		// make a channel of newly created GRanges rds files
-		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
-			.map{merge_metadata_and_process_output(it)}
-			.dump(tag: 'seurat:prepare:cell_ranger_arc:granges_files', pretty: true)
-			.set{granges_files}
-
 		// -------------------------------------------------------------------------------------------------
 		// read the 10X cell ranger matrices into an object
 		// -------------------------------------------------------------------------------------------------
@@ -133,9 +102,9 @@ workflow cell_ranger_arc {
 		// create the channels for the process to make a chromatin assay
 		barcoded_matrices
 			.filter{it.get('identifier') == 'accession'}
-			.combine(granges_files.map{it.subMap(['index path','granges'])})
-			.filter{check_for_matching_key_values(it, 'index path')}
-			.map{concatenate_maps_list(it)}
+			.combine(parameters)
+			.filter{check_for_matching_key_values(it, 'unique id')}
+			.map{it.first() + it.last().get('genome parameters').subMap('granges')} 
 			.map{it.subMap(['tag', 'granges', 'counts_matrices', 'quantification path'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:chromatin_assays_to_create', pretty: true)
 			.set{chromatin_assays_to_create}
@@ -153,7 +122,7 @@ workflow cell_ranger_arc {
 		merge_process_emissions(make_chromatin_assay, ['opt', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
 			.map{rename_map_keys(it, 'assay', 'chromatin_assay')}
-			.map{it.subMap(['quantification path', 'chromatin_assay'])}
+			.map{it.subMap(['quantification path', 'chromatin_assay', 'granges'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:chromatin_assays', pretty: true)
 			.set{chromatin_assays}
 
@@ -165,9 +134,7 @@ workflow cell_ranger_arc {
 		parameters
 			.combine(rna_assays)
 			.combine(chromatin_assays)
-			.combine(granges_files.map{it.subMap(['genome', 'index path', 'granges'])})
 			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'}.map{it.subMap(['index path', 'quantification path', 'features'])})
-			.filter{check_for_matching_key_values(it, 'genome')}
 			.filter{check_for_matching_key_values(it, 'index path')}
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
@@ -212,7 +179,7 @@ workflow cell_ranger_arc {
 		// make summary report for cell ranger arc stage
 		// -------------------------------------------------------------------------------------------------
 
-		all_processes = [convert_gtf_to_granges, write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
+		all_processes = [write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
 
 		// collate the software version yaml files into one
 		concat_workflow_emissions(all_processes, 'versions')

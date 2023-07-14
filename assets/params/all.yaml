@@ -14,12 +14,21 @@ _project:
                 - chrM
             mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
             cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
-            fasta files: inputs/genome
-            gtf files: inputs/genome
-            motifs: inputs/genome/motifs
+            fasta file: inputs/fasta
+            gtf file: inputs/gtf
+        mm10 + mcherry:
+            organism: mus musculus
+            assembly: mm10
+            ensembl release: 98
+            non-nuclear contigs:
+                - chrM
+            mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+            cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
+            fasta path: inputs/fastas
+            gtf path: inputs/gtfs
+            motifs file: inputs/motifs.txt
 
 _defaults:
-    genome: mm10
     feature identifiers: name
     feature types:
         Gene Expression:
@@ -56,7 +65,6 @@ _defaults:
             - AHM4688A24
             - AHM4688A26
             - AHM4688A28
-
     fastq paths:
         - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
         - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
@@ -93,6 +101,7 @@ _defaults:
 
 _datasets:
     stella 120h rep1:
+        genome: mm10
         description: PGCLC sorted by STELLA at 120 hours
         limsid: COO4671A1
         dataset tag: ST120R1
@@ -104,6 +113,7 @@ _datasets:
         # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     pecam1 120h rep1:
+        genome: mm10
         description: PGCLC sorted by PECAM1 at 120 hours
         limsid: COO4671A2
         dataset tag: P120R1
@@ -115,6 +125,7 @@ _datasets:
         # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     ssea1 120h rep1:
+        genome: mm10
         description: PGCLC sorted by SSEA1 at 120 hours
         limsid: COO4671A3
         dataset tag: SS120R1
@@ -126,6 +137,7 @@ _datasets:
         # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     blimp1 + ssea1 120h rep1:
+        genome: mm10
         description: PGCLC sorted by BLIMP1 and SSEA1 at 120 hours
         limsid: COO4671A4
         dataset tag: BS120R1
@@ -137,6 +149,7 @@ _datasets:
         # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     8 weeks sample1:
+        genome: mm10 + mcherry
         description: 8 week old, replicate 1
         dataset tag: 8WS1
         limsid:
@@ -150,6 +163,7 @@ _datasets:
         # index path: inputs/cellranger_arc_ref
 
     8 weeks sample2:
+        genome: mm10 + mcherry
         description: 8 week old, replicate 2
         dataset tag: 8WS2
         limsid:
@@ -163,6 +177,7 @@ _datasets:
         # index path: inputs/cellranger_arc_ref
 
     8 weeks sample3:
+        genome: mm10 + mcherry
         description: 8 week old, replicate 3
         dataset tag: 8WS3
         limsid:
