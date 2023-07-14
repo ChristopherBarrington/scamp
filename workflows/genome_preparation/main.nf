@@ -48,25 +48,25 @@ workflow genome_preparation {
 			.branch{
 				def has_fasta_file = it.containsKey('fasta file')
 				def has_fasta_path = it.containsKey('fasta path')
-				to_merge: !has_fasta_file & has_fasta_path
+				to_make: !has_fasta_file & has_fasta_path
 				to_skip: has_fasta_file | !has_fasta_path}
-			.set{fasta_paths}
+			.set{fasta_files}
 
-		fasta_paths.to_merge.dump(tag: 'genome_preparation:fasta_paths.to_merge', pretty: true)
-		fasta_paths.to_skip.dump(tag: 'genome_preparation:fasta_paths.to_skip', pretty: true)
+		fasta_files.to_make.dump(tag: 'genome_preparation:fasta_files.to_make', pretty: true)
+		fasta_files.to_skip.dump(tag: 'genome_preparation:fasta_files.to_skip', pretty: true)
 
 		// make channels of parameters
-		input_paths = fasta_paths.to_merge.map{it.get('fasta path')}
-		output_files = fasta_paths.to_merge.map{it.get('id') + '.fa'}
+		fasta_paths  = fasta_files.to_make.map{it.get('fasta path')}
+		output_files = fasta_files.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
-		cat_fastas(fasta_paths.to_merge, input_paths, output_files)
+		cat_fastas(fasta_files.to_make, fasta_paths, output_files)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'fasta file')}
 			.map{merge_metadata_and_process_output(it)}
-			.concat(fasta_paths.to_skip)
+			.concat(fasta_files.to_skip)
 			.map{it.subMap(['key', 'id', 'fasta file'])}
 			.dump(tag: 'genome_preparation:fasta_files', pretty: true)
 			.set{fasta_files}
@@ -112,25 +112,25 @@ workflow genome_preparation {
 			.branch{
 				def has_gtf_file = it.containsKey('gtf file')
 				def has_gtf_path = it.containsKey('gtf path')
-				to_merge: !has_gtf_file & has_gtf_path
+				to_make: !has_gtf_file & has_gtf_path
 				to_skip: has_gtf_file | !has_gtf_path}
-			.set{gtf_paths}
+			.set{gtf_files}
 
-		gtf_paths.to_merge.dump(tag: 'genome_preparation:gtf_paths.to_merge', pretty: true)
-		gtf_paths.to_skip.dump(tag: 'genome_preparation:gtf_paths.to_skip', pretty: true)
+		gtf_files.to_make.dump(tag: 'genome_preparation:gtf_files.to_make', pretty: true)
+		gtf_files.to_skip.dump(tag: 'genome_preparation:gtf_files.to_skip', pretty: true)
 
 		// make channels of parameters
-		input_paths  = gtf_paths.to_merge.map{it.get('gtf path')}
-		output_files = fasta_paths.to_merge.map{it.get('id') + '.gtf'}
+		gtf_paths    = gtf_files.to_make.map{it.get('gtf path')}
+		output_files = gtf_files.to_make.map{it.get('id') + '.gtf'}
 
 		// run the process
-		cat_gtfs(gtf_paths.to_merge, input_paths, output_files)
+		cat_gtfs(gtf_files.to_make, gtf_paths, output_files)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'gtf file')}
 			.map{merge_metadata_and_process_output(it)}
-			.concat(gtf_paths.to_skip)
+			.concat(gtf_files.to_skip)
 			.map{it.subMap(['key', 'id', 'gtf file'])}
 			.dump(tag: 'genome_preparation:gtf_files', pretty: true)
 			.set{gtf_files}
