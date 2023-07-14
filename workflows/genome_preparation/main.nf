@@ -99,8 +99,8 @@ workflow genome_preparation {
 			.map{merge_metadata_and_process_output(it)}
 			.concat(fasta_index_files.to_skip)
 			.map{it.subMap(['key', 'id', 'fasta index file'])}
-			.dump(tag: 'genome_preparation:indexed_fasta_files', pretty: true)
-			.set{indexed_fasta_files}
+			.dump(tag: 'genome_preparation:fasta_index_files', pretty: true)
+			.set{fasta_index_files}
 
 		// -------------------------------------------------------------------------------------------------
 		// merge genome gtf files, if provided by `gtf path`
@@ -210,7 +210,7 @@ workflow genome_preparation {
 
 		channel.empty()
 			.concat(fasta_files)
-			.combine(indexed_fasta_files)
+			.combine(fasta_index_files)
 			.combine(gtf_files)
 			.combine(granges_files)
 			.combine(mart_files)
