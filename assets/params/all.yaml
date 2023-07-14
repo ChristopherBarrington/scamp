@@ -14,8 +14,8 @@ _project:
                 - chrM
             mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
             cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
-            fasta file: inputs/fasta
-            gtf file: inputs/gtf
+            fasta file: inputs/fasta.fa
+            # gtf file: inputs/gtf.gtf
         mm10 + mcherry:
             organism: mus musculus
             assembly: mm10
@@ -106,11 +106,11 @@ _datasets:
         limsid: COO4671A1
         dataset tag: ST120R1
         stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
+            # - quantification/cell ranger
+            # - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A1/outs
         quantification method: cell ranger
-        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
+        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     pecam1 120h rep1:
         genome: mm10
@@ -118,11 +118,11 @@ _datasets:
         limsid: COO4671A2
         dataset tag: P120R1
         stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
+            # - quantification/cell ranger
+            # - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A2/outs
         quantification method: cell ranger
-        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
+        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     ssea1 120h rep1:
         genome: mm10
@@ -130,11 +130,11 @@ _datasets:
         limsid: COO4671A3
         dataset tag: SS120R1
         stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
+            # - quantification/cell ranger
+            # - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A3/outs
         quantification method: cell ranger
-        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
+        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     blimp1 + ssea1 120h rep1:
         genome: mm10
@@ -142,11 +142,11 @@ _datasets:
         limsid: COO4671A4
         dataset tag: BS120R1
         stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
+            # - quantification/cell ranger
+            # - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A4/outs
         quantification method: cell ranger
-        # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
+        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     8 weeks sample1:
         genome: mm10 + mcherry
@@ -156,8 +156,8 @@ _datasets:
             - AHM4688A1
             - AHM4688A4
         stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
+            # - quantification/cell_ranger_arc
+            # - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
@@ -170,8 +170,8 @@ _datasets:
             - AHM4688A2
             - AHM4688A5
         stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
+            # - quantification/cell_ranger_arc
+            # - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
@@ -184,8 +184,8 @@ _datasets:
             - AHM4688A3
             - AHM4688A6
         stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
+            # - quantification/cell_ranger_arc
+            # - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
