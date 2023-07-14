@@ -106,7 +106,7 @@ workflow genome_preparation {
 		// merge genome gtf files, if provided by `gtf path`
 		// -------------------------------------------------------------------------------------------------
 
-		// branch parameters into multiple channels according to the 'quantification method' key
+		// branch parameters into multiple channels according to the 'gtf file' and 'gtf path' keys
 		genome_parameters
 			.map{it.subMap(['key', 'id', 'gtf file', 'gtf path'])}
 			.branch{
