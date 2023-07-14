@@ -38,8 +38,8 @@ parser.add_argument(
 	help='<firstname>.<lastname> format for the scientist')
 
 parser.add_argument(
-	'--genomes', type=str, nargs='+', required=True, dest='genomes',
-	help='Genomes included in any dataset in the project.',
+	'--genome', type=str, required=True, dest='genome',
+	help='Genome used in the project.',
 	choices=['mm10', 'GRCh38'])
 
 parser.add_argument(
@@ -93,7 +93,6 @@ def validate_arguments():
 	if args.project_type is None: get_project_type_from_sample_sheet()
 
 	args.fastq_paths_glob = os.path.join(args.data_path, 'primary_data', '*', 'fastq')
-	args.genome = args.genomes[0]
 
 # if only given a lims id, find that directory
 def get_data_path():
@@ -156,11 +155,11 @@ def get_project_type_from_sample_sheet():
 		args.project_type = project_types[0]
 
 # ------------------------------------------------------------------------------------------------
-# get the genome information for genomes included in the project
+# get information for genome used in the project
 # ------------------------------------------------------------------------------------------------
 
 def get_genome_parameters():
-	defaults = {
+	genomes = {
 		'mm10': {
 			'organism': 'mus musculus',
 			'assembly': 'mm10',
@@ -173,9 +172,7 @@ def get_genome_parameters():
 			'ensembl release': 98,
 			'non-nuclear contigs': ['chrM'],
 			'mitochondrial features': 'undefined'}}
-
-	genomes = {k:defaults[k] for k in args.genomes if k in defaults}
-	return(genomes)
+	return(genomes.get(args.genome))
 
 # ------------------------------------------------------------------------------------------------
 # get the fastq directories for this lims id using data_path
@@ -377,7 +374,7 @@ def main():
 
 	# get parameters from args-dependent information
 	stages = get_stages()
-	genomes = get_genome_parameters()
+	genome = get_genome_parameters()
 	fastq_paths = get_fastq_paths_from_data_path()
 	dataset_index = get_dataset_index()
 	feature_types = get_feature_types()
@@ -385,7 +382,7 @@ def main():
 
 	# get parameters dependent on the above variables
 	datasets = get_datasets(sample_lims_ids)
-	genomes = {G:genomes[G] | get_genome_files(dataset_index) for G in genomes}
+	genome = genome | get_genome_files(dataset_index)
 
 	# put the parameters together
 	params = {
@@ -394,10 +391,9 @@ def main():
 			'scientist': args.scientist,
 			'lims id': args.lims_id,
 			'babs id': 'unknown',
-			'type': args.project_type,
-			'genomes': genomes},
+			'type': args.project_type},
+		'_genome':	genome,
 		'_defaults': {
-			'genome': args.genome,
 			'fastq paths': fastq_paths,
 			'feature types': library_types,
 			'index path': dataset_index,
