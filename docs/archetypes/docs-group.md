@@ -3,6 +3,8 @@ title: {{ .Name }}
 weight: 
 ---
 
+<!--more-->
+
 {{% children
 	containerstyle="ul"
 	style="li"

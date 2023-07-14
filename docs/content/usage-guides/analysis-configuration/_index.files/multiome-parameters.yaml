@@ -4,15 +4,15 @@ _project:
     lims id: SC22051
     babs id: sa145
     type: 10X-Multiomics
-    genomes:
-        mm10_mcherry:
-            organism: mus musculus
-            assembly: mm10
-            ensembl release: 98
-            non-nuclear contigs:
-                - chrM
-            fasta files: inputs/fasta
-            gtf files: inputs/gtf
+
+_genome:
+    assembly: mm10 + mCherry
+    organism: mus musculus
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    fasta path: inputs/fastas
+    gtf path: inputs/gtfs
 
 _defaults:
     fastq paths:
@@ -33,7 +33,6 @@ _defaults:
     stages:
         - quantification/cell ranger arc
         - seurat/prepare/cell ranger arc
-    genome: mm10_mcherry
 
 _datasets:
     8 weeks sample1:
