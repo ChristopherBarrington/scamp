@@ -42,12 +42,12 @@ workflow cell_ranger_arc {
 
 		// get the unique set of quantification matrices and feature identifiers' columns
 		parameters
-			.map{[it.subMap('unique id', 'index path', 'quantification path'), ['accession', 'name']]}
+			.map{[it.subMap('dataset id', 'index path', 'quantification path'), ['accession', 'name']]}
 			.transpose()
 			.map{it.first() + [identifier: it.last(), 'matrix state': 'filtered']}
 			.unique()
 			.map{it + ['barcoded matrix path': Paths.get(it.get('quantification path').toString(), 'filtered_feature_bc_matrix')]}
-			.map{it + ['tag': format_unique_key([it.get('unique id'), it.get('matrix state'), it.get('identifier')], sep=' + ')]}
+			.map{it + ['tag': format_unique_key([it.get('dataset id'), it.get('matrix state'), it.get('identifier')], sep=' + ')]}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:barcoded_matrices_to_read', pretty: true)
 			.set{barcoded_matrices_to_read}
 
@@ -103,7 +103,7 @@ workflow cell_ranger_arc {
 		barcoded_matrices
 			.filter{it.get('identifier') == 'accession'}
 			.combine(parameters)
-			.filter{check_for_matching_key_values(it, 'unique id')}
+			.filter{check_for_matching_key_values(it, 'dataset id')}
 			.map{it.first() + it.last().get('genome parameters').subMap('granges')} 
 			.map{it.subMap(['tag', 'granges', 'counts_matrices', 'quantification path'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:chromatin_assays_to_create', pretty: true)
@@ -142,12 +142,12 @@ workflow cell_ranger_arc {
 			.map{if(it.get('feature identifiers') == 'name') {it.ordered_assays = it.get('ordered_assays').reverse()} ; it}
 			.map{it + [ordered_assays: it.get('ordered_assays') + [it.get('chromatin_assay')]]}
 			.map{it + ['remove barcode suffixes': 'TRUE']} // should be a user parameter
-			.map{it.subMap(['unique id', 'ordered_assays', 'remove barcode suffixes', 'granges', 'features', 'dataset name', 'dataset id'])}
+			.map{it.subMap(['dataset id', 'ordered_assays', 'remove barcode suffixes', 'granges', 'features', 'dataset name'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:objects_to_create', pretty: true)
 			.set{objects_to_create}
 
 		// create the channels for the process to make a seurat object
-		tags                    = objects_to_create.map{it.get('unique id')}
+		tags                    = objects_to_create.map{it.get('dataset id')}
 		remove_barcode_suffixes = objects_to_create.map{it.get('remove barcode suffixes')}
 		assays                  = objects_to_create.map{it.get('ordered_assays')}
 		misc_files              = objects_to_create.map{it.subMap(['granges', 'features']).values()}
@@ -170,7 +170,7 @@ workflow cell_ranger_arc {
 
 		parameters
 			.combine(objects)
-			.filter{check_for_matching_key_values(it, ['unique id'])}
+			.filter{check_for_matching_key_values(it, ['dataset id'])}
 			.map{it.first() + ['seurat path': it.last().subMap(['seurat'])]}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:result', pretty: true)
 			.set{result}

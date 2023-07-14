@@ -67,12 +67,12 @@ workflow cell_ranger {
 		parameters
 			.combine(index_paths)
 			.map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'dataset id', 'description', 'limsid', 'fastq paths', 'index path'])}
+			.map{it.subMap(['dataset id', 'description', 'limsid', 'fastq paths', 'index path'])}
 			.dump(tag: 'quantification:cell_ranger:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
-		tags         = datasets_to_quantify.map{it.get('unique id')}
+		tags         = datasets_to_quantify.map{it.get('dataset id')}
 		ids          = datasets_to_quantify.map{it.get('dataset id')}
 		descriptions = datasets_to_quantify.map{it.get('description')}
 		limsids      = datasets_to_quantify.map{it.get('limsid')}
@@ -95,7 +95,7 @@ workflow cell_ranger {
 
 		parameters
 			.combine(quantified_datasets)
-			.filter{check_for_matching_key_values(it, ['unique id'])}
+			.filter{check_for_matching_key_values(it, ['dataset id'])}
 			.map{it.first() + it.last().subMap(['index path', 'quantification path'])}
 			.map{it + ['quantification method': 'cell_ranger']}
 			.dump(tag: 'quantification:cell_ranger:final_results', pretty: true)
