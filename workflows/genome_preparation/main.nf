@@ -141,7 +141,7 @@ workflow genome_preparation {
 
 		// merge the fasta and gtf process outputs
 		// branch parameters into multiple channels using key(s)
-		indexed_fasta_files
+		fasta_index_files
 			.combine(gtf_files)
 			.filter{check_for_matching_key_values(it, ['key'])}
 			.map{concatenate_maps_list(it)}
@@ -217,7 +217,6 @@ workflow genome_preparation {
 			.filter{check_for_matching_key_values(it, ['id'])}
 			.filter{check_for_matching_key_values(it, ['key'])}
 			.map{concatenate_maps_list(it)}
-			.dump(tag: 'working', pretty: true)
 			.combine(parameters)
 			.filter{it.first().get('key') == it.last().get('genome')}
 			.map{it.last().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last().get('genome parameters') + it.first()]}
