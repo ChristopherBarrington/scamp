@@ -33,8 +33,8 @@ workflow genome_preparation {
 		// -------------------------------------------------------------------------------------------------
 
 		parameters
+			.first()
 			.map{it.get('genome parameters')}
-			.unique()
 			.dump(tag: 'genome_preparation:genome_parameters', pretty: true)
 			.set{genome_parameters}
 
@@ -44,7 +44,6 @@ workflow genome_preparation {
 
 		// branch parameters into multiple channels using key(s)
 		genome_parameters
-			.map{it.subMap(['key', 'id', 'fasta file', 'fasta path', 'fasta index file'])}
 			.branch{
 				def has_fasta_file = it.containsKey('fasta file')
 				def has_fasta_path = it.containsKey('fasta path')
@@ -60,23 +59,24 @@ workflow genome_preparation {
 		output_files = fasta_files.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
-		cat_fastas(fasta_files.to_make, fasta_paths, output_files)
+		cat_fastas([:], fasta_paths, output_files)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'fasta file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(fasta_files.to_skip)
-			.map{it.subMap(['key', 'id', 'fasta file'])}
+			.merge(genome_parameters)
+			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:fasta_files', pretty: true)
-			.set{fasta_files}
+			.set{genome_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// make fai for genomes
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into multiple channels using key(s)
-		fasta_files
+		genome_parameters
 			.branch{
 				def has_fasta_file = it.containsKey('fasta file')
 				def has_fasta_index_file = it.containsKey('fasta index file')
@@ -91,16 +91,17 @@ workflow genome_preparation {
 		input_files = fasta_index_files.to_make.map{it.get('fasta file')}
 
 		// run the process
-		faidx(fasta_index_files.to_make, input_files)
+		faidx([:], input_files)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(faidx, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'fasta index file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(fasta_index_files.to_skip)
-			.map{it.subMap(['key', 'id', 'fasta index file'])}
+			.merge(genome_parameters)
+			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:fasta_index_files', pretty: true)
-			.set{fasta_index_files}
+			.set{genome_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// merge genome gtf files, if provided by `gtf path`
@@ -108,7 +109,6 @@ workflow genome_preparation {
 
 		// branch parameters into multiple channels using key(s)
 		genome_parameters
-			.map{it.subMap(['key', 'id', 'gtf file', 'gtf path'])}
 			.branch{
 				def has_gtf_file = it.containsKey('gtf file')
 				def has_gtf_path = it.containsKey('gtf path')
@@ -124,28 +124,24 @@ workflow genome_preparation {
 		output_files = gtf_files.to_make.map{it.get('id') + '.gtf'}
 
 		// run the process
-		cat_gtfs(gtf_files.to_make, gtf_paths, output_files)
+		cat_gtfs([:], gtf_paths, output_files)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'gtf file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(gtf_files.to_skip)
-			.map{it.subMap(['key', 'id', 'gtf file'])}
+			.merge(genome_parameters)
+			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:gtf_files', pretty: true)
-			.set{gtf_files}
+			.set{genome_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// make GRanges objects for gene annotations of the genomes
 		// -------------------------------------------------------------------------------------------------
 
-		// merge the fasta and gtf process outputs
 		// branch parameters into multiple channels using key(s)
-		fasta_index_files
-			.combine(gtf_files)
-			.filter{check_for_matching_key_values(it, ['key'])}
-			.map{concatenate_maps_list(it)}
-			.map{it.subMap(['key', 'id', 'gtf file', 'fasta index file'])}
+		genome_parameters
 			.branch{
 				def has_fasta_index_file = it.containsKey('fasta index file')
 				def has_gtf_file = it.containsKey('gtf file')
@@ -162,23 +158,23 @@ workflow genome_preparation {
 		fais    = granges_files.to_make.map{it.get('fasta index file')}
 
 		// run the process
-		convert_gtf_to_granges(granges_files.to_make, genomes, gtfs, fais)
+		convert_gtf_to_granges([:], genomes, gtfs, fais)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
 			.map{merge_metadata_and_process_output(it)}
 			.concat(granges_files.to_skip)
-			.map{it.subMap(['key', 'id', 'granges'])}
+			.merge(genome_parameters)
+			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:granges_files', pretty: true)
-			.set{granges_files}
+			.set{genome_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// make a biomaRt object for the genome
 		// -------------------------------------------------------------------------------------------------
 
-		// branch parameters into multiple channels using key(s)
+		// // branch parameters into multiple channels using key(s)
 		genome_parameters
-			.map{it.subMap(['key', 'id', 'organism', 'ensembl release'])}
 			.branch{
 				def has_ensembl_release = it.containsKey('ensembl release')
 				to_make: has_ensembl_release
@@ -193,33 +189,25 @@ workflow genome_preparation {
 		ensembl_releases = mart_files.to_make.map{it.get('ensembl release')}
 
 		// run the process
-		get_mart(mart_files.to_make, organisms, ensembl_releases)
+		get_mart([:], organisms, ensembl_releases)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(get_mart, ['opt', 'mart'])
 			.map{rename_map_keys(it, 'mart', 'biomart connection')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(mart_files.to_skip)
-			.map{it.subMap(['key', 'id', 'biomart connection'])}
+			.merge(genome_parameters)
+			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:mart_files', pretty: true)
-			.set{mart_files}
+			.set{genome_parameters}
 
 		// -------------------------------------------------------------------------------------------------
-		// join any/all information back onto the parameters ready to emit
+		// get ready to emit
 		// -------------------------------------------------------------------------------------------------
 
-		channel.empty()
-			.concat(fasta_files)
-			.combine(fasta_index_files)
-			.combine(gtf_files)
-			.combine(granges_files)
-			.combine(mart_files)
-			.filter{check_for_matching_key_values(it, ['id'])}
-			.filter{check_for_matching_key_values(it, ['key'])}
-			.map{concatenate_maps_list(it)}
-			.combine(parameters)
-			.filter{it.first().get('key') == it.last().get('genome')}
-			.map{it.last().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last().get('genome parameters') + it.first()]}
+		parameters
+			.combine(genome_parameters)
+			.map{it.first().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last()]}
 			.dump(tag: 'genome_preparation:result', pretty: true)
 			.set{result}
 
