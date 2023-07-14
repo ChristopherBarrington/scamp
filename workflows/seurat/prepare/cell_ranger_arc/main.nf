@@ -172,8 +172,8 @@ workflow cell_ranger_arc {
 			.combine(objects)
 			.filter{check_for_matching_key_values(it, ['unique id'])}
 			.map{it.first() + ['seurat path': it.last().subMap(['seurat'])]}
-			.dump(tag: 'seurat:prepare:cell_ranger_arc:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'seurat:prepare:cell_ranger_arc:result', pretty: true)
+			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for cell ranger arc stage
@@ -202,6 +202,6 @@ workflow cell_ranger_arc {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		result = final_results
+		result = result
 		report = channel.of('report.document')
 }
