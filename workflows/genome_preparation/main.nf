@@ -208,19 +208,22 @@ workflow genome_preparation {
 		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
-		fasta_files
+		channel.empty()
+			.concat(fasta_files)
 			.combine(indexed_fasta_files)
 			.combine(gtf_files)
 			.combine(granges_files)
 			.combine(mart_files)
 			.filter{check_for_matching_key_values(it, ['id'])}
+			.filter{check_for_matching_key_values(it, ['key'])}
 			.map{concatenate_maps_list(it)}
+			.dump(tag: 'working', pretty: true)
 			.combine(parameters)
 			.filter{it.first().get('key') == it.last().get('genome')}
 			.map{it.last().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last().get('genome parameters') + it.first()]}
-			.dump(tag: 'genome_preparation:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'genome_preparation:result', pretty: true)
+			.set{result}
 
 	emit:
-		result = final_results
+		result = result
 }
