@@ -42,7 +42,7 @@ workflow cell_ranger_arc {
 
 		// get the unique set of quantification matrices and feature identifiers' columns
 		parameters
-			.map{[it.subMap('dataset id', 'index path', 'quantification path'), ['accession', 'name']]}
+			.map{[it.subMap('dataset id', 'quantification path'), ['accession', 'name']]}
 			.transpose()
 			.map{it.first() + [identifier: it.last(), 'matrix state': 'filtered']}
 			.unique()
@@ -134,8 +134,7 @@ workflow cell_ranger_arc {
 		parameters
 			.combine(rna_assays)
 			.combine(chromatin_assays)
-			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'}.map{it.subMap(['index path', 'quantification path', 'features'])})
-			.filter{check_for_matching_key_values(it, 'index path')}
+			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'}.map{it.subMap(['quantification path', 'features'])})
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
 			.map{it + [ordered_assays: it.subMap('rna_assay_by_accession', 'rna_assay_by_name').values().toList()]}
