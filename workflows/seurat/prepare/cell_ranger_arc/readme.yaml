@@ -37,7 +37,7 @@ channel tags:
   - ':chromatin_assays': Paths to the created chromatin accessibility assays.
   - ':objects_to_create': Parameters used to create Seurat objects.
   - ':objects': Paths to created Seurat objects.
-  - ':final_results': Input parameters with `seurat path` key added.
+  - ':final_result': Input parameters with `seurat path` key added.
 
 authors:
   - "@ChristopherBarrington"
