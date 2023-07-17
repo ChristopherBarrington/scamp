@@ -32,12 +32,6 @@ def parse_scamp_parameters(stage=null) {
 		.collect{it + ['description': it.get('description', it.get('dataset name'))]}                           // dataset descriptions
 		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}                           // feature identifiers
 
-		// add default values to each set of dataset parameters
-		.collect{default_dataset_params + it}
-
-		// add genome parameters to each dataset
-		.collect{it + ['genome parameters': genome_params]}
-
 		// try to make parameters safe by regex
 		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}                                          // reformat the stages collection to lower-case, non-space
 		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])} // if `quantification method` is provided, make it safe
