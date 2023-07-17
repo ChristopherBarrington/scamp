@@ -1,9 +1,5 @@
 #! bash
 
-# create input files
-cat fasta/*.fa > assembly.fasta
-cat gtf/*.gtf > features.gtf
-
 # rename any gene_biotype keys to gene_type
 sed --in-place 's/ gene_biotype / gene_type /' features.gtf
 

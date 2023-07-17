@@ -1,5 +1,5 @@
 process convert_gtf_to_granges {
-	tag "$tag"
+	tag "$genome"
 
 	cpus 1
 	memory '8GB'
@@ -7,7 +7,6 @@ process convert_gtf_to_granges {
 
 	input:
 		val opt
-		val tag
 		val genome
 		path gtf
 		path fai

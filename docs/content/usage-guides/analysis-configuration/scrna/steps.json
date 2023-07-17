@@ -1,18 +1,20 @@
-
 {
 	"project" : {
 		"target": 1,
 		"title": "project description",
 		"text": "Parameters that define the project as a whole."},
+	"genome" : {
+		"target": 8,
+		"title": "genome used in the project",
+		"text": "Parameters that are independent of the dataset and analysis that describe the genome."},
 	"project_defaults" : {
-		"target": 13,
+		"target": 16,
 		"title": "project defaults",
-		"text": "A set of parameters that are the same for <i>all</i> datasets in <i>all</i> analyses."},
+		"text": "A set of parameters that are the same for <emph>all</emph> datasets in <code>_datasets</code>."},
 	"analysis" : {
-		"target": 27,
-		"title": "an analysis",
-		"text": "One or more analysis groups are defined. Each analysis can contain multiple datasets. These cannot start with underscores!"},
-
+		"target": 34,
+		"title": "project datasets",
+		"text": "Descriptions of each dataset to include in the project."},
 
 	"people" : {
 		"target": 2,
@@ -26,33 +28,19 @@
 		"target": 6,
 		"title": "project type",
 		"text": "A curated identifier for the project type which should be the same as used by ASF. This is included in the project design file in the <code>data</code> directory or in the LIMS."},
-	"genomes" : {
-		"target": 7,
-		"title": "genomes in the project",
-		"text": "A list of genomes used in the project, a dataset is linked to one of the <code>genomes</code> by the <code>genome</code> key of a dataset."},
 
 	"fastq_paths" : {
-		"target": 14,
+		"target": 17,
 		"title": "paths to FastQ files",
 		"text": "A list of paths that can be searched that may have a FastQ (<code>*.fastq.gz</code> file for one or more of the datasets."},
 	"feature_types" : {
-		"target": 19,
+		"target": 22,
 		"title": "assay types",
 		"text": "A list of LIMS IDs for each curated type of data. The <code>feature_types</code> keys depend on the data type and application. For example, Cell Ranger ARC expects <code>Gene Expression</code> and <code>Chromatin Accessibility</code> feature types."},
 	"feature_identifiers" : {
-		"target": 25,
+		"target": 28,
 		"title": "identifiers",
 		"text": "Which feature identifier should be used as the default: probably <code>name</code> or <code>accession</code>."},
-
-	"analysis_defaults" : {
-		"target": 28,
-		"title": "analysis defaults",
-		"text": "As with project defaults, these parameters are applied to all datasets <emph>within this analysis</emph>."},
-	"dataset" : {
-		"target": 35,
-		"title": "a dataset",
-		"text": "The first (of four) datasets. Each dataset is specified in separate stanzas of the analysis. Dataset names should not start with underscores!"},
-
 	"stages" : {
 		"target": 29,
 		"title": "analysis stages",
@@ -61,11 +49,11 @@
 		"target": 32,
 		"title": "genome index",
 		"text": "The index against which the dataset(s) were quantified. This can be used by modules to get paths to GTF, FastA and FastA index files, for example."},
-	"genome" : {
-		"target": 33,
-		"title": "genome",
-		"text": "The key that was used in <code>genomes</code> to identify a set of genome parameters. Multiple genomes can be used in the same project, but are likely best separated into different analyses."},
 
+	"dataset" : {
+		"target": 35,
+		"title": "a dataset",
+		"text": "The first (of four) datasets. Each dataset is specified in a separate stanza of <code>_datasets</code>."},
 	"description" : {
 		"target": 36,
 		"title": "description",
@@ -73,9 +61,9 @@
 	"limsid" : {
 		"target": 37,
 		"title": "LIMS ID",
-		"text": "The name(s) of libraries used to describe the dataset. In snRNA+ATAC for example, this would be an array of two libraries: one for the RNA-seq and another for the ATAC-seq."},
+		"text": "The name(s) of libraries used to describe the dataset. In snRNA+ATAC for example, this would be a collection of two libraries: one for the RNA-seq and another for the ATAC-seq."},
 	"dataset_tag" : {
 		"target": 38,
 		"title": "dataset tag",
-		"text": "A short tag to describe a dataset that can be appended to cell barcodes to quickly discriminate originating dataset and uniquely identify cells in integrated objects."}
+		"text": "A short tag to describe a dataset that can be appended to cell barcodes to quickly discriminate originating dataset and uniquely identify cells in (Seurat) integrated objects."}
 }

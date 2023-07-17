@@ -74,59 +74,6 @@
 	</table>
 {{ end }}
 
-<!-- show parameters table -->
-
-{{ if $parameters := .Params.parameters_disabled }}
-	<h2>{{ partial "shortcodes/icon.html" (dict "context" . "icon" "cubes") }} Workflow parameters</h2>
-	<table class="parameters-table">
-		<tr>
-			<th>Channel key</th>
-			<th>Description</th>
-			<th>Type</th>
-			<th>Provider</th>
-		</tr>
-		{{ range $info := sort $parameters "key" }}
-			<tr>
-				<td><code>{{ index $info "key" }}</code></td>
-				<td>{{ index $info "description" | markdownify }}</td>
-				<td><code>{{ index $info "type" }}</code></td>
-				<td>
-					{{ $args := dict "user"    (dict "colour" "orange" "icon" "user")
-					                 "default" (dict "colour" "green" "icon" "dog")
-					                 "process" (dict "colour" "blue" "icon" "cogs")}}
-
-					{{ if $info.providers }}
-						{{ range $provider := slice "user" "default" "process" }}
-							{{ if $provider_value := index $info.providers $provider }}
-								{{ $colour := index (index $args $provider) "colour" }}
-								{{ $icon := index (index $args $provider) "icon" }}
-
-								{{ $hover := $provider }}
-								{{ if eq $provider "user" }}
-									{{ $hover = printf "{scamp} parameter: %s" $provider_value }}
-								{{ else if eq $provider "default" }}
-									{{ $hover = printf "default value: %s" $provider_value }}
-								{{ else if eq $provider "process" }}
-									{{ $hover = printf "provided by upstream process: %s" $provider_value }}
-								{{ end }}
-
-								{{ $args := dict
-									"context" $page_context
-									"title" " "
-									"style" $colour
-									"content" (partial "shortcodes/icon.html" (dict "context" $page_context "icon" $icon))
-									"hover" $hover }}
-
-								{{ partial "shortcodes/badge.html" $args }}
-							{{ end }}
-						{{ end }}
-					{{ end }}
-				</td>
-			</tr>
-		{{ end }}
-	</table>
-{{ end }}
-
 <!-- show outputs table -->
 
 {{ if $output := .Params.output_disabled }}

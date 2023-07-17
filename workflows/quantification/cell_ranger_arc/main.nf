@@ -31,7 +31,7 @@ workflow cell_ranger_arc {
 
 		// branch parameters into two channels: {missing,provided} according to the presence of the 'index path' key
 		parameters
-			.map{it.get('genome parameters').subMap(['key', 'organism', 'assembly', 'non-nuclear contigs', 'motifs', 'fasta files', 'gtf files']) + it.subMap('index path')}
+			.map{it.get('genome parameters').subMap(['id', 'organism', 'non-nuclear contigs', 'motifs file', 'fasta file', 'gtf file']) + it.subMap('index path')}
 			.unique()
 			.branch{
 				def index_provided = it.containsKey('index path')
@@ -43,16 +43,16 @@ workflow cell_ranger_arc {
 		genome_indexes.provided.dump(tag: 'quantification:cell_ranger_arc:genome_indexes.provided', pretty: true)
 
 		// make channels of parameters for genomes that need indexes to be created
-		tags                = genome_indexes.missing.map{it.get('key')}
+		tags                = genome_indexes.missing.map{it.get('id')}
 		organisms           = genome_indexes.missing.map{it.get('organism')}
-		assemblies          = genome_indexes.missing.map{it.get('assembly')}
+		assemblies          = genome_indexes.missing.map{it.get('id')}
 		non_nuclear_contigs = genome_indexes.missing.map{it.get('non-nuclear contigs')}
-		motifs              = genome_indexes.missing.map{it.get('motifs')}
-		paths_to_fastas     = genome_indexes.missing.map{it.get('fasta files')}
-		paths_to_gtfs       = genome_indexes.missing.map{it.get('gtf files')}
+		motifs_files        = genome_indexes.missing.map{it.get('motifs file')}
+		fasta_files         = genome_indexes.missing.map{it.get('fasta file')}
+		gtf_files           = genome_indexes.missing.map{it.get('gtf file')}
 
 		// create cell ranger arc indexes
-		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs, paths_to_fastas, paths_to_gtfs)
+		mkref(genome_indexes.missing, tags, organisms, assemblies, non_nuclear_contigs, motifs_files, fasta_files, gtf_files)
 
 		// make a channel of newly created genome indexes, each defined in a map
 		merge_process_emissions(mkref, ['opt', 'path'])
@@ -94,14 +94,13 @@ workflow cell_ranger_arc {
 		// make a channel containing all information for the quantification process
 		parameters
 			.combine(index_paths)
-			.filter{it.first().get('genome') == it.last().get('key')}
 			.map{it.first() + it.last().subMap('index path')}
-			.map{it.subMap(['unique id', 'dataset id', 'description', 'limsid', 'index path'])}
+			.map{it.subMap(['dataset id', 'description', 'limsid', 'index path'])}
 			.dump(tag: 'quantification:cell_ranger_arc:datasets_to_quantify', pretty: true)
 			.set{datasets_to_quantify}
 
 		// make channels of parameters for samples that need to be quantified
-		tags              = datasets_to_quantify.map{it.get('unique id')}
+		tags              = datasets_to_quantify.map{it.get('dataset id')}
 		ids               = datasets_to_quantify.map{it.get('dataset id')}
 		descriptions      = datasets_to_quantify.map{it.get('description')}
 		limsids           = datasets_to_quantify.map{it.get('limsid')}
@@ -124,11 +123,11 @@ workflow cell_ranger_arc {
 
 		parameters
 			.combine(quantified_datasets)
-			.filter{check_for_matching_key_values(it, ['unique id'])}
+			.filter{check_for_matching_key_values(it, ['dataset id'])}
 			.map{it.first() + it.last().subMap(['index path', 'libraries_csv', 'quantification path'])}
 			.map{it + ['quantification method': 'cell_ranger_arc']}
-			.dump(tag: 'quantification:cell_ranger_arc:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'quantification:cell_ranger_arc:result', pretty: true)
+			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for cell ranger arc stage
@@ -151,6 +150,6 @@ workflow cell_ranger_arc {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		result = final_results
+		result = result
 		report = channel.of('report.document')
 }

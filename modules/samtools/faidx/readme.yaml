@@ -1,0 +1,41 @@
+name: faidx
+
+description: |
+  Create a FastA index from a FastA file, providing a `.fai` file.
+
+tags:
+  - genomics
+  - index
+
+tools:
+  samtools:
+    description: A suite of programs for interacting with high-throughput sequencing data.
+    homepage: http://www.htslib.org
+    documentation: http://www.htslib.org/doc/#manual-pages
+    source: http://www.github.com/samtools
+    doi: doi.org/10.1093/gigascience/giab008
+    licence: MIT/Expat
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: fasta
+    type: file
+    description: A FastA file to index.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: versions
+    type: file
+    description: YAML-formatted file of software versions used by the task.
+    pattern: versions.yaml
+  - name: '<fasta>.fai'
+    type: file
+    description: FastA index file.
+    pattern: '*.fai'
+
+authors:
+  - "@ChristopherBarrington"

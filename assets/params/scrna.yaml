@@ -5,18 +5,22 @@ _project:
     scientist: scientist.b
     lims id: SC23002
     babs id: sn002
-    genomes:
-        mm10:
-            organism: mus musculus
-            assembly: mm10
-            ensembl release: 98
-            non-nuclear contigs:
-                - chrM
-            mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
-            cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
+
+_genome:
+    name: mm10:
+    organism: mus musculus
+    assembly: mm10
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
+    # fasta path: inputs/fastas
+    # gtf path: inputs/gtfs
+    fasta file: inputs/fasta.fa
+    gtf file: inputs/gtf.gtf
 
 _defaults:
-    genome: mm10
     fastq paths:
         - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
         - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
@@ -31,15 +35,13 @@ _defaults:
             - COO4671A4
             - COO4671A5
             - COO4671A6
+    stages:
+        - quantification/cell ranger
+        - seurat/prepare/cell ranger
+    quantification method: cell ranger
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
-cell ranger and seurat:
-    _defaults:
-        stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
-        quantification method: cell ranger
-        index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
-
+_datasets:
     stella 120h rep1:
         description: PGCLC sorted by STELLA at 120 hours
         limsid: COO4671A1

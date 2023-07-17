@@ -26,8 +26,8 @@ workflow seurat {
 		parameters
 			.branch{
 				def seurat_provided = it.containsKey('seurat file')
-				provided: seurat_provided == true
-				required: seurat_provided == false}
+				provided: seurat_provided
+				required: !seurat_provided}
 			.set{objects}
 
 		objects.required.dump(tag: 'seurat:objects.required', pretty: true)

@@ -5,18 +5,22 @@ _project:
     scientist: scientist.a
     lims id: SC23001
     babs id: sn001
-    genomes:
-        mm10_mcherry:
-            organism: mus musculus
-            assembly: mm10
-            ensembl release: 98
-            non-nuclear contigs:
-                - chrM
-            mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
-            cell cycle genes: inputs/cell_cycle_genes.yaml
+
+_genome:
+    name: mm10 + mCherry
+    organism: mus musculus
+    assembly: mm10_mcherry
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    cell cycle genes: inputs/cell_cycle_genes.yaml
+    fasta path: inputs/fastas
+    gtf path: inputs/gtfs
+    motifs file: inputs/motifs
+    # fasta file: inputs/fasta
 
 _defaults:
-    genome: mm10_mcherry
     fastq paths:
         - inputs/data_sa154/220406_A01366_0169_AHC3HVDMXY/fastq
         - inputs/data_sa154/220407_A01366_0171_AH3W3LDRX2/fastq
@@ -75,16 +79,14 @@ _defaults:
             - AHM4688A24
             - AHM4688A26
             - AHM4688A28
+    stages:
+        - quantification/cell_ranger_arc
+        - seurat/prepare/cell_ranger_arc
+    index path: inputs/cellranger_arc_ref
+    feature identifiers: name
+    quantification method: cell ranger arc
 
-seurat:
-    _defaults:
-        stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
-        index path: inputs/cellranger_arc_ref
-        feature identifiers: name
-        quantification method: cell ranger arc
-
+_datasets:
     8 weeks sample1:
         description: 8 week old, replicate 1
         limsid:

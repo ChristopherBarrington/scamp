@@ -9,103 +9,25 @@ tags:
   - gene expression
 
 steps:
-  - name: Make GRanges object
-    description: A GRanges object is created for each genome in the project using the GTF file in the `index path`. This will be saved into the Seurat object's `misc` slot later in the workflow. 
-    anchor: 43
-    modules:
-      - R/GenomicRanges/convert_gtf_to_granges
-
-  - name: Connect to biomaRt
-    description: Create a biomaRt connection for each genome, matching to the Ensembl release. This object will be added to the Seurat object's `misc` slot later in the workflow. **This functionality should be in separate "genome_preparation" workflow.**
-    anchor: 72
-    modules:
-      - R/biomaRt/get_mart
-
   - name: Read Cell Ranger output into assays
     description: "Read the Cell Ranger `filtered_feature_bc_matrix` and save the result, ready to create assay(s). Two RNA assays are created for each dataset: one using features indexed by accession and another by feature name."
-    anchor: 98
+    anchor: 38
     modules:
       - R/Seurat/write_10x_counts_matrices
       - R/Seurat/make_assay
 
   - name: Create Seurat object
     description: Collect the miscellaneous data and assays and create a Seurat object, saved as an RDS file.
-    anchor: 159
+    anchor: 99
     modules:
       - R/Seurat/make_object
 
 output:
-  - name: result
+  - name: final_results
     type: channel
     description: A channel of maps that are the same as the input parameters sets but now include `index path` _and_ `quantification path` parameters.
 
-parameters:
-  - key: genome
-    description: The name of the genome used for the dataset.
-    type: string
-    providers:
-      user: genome
-  - key: gtf
-    description: Path to GTF file used to create the index.
-    type: file
-    providers:
-      default: from Cell Ranger index
-  - key: fai
-    description: Genome FastA index.
-    type: file
-    providers:
-      default: from Cell Ranger index.
-  - key: index path
-    description: Path to the index that against which the dataset was quantified, which provides the genes GTF file and genome FastA index. If not provided in the parameters, it should have been created by the `quantification/cell_ranger` workflow.
-    type: path
-    providers:
-      user: index path
-      process: quantification/cell_ranger/mkref
-  - key: organism
-    description: Scientific name of the species, specified in the `_project/genomes` stanza. For example, "mus musculus".
-    type: string
-    providers:
-      user: organism
-  - key: ensembl release
-    description: The Ensembl release number that is most relevant (ideally matching) the provided index.
-    type: numeric
-    providers:
-      user: ensembl release
-  - key: unique id
-    description: An identifier for the analysis and dataset that is used as the task's tag.
-    type: string
-    providers:
-      user: unique id
-      default: stage name and dataset name
-  - key: quantification path
-    description: Path to the Cell Ranger `outs` directory under which `filtered_feature_bc_matrix` can be found. If not provided in the parameters, this sould be provided by the `quantification/cell_ranger` workflow.
-    type: path
-    providers:
-      user: quantification path
-      process: quantification/cell_ranger/count
-  - key: feature identifiers
-    description: Whether to use `accession` or `name` as the feature index. The non-selected identifier is saved into an `RNA_alt` assay in the object.
-    type: string
-    providers:
-      user: feature identifiers
-  - key: dataset name
-    description: A human-readable name for the dataset that will be used as the Seurat `Project`. If not provided in the parameters, the dataset key will be used.
-    type: string
-    providers:
-      user: dataset name
-      default: dataset key in parameters file
-  - key: dataset id
-    description: A filesystem-safe dataset name. {scamp} will try to convert the dataset name if not provided.
-    type: string
-    providers:
-      user: dataset name
-      default: parsed dataset name
-
 channel tags:
-  - ':gtf_files_to_convert_to_granges': A channel of paths to GTF files from unique indexes in the workflow's parameters.
-  - ':granges_files': The created GTF GRanges object for each index.
-  - ':biomart_connections_to_make': Parameters used to make biomaRt connections.
-  - ':mart_files': Paths to the created biomaRt connection objects.
   - ':barcoded_matrices_to_read': Parameters to read filtered expression matrices in both accession or name modes using.
   - ':barcoded_matrices': Paths to the created matrix objects that will be used to write assays.
   - ':rna_assays_branched.accession': Paths to assays created using accessions.
@@ -113,7 +35,7 @@ channel tags:
   - ':rna_assays': Merge of accession- and name-indexed assays.
   - ':objects_to_create': Parameters used to create Seurat objects.
   - ':objects': Paths to created Seurat objects.
-  - ':final_results': Input parameters with `seurat path` key added.
+  - ':final_result': Input parameters with `seurat path` key added.
 
 authors:
   - "@ChristopherBarrington"

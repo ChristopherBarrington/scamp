@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! bash
 
 touch output.file
 touch versions.yaml task.yaml

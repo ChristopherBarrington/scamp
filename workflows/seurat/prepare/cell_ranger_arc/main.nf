@@ -8,8 +8,6 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { convert_gtf_to_granges } from '../../../../modules/R/GenomicRanges/convert_gtf_to_granges'
-
 include { make_assay as make_rna_assay } from '../../../../modules/R/Seurat/make_assay'
 include { make_object }                  from '../../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices }    from '../../../../modules/R/Seurat/write_10x_counts_matrices'
@@ -39,46 +37,17 @@ workflow cell_ranger_arc {
 
 	main:
 		// -------------------------------------------------------------------------------------------------
-		// make GRanges objects for gene annotations of the genomes
-		// -------------------------------------------------------------------------------------------------
-
-		// create the channels for the process to make GRanges objects using Cell Ranger ARC indexes
-		parameters
-			.map{it.subMap(['genome', 'index path'])}
-			.map{it.values().join('###')}
-			.unique()
-			.map{make_map(it.split('###'), ['genome', 'index path'])}
-			.map{it + [gtf: Paths.get(it.get('index path').toString(), 'genes', 'genes.gtf.gz')]}
-			.map{it + [fai: Paths.get(it.get('index path').toString(), 'fasta', 'genome.fa.fai')]}
-			.dump(tag: 'seurat:prepare:cell_ranger:gtf_files_to_convert_to_granges', pretty: true)
-			.set{gtf_files_to_convert_to_granges}
-
-		tags      = gtf_files_to_convert_to_granges.map{it.get('genome')}
-		genomes   = gtf_files_to_convert_to_granges.map{it.get('genome')}
-		gtf_files = gtf_files_to_convert_to_granges.map{it.get('gtf')}
-		fai_files = gtf_files_to_convert_to_granges.map{it.get('fai')}
-
-		// make the granges rds files from gtf files
-		convert_gtf_to_granges(gtf_files_to_convert_to_granges, tags, genomes, gtf_files, fai_files)
-
-		// make a channel of newly created GRanges rds files
-		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
-			.map{merge_metadata_and_process_output(it)}
-			.dump(tag: 'seurat:prepare:cell_ranger_arc:granges_files', pretty: true)
-			.set{granges_files}
-
-		// -------------------------------------------------------------------------------------------------
 		// read the 10X cell ranger matrices into an object
 		// -------------------------------------------------------------------------------------------------
 
 		// get the unique set of quantification matrices and feature identifiers' columns
 		parameters
-			.map{[it.subMap('unique id', 'index path', 'quantification path'), ['accession', 'name']]}
+			.map{[it.subMap('dataset id', 'quantification path'), ['accession', 'name']]}
 			.transpose()
 			.map{it.first() + [identifier: it.last(), 'matrix state': 'filtered']}
 			.unique()
 			.map{it + ['barcoded matrix path': Paths.get(it.get('quantification path').toString(), 'filtered_feature_bc_matrix')]}
-			.map{it + ['tag': format_unique_key([it.get('unique id'), it.get('matrix state'), it.get('identifier')], sep=' + ')]}
+			.map{it + ['tag': format_unique_key([it.get('dataset id'), it.get('matrix state'), it.get('identifier')], sep=' + ')]}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:barcoded_matrices_to_read', pretty: true)
 			.set{barcoded_matrices_to_read}
 
@@ -133,9 +102,9 @@ workflow cell_ranger_arc {
 		// create the channels for the process to make a chromatin assay
 		barcoded_matrices
 			.filter{it.get('identifier') == 'accession'}
-			.combine(granges_files.map{it.subMap(['index path','granges'])})
-			.filter{check_for_matching_key_values(it, 'index path')}
-			.map{concatenate_maps_list(it)}
+			.combine(parameters)
+			.filter{check_for_matching_key_values(it, 'dataset id')}
+			.map{it.first() + it.last().get('genome parameters').subMap('granges')} 
 			.map{it.subMap(['tag', 'granges', 'counts_matrices', 'quantification path'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:chromatin_assays_to_create', pretty: true)
 			.set{chromatin_assays_to_create}
@@ -153,7 +122,7 @@ workflow cell_ranger_arc {
 		merge_process_emissions(make_chromatin_assay, ['opt', 'assay'])
 			.map{merge_metadata_and_process_output(it)}
 			.map{rename_map_keys(it, 'assay', 'chromatin_assay')}
-			.map{it.subMap(['quantification path', 'chromatin_assay'])}
+			.map{it.subMap(['quantification path', 'chromatin_assay', 'granges'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:chromatin_assays', pretty: true)
 			.set{chromatin_assays}
 
@@ -165,22 +134,19 @@ workflow cell_ranger_arc {
 		parameters
 			.combine(rna_assays)
 			.combine(chromatin_assays)
-			.combine(granges_files.map{it.subMap(['genome', 'index path', 'granges'])})
-			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'}.map{it.subMap(['index path', 'quantification path', 'features'])})
-			.filter{check_for_matching_key_values(it, 'genome')}
-			.filter{check_for_matching_key_values(it, 'index path')}
+			.combine(barcoded_matrices.filter{it.get('identifier') == 'accession'}.map{it.subMap(['quantification path', 'features'])})
 			.filter{check_for_matching_key_values(it, 'quantification path')}
 			.map{concatenate_maps_list(it)}
 			.map{it + [ordered_assays: it.subMap('rna_assay_by_accession', 'rna_assay_by_name').values().toList()]}
 			.map{if(it.get('feature identifiers') == 'name') {it.ordered_assays = it.get('ordered_assays').reverse()} ; it}
 			.map{it + [ordered_assays: it.get('ordered_assays') + [it.get('chromatin_assay')]]}
 			.map{it + ['remove barcode suffixes': 'TRUE']} // should be a user parameter
-			.map{it.subMap(['unique id', 'ordered_assays', 'remove barcode suffixes', 'granges', 'features', 'dataset name', 'dataset id'])}
+			.map{it.subMap(['dataset id', 'ordered_assays', 'remove barcode suffixes', 'granges', 'features', 'dataset name'])}
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:objects_to_create', pretty: true)
 			.set{objects_to_create}
 
 		// create the channels for the process to make a seurat object
-		tags                    = objects_to_create.map{it.get('unique id')}
+		tags                    = objects_to_create.map{it.get('dataset id')}
 		remove_barcode_suffixes = objects_to_create.map{it.get('remove barcode suffixes')}
 		assays                  = objects_to_create.map{it.get('ordered_assays')}
 		misc_files              = objects_to_create.map{it.subMap(['granges', 'features']).values()}
@@ -203,16 +169,16 @@ workflow cell_ranger_arc {
 
 		parameters
 			.combine(objects)
-			.filter{check_for_matching_key_values(it, ['unique id'])}
+			.filter{check_for_matching_key_values(it, ['dataset id'])}
 			.map{it.first() + ['seurat path': it.last().subMap(['seurat'])]}
-			.dump(tag: 'seurat:prepare:cell_ranger_arc:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'seurat:prepare:cell_ranger_arc:result', pretty: true)
+			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for cell ranger arc stage
 		// -------------------------------------------------------------------------------------------------
 
-		all_processes = [convert_gtf_to_granges, write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
+		all_processes = [write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
 
 		// collate the software version yaml files into one
 		concat_workflow_emissions(all_processes, 'versions')
@@ -235,6 +201,6 @@ workflow cell_ranger_arc {
 		// TODO: add process to render a chapter of a report
 
 	emit:
-		result = final_results
+		result = result
 		report = channel.of('report.document')
 }
