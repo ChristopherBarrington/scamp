@@ -38,16 +38,17 @@ def validate_scamp_parameters(parameters = parse_scamp_parameters(), show_all = 
 			continue
 		}
 
+		// for each stage in this dataset's analysis, load the documentation and pluck out the expected parameters stanza and make it look like xxxx below
 		def stages = parameters
 			.get(dataset).get('_dataset').get('stages')
-			.collect{[_genome: ['assembly'], _dataset: ['index path', 'dataset name', 'dataset id']]}
-			.inject([:]){a,b -> [_genome: a.get('_genome',[]) + b.get('_genome', []),
-	                     _dataset: a.get('_dataset',[]) + b.get('_dataset',[])]}
-			.each{k,v -> v.unique()}
+			*.replaceAll(':', '/')
+			// .collect{[_genome: ['assembly'], _dataset: ['index path', 'dataset name', 'dataset id']]} //////// this should come from the doc file
+			// .inject([:]){a,b -> [_genome: a.get('_genome',[]) + b.get('_genome', []),
+	                //      _dataset: a.get('_dataset',[]) + b.get('_dataset',[])]}
+			// .each{k,v -> v.unique()}
 
 
-
-
+			print_as_json(stages)
 
 // get parameters required by each stage
 def xxxx = [[_genome: ['assembly'],
