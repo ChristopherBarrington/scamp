@@ -1,8 +1,9 @@
-// get a complete set of parameters for every parameter set, filling in genomes, shared and default parameters
+// read the parameters file and add already-defined shared parameters
 
 include { convert_map_keys_to_files }  from '../convert_map_keys_to_files'
 include { make_string_directory_safe } from '../make_string_directory_safe'
 include { pluck }                      from '../pluck'
+include { read_yaml_file }             from '../read_yaml_file'
 include { remove_keys_from_map }       from '../remove_keys_from_map'
 
 def parse_scamp_parameters(stage=null) {
@@ -26,11 +27,11 @@ def parse_scamp_parameters(stage=null) {
 		.collect{default_dataset_params + it}
 
 		// add default values where parameters are omitted
-		.collect{it + ['dataset name': it.get('dataset name', it.get('dataset key'))]}                          // dataset names
-		.collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id', it.get('dataset name')))]} // dataset ids
-		.collect{it + ['dataset tag': it.get('dataset tag', it.get('dataset id'))]}                             // dataset tags
-		.collect{it + ['description': it.get('description', it.get('dataset name'))]}                           // dataset descriptions
-		.collect{it + ['feature identifiers': it.get('feature identifiers', 'name')]}                           // feature identifiers
+		// .collect{it + ['dataset name': it.get('dataset name') ?: it.get('dataset key')]}                          // dataset names
+		// .collect{it + ['dataset id': make_string_directory_safe(it.get('dataset id') ?: it.get('dataset name'))]} // dataset ids
+		// .collect{it + ['dataset tag': it.get('dataset tag') ?: it.get('dataset id')]}                             // dataset tags
+		// .collect{it + ['description': it.get('description') ?: it.get('dataset name')]}                           // dataset descriptions
+		// .collect{it + ['feature identifiers': it.get('feature identifiers') ?: 'name']}                           // feature identifiers
 
 		// try to make parameters safe by regex
 		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}                                          // reformat the stages collection to lower-case, non-space
@@ -38,9 +39,12 @@ def parse_scamp_parameters(stage=null) {
 
 		// convert strings to absolute file paths for expected keys
 		.collect{convert_map_keys_to_files(it, possible_file_keys)}
+}
 
-		// filter for datasets that contain a specific processing stage
-		.findAll{it.get('stages', []).contains(stage) | stage==null}
+// filter for datasets that contain a specific processing stage
+
+def parse_scamp_parameters(String stage) {
+		parse_scamp_parameters().findAll{it.get('stages', []).contains(stage)}
 }
 
 // get a hash of genome parameters
@@ -72,13 +76,7 @@ def get_project_parameters() {
 // read and parse the scamp parameters
 
 def get_scamp_params() {
-	try {
-		@Grab('org.apache.groovy:groovy-yaml')
-		def yamlslurper = new groovy.yaml.YamlSlurper()
-		yamlslurper.parse(file(params.get('scamp_file')))
-	} catch(Exception e) {
-		System.exit(0)
-	}
+	read_yaml_file(params.get('scamp_file'))
 }
 
 // define which parameter keys should be files
