@@ -110,7 +110,7 @@ _datasets:
         stages:
             # - quantification/cell ranger
             # - seurat/prepare/cell ranger
-        # quantification path: inputs/cellranger_nm322/COO4671A2/outs
+        quantification path: inputs/cellranger_nm322/COO4671A2/outs
         quantification method: cell ranger
         index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
@@ -121,7 +121,7 @@ _datasets:
         stages:
             # - quantification/cell ranger
             # - seurat/prepare/cell ranger
-        # quantification path: inputs/cellranger_nm322/COO4671A3/outs
+        quantification path: inputs/cellranger_nm322/COO4671A3/outs
         quantification method: cell ranger
         index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
@@ -132,7 +132,7 @@ _datasets:
         stages:
             # - quantification/cell ranger
             # - seurat/prepare/cell ranger
-        # quantification path: inputs/cellranger_nm322/COO4671A4/outs
+        quantification path: inputs/cellranger_nm322/COO4671A4/outs
         quantification method: cell ranger
         index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
@@ -145,7 +145,7 @@ _datasets:
         stages:
             # - quantification/cell_ranger_arc
             # - seurat/prepare/cell_ranger_arc
-        # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
+        quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
 
@@ -158,7 +158,7 @@ _datasets:
         stages:
             # - quantification/cell_ranger_arc
             # - seurat/prepare/cell_ranger_arc
-        # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
+        quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
 
