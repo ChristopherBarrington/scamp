@@ -30,14 +30,14 @@ workflow {
 
 		channel
 			.fromList(validate_scamp_parameters())
-			.dump(tag: 'scamp:parsed_scamp_parameters', pretty: true)
-			.set{parsed_scamp_parameters}
+			.dump(tag: 'scamp:validated_scamp_parameters', pretty: true)
+			.set{validated_scamp_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// run genome workflow, independent of dataset parameters
 		// -------------------------------------------------------------------------------------------------
 
-		genome_preparation(parsed_scamp_parameters).result
+		genome_preparation(validated_scamp_parameters).result
 			.dump(tag: 'scamp:complete_analysis_parameters', pretty: true)
 			.set{complete_analysis_parameters}
 
