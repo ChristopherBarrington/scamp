@@ -6,6 +6,8 @@ def read_yaml_file(filename) {
 		def yamlslurper = new groovy.yaml.YamlSlurper()
 		yamlslurper.parse(file(filename))
 	} catch(Exception e) {
+		println('!!! error in read_yaml_file for: ' + filename + ' !!!')
+		println(e)
 		System.exit(0)
 	}
 }
