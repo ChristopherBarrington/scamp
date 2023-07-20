@@ -46,7 +46,7 @@ def validate_scamp_parameters() {
 			.get(dataset).get('_dataset').get('stages')
 		def required_parameters = dataset_stages
 			*.replaceAll(':', '/')
-			.collect{read_yaml_file(Paths.get('workflows', it, 'readme.yaml')).get('parameters')}
+			.collect{read_yaml_file(Paths.get(workflow.projectDir.toString(), 'workflows', it, 'readme.yaml')).get('parameters')}
 			.inject([_genome: [], _dataset: ['dataset name', 'dataset id']]) {
 				a,b -> [_genome: a.get('_genome',[]) + b.get('_genome', []),
 				        _dataset: a.get('_dataset',[]) + b.get('_dataset',[])]}
