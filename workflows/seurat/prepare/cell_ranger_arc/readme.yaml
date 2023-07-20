@@ -43,6 +43,7 @@ parameters:
   _dataset:
     - dataset id
     - dataset name
+    - quantification method
     - quantification path
     - feature identifiers
 
