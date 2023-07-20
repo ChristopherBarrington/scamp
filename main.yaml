@@ -159,3 +159,13 @@
         YAML file (default: `scamp_file.yaml`) that contains the configuration parameters for the analyses.
       type: file
       provider: default
+
+    - name: show_parameter_validation
+      description: Show a summary of the parameters that were checked and validated for each dataset. The default is to not show the summary (`--show_parameter_validation false`).
+      type: boolean
+      provider: default
+
+    - name: only_validate_parameters
+      description: Do not start the piipeline but check and validate that the parameters in `--scamp_file` are probably OK to use. The checks are for types against the expected and whether sufficent parameters were provided for each of a dataset's `stages`. Defaults to `false`.
+      type: boolean
+      provider: default
