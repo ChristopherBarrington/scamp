@@ -41,5 +41,23 @@ channel tags:
   - ':quantified_datasets': Parameter sets of datasets that were quantified.
   - ':final_result': Input parameters with the `index path` (if applicable), `libraries_csv`, `quantification method` and `quantification path` keys added.
 
+parameters:
+  _genome:
+    - id
+    # - organism
+    # - non-nuclear contigs
+    # - motifs file
+    # - fasta file
+    # - gtf file
+
+  _dataset:
+    - fastq paths
+    - feature types
+    - dataset id
+    - description
+    - limsid
+    - index path
+
+
 authors:
   - "@ChristopherBarrington"

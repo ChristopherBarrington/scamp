@@ -11,8 +11,9 @@ include { print_as_json } from './utilities/print_as_json'
 
 include { concat_workflow_emissions } from './utilities/concat_workflow_emissions'
 include { make_map }                  from './utilities/make_map'
-include { parse_scamp_parameters }    from './utilities/parse_scamp_parameters'
+// include { parse_scamp_parameters }    from './utilities/parse_scamp_parameters'
 include { print_pipeline_title }      from './utilities/print_pipeline_title'
+include { validate_scamp_parameters } from './utilities/validate_scamp_parameters'
 
 print_pipeline_title()
 
@@ -28,17 +29,18 @@ workflow {
 		// -------------------------------------------------------------------------------------------------
 
 		channel
-			.fromList(parse_scamp_parameters())
-			.dump(tag: 'scamp:parsed_scamp_parameters', pretty: true)
-			.set{parsed_scamp_parameters}
+			.fromList(validate_scamp_parameters())
+			.dump(tag: 'scamp:validated_scamp_parameters', pretty: true)
+			.set{validated_scamp_parameters}
 
 		// -------------------------------------------------------------------------------------------------
 		// run genome workflow, independent of dataset parameters
 		// -------------------------------------------------------------------------------------------------
 
-		genome_preparation(parsed_scamp_parameters).result
+		genome_preparation(validated_scamp_parameters).result
 			.dump(tag: 'scamp:complete_analysis_parameters', pretty: true)
 			.set{complete_analysis_parameters}
+
 
 		// -------------------------------------------------------------------------------------------------
 		// run quantification workflows

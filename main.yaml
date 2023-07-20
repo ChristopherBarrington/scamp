@@ -1,4 +1,5 @@
 - title: Analysis parameters
+  name: _dataset
   description: Any {scamp} parameter that can be provided in the project `_defaults` stanza or under a specific dataset's stanza.
   icon: edit
   parameters:
@@ -7,8 +8,8 @@
       type: paths
 
     - name: feature types
-      description: A dictionary of assay types in the project and the relevant LIMS IDs.
-      type: dictionary
+      description: A map of assay types in the project and the relevant LIMS IDs.
+      type: map of strings
 
     - name: feature identifiers
       description: Whether to use `accession` or `name` as the feature index. In the Seurat workflows, the non-selected identifier may be saved into an `RNA_alt` assay in the object. The default is to use feature names.
@@ -61,6 +62,7 @@
       provider: process
 
 - title: Project parameters
+  name: _project
   description: A reserved stanza that defines the project, rather than specifc data.
   icon: rocket
   parameters:
@@ -88,6 +90,7 @@
       provider: default
 
 - title: Genome parameters
+  name: _genome
   description: A dictionary of parameters that define a genome. This can be used to define the parameters for a custom genome.
   icon: vial
   parameters:
@@ -128,6 +131,7 @@
 
     - name: gtf file
       description: GTF file of features in the genome. This parameter will be used in preference to the `gtf path`.
+      type: file
       provider: process
 
     - name: motifs file
@@ -135,6 +139,7 @@
       type: file
 
 - title: Nextflow parameters
+  name: _nextflow
   description: Parameters used by the pipeline but are not directly part of {scamp} and specified with the `--` command line option. Default values are defined in `params.config`.
   icon: globe
   parameters:
@@ -154,4 +159,14 @@
       description: |
         YAML file (default: `scamp_file.yaml`) that contains the configuration parameters for the analyses.
       type: file
+      provider: default
+
+    - name: show_parameter_validation
+      description: Show a summary of the parameters that were checked and validated for each dataset. The default is to not show the summary (`--show_parameter_validation false`). If any parameter fails validation, the summary of failed parameters is printed and scamp will stop.
+      type: boolean
+      provider: default
+
+    - name: only_validate_parameters
+      description: Do not start the piipeline but check and validate that the parameters in `--scamp_file` are probably OK to use. The checks are for types against the expected and whether sufficent parameters were provided for each of a dataset's `stages`. Defaults to `false`.
+      type: boolean
       provider: default
