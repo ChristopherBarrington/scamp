@@ -18,7 +18,7 @@ def validate_scamp_parameters() {
 		.inject([:]){a,b -> a+b}
 
 	// read the parameter schema from file
-	def parameter_specifications = read_yaml_file('main.yaml')
+	def parameter_specifications = read_yaml_file(Paths.get(workflow.projectDir.toString(), 'main.yaml'))
 		.collect{it.findAll{it.key != 'parameters'} + ['parameters': it.get('parameters').collect{[(it.get('name')): it.findAll{it.key != 'name'}]}]}
 		.collect{[(it.get('name')): concatenate_maps_list(it.get('parameters'))]}
 		.inject([:]) {x,y -> x+y}
