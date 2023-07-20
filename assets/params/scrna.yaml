@@ -7,7 +7,7 @@ _project:
     babs id: sn002
 
 _genome:
-    name: mm10:
+    name: mm10
     organism: mus musculus
     assembly: mm10
     ensembl release: 98
