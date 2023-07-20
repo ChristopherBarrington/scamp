@@ -162,7 +162,7 @@
       provider: default
 
     - name: show_parameter_validation
-      description: Show a summary of the parameters that were checked and validated for each dataset. The default is to not show the summary (`--show_parameter_validation false`).
+      description: Show a summary of the parameters that were checked and validated for each dataset. The default is to not show the summary (`--show_parameter_validation false`). If any parameter fails validation, the summary of failed parameters is printed and scamp will stop.
       type: boolean
       provider: default
 
