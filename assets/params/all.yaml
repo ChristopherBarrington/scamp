@@ -17,7 +17,7 @@ _genome:
     cell cycle genes: inputs/cell_cycle_genes.yaml
     fasta path: inputs/fastas
     gtf path: inputs/gtfs
-    motifs file: inputs/motifs
+    # motifs file: inputs/motifs
     # fasta file: inputs/fasta.fa
 
 _defaults:
