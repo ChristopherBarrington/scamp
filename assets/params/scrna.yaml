@@ -15,9 +15,9 @@ _genome:
         - chrM
     mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
     cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
-    # fasta path: inputs/fastas
+    fasta path: inputs/fastas
     # gtf path: inputs/gtfs
-    fasta file: inputs/fasta.fa
+    # fasta file: inputs/fasta.fa
     gtf file: inputs/gtf.gtf
 
 _defaults:
@@ -39,7 +39,7 @@ _defaults:
         - quantification/cell ranger
         - seurat/prepare/cell ranger
     quantification method: cell ranger
-    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
+    # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
 _datasets:
     stella 120h rep1:
