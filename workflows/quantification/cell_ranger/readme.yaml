@@ -34,5 +34,17 @@ channel tags:
   - ':quantified_datasets': After quantifiaction, the `quantification path` key is added to the parameters.
   - ':final_results': The new parameters from the workflow are merged back into the input parameters, with a `quantification method` key added. The channel is emitted from the workflow as `result`.
 
+parameters:
+  _genome:
+    - assembly
+    - id
+
+  _dataset:
+    - index path
+    - dataset id
+    - description
+    - limsid
+    - fastq paths
+
 authors:
   - "@ChristopherBarrington"

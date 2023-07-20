@@ -56,5 +56,15 @@ channel tags:
   - ':mart_file': Channel of `mart` objects.
   - ':result': Channel containing all of the parameters with these new keys added.
 
+parameters:
+  _genome:
+    - id
+    - assembly
+    - organism
+    - ensembl release
+    - fasta file
+    - fasta index file
+    - gtf file
+
 authors:
   - "@ChristopherBarrington"

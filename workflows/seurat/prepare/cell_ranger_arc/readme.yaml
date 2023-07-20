@@ -39,5 +39,12 @@ channel tags:
   - ':objects': Paths to created Seurat objects.
   - ':final_result': Input parameters with `seurat path` key added.
 
+parameters:
+  _dataset:
+    - dataset id
+    - dataset name
+    - quantification path
+    - feature identifiers
+
 authors:
   - "@ChristopherBarrington"
