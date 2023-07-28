@@ -47,7 +47,7 @@ listEnsemblArchives() |>
 
 organism %>%
 	switch(`mus musculus`='mmusculus',
-	       str_replace(., pattern='^(.).+ (.+)\$', replacement='\\1\\2')) -> species
+	       str_replace(., pattern='^(.).+ (.+)\$', replacement='\\\\1\\\\2')) -> species
 dataset <- str_c(species, 'gene_ensembl', sep='_')
 
 sprintf(fmt='making mart for %s using release-%s', species, release) %>% log_message(level='section')
