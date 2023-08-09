@@ -30,6 +30,10 @@ In this example for a scRNA-seq project, there are four datasets that will be qu
 {{< tab title="snRNA+ATAC-seq" >}}
 {{< shepherd_tour tour="multiome" lang="yaml" >}}
 {{< /tab >}}
+
+{{< tab title="pre-quantified scRNA-seq" >}}
+{{< shepherd_tour tour="quantified-scrna" lang="yaml" >}}
+{{< /tab >}}
 {{< /tabs >}}
 
 `_project` includes information about the project rather than parameters that should be applied to datasets. Most of the information in this stanza can be extracted from a path on Nemo and/or the LIMS.
