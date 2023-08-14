@@ -19,7 +19,6 @@
     - name: stages
       description: A collection of (unordered) workflows to apply in an analysis. These are a curated list of workflows available in {scamp} and should be specified as a path. (Spaces will be converted to underscores). Omitting this parameter will prevent workflows from launching but will not cause {scamp} to fail.
       type: strings
-      provider: default
 
     - name: index path
       description: The path to an index for the analysis. If omitted, it is assumed that an index is to be created and will be provided by a {scamp} process.
@@ -68,7 +67,7 @@
   parameters:
 
     - name: lab
-      description: The `<last name><first initial>` formatted name of the lab. This is used to find data, if possible.
+      description: The `<last name><first initial>` formatted name of the lab.
       type: string
 
     - name: scientist
