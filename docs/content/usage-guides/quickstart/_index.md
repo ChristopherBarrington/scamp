@@ -31,7 +31,7 @@ The following snippet will use the `guess_scamp_file.py` script that is included
 {{< tab title="bash" >}}
 {{< highlight bash >}}
 if [[ -n ${NXF_HOME} ]]; then
-  export NXF_HOME=/nemo/project/home/{$USER}/.nextflow
+  export NXF_HOME=/nemo/project/home/${USER}/.nextflow
 fi
 
 nextflow pull ChristopherBarrington/scamp -revision {{% getenv "SCAMP_TAG" %}}
