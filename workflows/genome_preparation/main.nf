@@ -55,7 +55,7 @@ workflow genome_preparation {
 		fasta_file.to_skip.dump(tag: 'genome_preparation:fasta_file.to_skip', pretty: true)
 
 		// make channels of parameters
-		fasta_paths  = fasta_file.to_make.map{it.get('fasta path')}
+		fasta_paths = fasta_file.to_make.map{it.get('fasta path')}
 		output_file = fasta_file.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
