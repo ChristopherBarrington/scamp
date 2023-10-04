@@ -72,7 +72,7 @@ workflow genome_preparation {
 			.set{genome_parameters}
 
 		// -------------------------------------------------------------------------------------------------
-		// make fai for genomes
+		// make fai for genome
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into multiple channels using key(s)
