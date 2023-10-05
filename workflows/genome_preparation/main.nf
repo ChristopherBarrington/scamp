@@ -70,11 +70,11 @@ workflow genome_preparation {
 			.set{fasta_file}
 
 		// -------------------------------------------------------------------------------------------------
-		// make fai for genome
+		// make fasta index for genome
 		// -------------------------------------------------------------------------------------------------
 
 		// branch parameters into multiple channels using key(s)
-		genome_parameters
+		fasta_file
 			.branch{
 				def has_fasta_file = it.containsKey('fasta file')
 				def has_fasta_index_file = it.containsKey('fasta index file')
@@ -96,10 +96,10 @@ workflow genome_preparation {
 			.map{rename_map_keys(it, 'path', 'fasta index file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(fasta_index_file.to_skip)
-			.merge(genome_parameters)
-			.map{it.last() + it.first()}
+			.merge(fasta_file)
+			.map{concatenate_maps_list(it)}
 			.dump(tag: 'genome_preparation:fasta_index_file', pretty: true)
-			.set{genome_parameters}
+			.set{fasta_index_file}
 
 		// -------------------------------------------------------------------------------------------------
 		// merge genome gtf files, if provided by `gtf path`
