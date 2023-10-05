@@ -84,8 +84,8 @@ workflow cell_ranger {
 				name: identifier == 'name'}
 			.set{rna_assays_branched}
 
-			rna_assays_branched.accession.dump(tag: 'seurat:prepare:cell_ranger:rna_assays_branched.accession', pretty: true)
-			rna_assays_branched.name.dump(tag: 'seurat:prepare:cell_ranger:rna_assays_branched.name', pretty: true)
+		rna_assays_branched.accession.dump(tag: 'seurat:prepare:cell_ranger:rna_assays_branched.accession', pretty: true)
+		rna_assays_branched.name.dump(tag: 'seurat:prepare:cell_ranger:rna_assays_branched.name', pretty: true)
 
 		rna_assays_branched.accession
 			.combine(rna_assays_branched.name)
