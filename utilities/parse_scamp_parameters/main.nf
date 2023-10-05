@@ -86,6 +86,7 @@ def get_possible_file_keys() {
 	 'quantification path',
 	 'fastq paths',
 	 'fasta file', 'fasta path',
+	 'fasta index file',
 	 'gtf file', 'gtf path',
 	 'motifs file',
 	 'mitochondrial features',
