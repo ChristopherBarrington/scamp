@@ -17,13 +17,13 @@ steps:
 output:
   - name:  final_results
     type: channel
-    description: A parameters channel with datasets now including the parameters provided by subworkflows.
+    description: A parameters channel with datasets now including the parameters provided by workflows.
 
 channel tags:
   - 'quantified_by.cell_ranger': Channel of datasets for which a Seurat oject is required and was quantified by Cell Ranger.
   - 'quantified_by.cell_ranger_arc': Cell Ranger ARC-qauntified datasets that do not have a `seurat file`.
   - 'quantified_by.unknown': Datasets that lack both `seurat file` and `quantification method`.
-  - 'final_results': The parameters channels with subworkflow parameters included.
+  - 'final_results': The parameters channels with workflow parameters included.
 
 authors:
   - "@ChristopherBarrington"

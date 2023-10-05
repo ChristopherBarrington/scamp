@@ -25,9 +25,9 @@ workflow quantification {
 		// branch parameters into multiple channels according to the 'quantification method' key
 		parameters
 			.branch{
-				def stages = it.get('stages')
-				cell_ranger: stages.contains('quantification:cell_ranger')
-				cell_ranger_arc: stages.contains('quantification:cell_ranger_arc')
+				def workflows = it.get('workflows')
+				cell_ranger: workflows.contains('quantification:cell_ranger')
+				cell_ranger_arc: workflows.contains('quantification:cell_ranger_arc')
 				unknown: true}
 			.set{quantification}
 
@@ -36,20 +36,20 @@ workflow quantification {
 		quantification.unknown.dump(tag: 'quantification:quantification.unknown', pretty: true)
 
 		// -------------------------------------------------------------------------------------------------
-		// run the subworkflows
+		// run the workflows
 		// -------------------------------------------------------------------------------------------------
 
 		cell_ranger(quantification.cell_ranger)
 		cell_ranger_arc(quantification.cell_ranger_arc)
 
 		// -------------------------------------------------------------------------------------------------
-		// make channels of all outputs from the subworkflows
+		// make channels of all outputs from the workflows
 		// -------------------------------------------------------------------------------------------------
 
-		// make a list of all subworkflows
+		// make a list of all workflows
 		all_quantifications = [cell_ranger, cell_ranger_arc]
 
-		// concatenate output channels from each subworkflow
+		// concatenate output channels from each workflow
 		concat_workflow_emissions(all_quantifications, 'result')
 			.concat(quantification.unknown)
 			.dump(tag: 'quantification:result', pretty: true)

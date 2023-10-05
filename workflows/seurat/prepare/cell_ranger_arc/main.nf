@@ -178,7 +178,7 @@ workflow cell_ranger_arc {
 			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
-		// make summary report for cell ranger arc stage
+		// make summary report for the workflow
 		// -------------------------------------------------------------------------------------------------
 
 		all_processes = [write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
