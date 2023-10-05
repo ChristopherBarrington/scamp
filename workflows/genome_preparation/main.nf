@@ -200,8 +200,17 @@ workflow genome_preparation {
 		// get ready to emit
 		// -------------------------------------------------------------------------------------------------
 
+		genome_parameters
+			.combine(fasta_index_file)
+			.combine(gtf_file)
+			.combine(granges_file)
+			.combine(mart_file)
+			.map{concatenate_maps_list(it)}
+			.dump(tag: 'genome_preparation:complete_genome_parameters', pretty: true)
+			.set{complete_genome_parameters}
+
 		parameters
-			.combine(genome_parameters)
+			.combine(complete_genome_parameters)
 			.map{it.first().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last()]}
 			.dump(tag: 'genome_preparation:result', pretty: true)
 			.set{result}
