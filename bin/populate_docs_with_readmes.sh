@@ -1,5 +1,7 @@
 #! /bin/env bash
 
+# usage: bash bin/populate_docs_with_readmes.sh
+
 cd docs || exit
 rm -r content/{modules,utilities,workflows} content/usage-guides/user-parameters
 
