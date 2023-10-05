@@ -1,2 +1,2 @@
 # scamp
-single cell and more analysis pipeline
+single cell analysis and more pipeline
