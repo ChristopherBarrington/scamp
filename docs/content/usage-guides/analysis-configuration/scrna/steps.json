@@ -41,9 +41,9 @@
 		"target": 28,
 		"title": "identifiers",
 		"text": "Which feature identifier should be used as the default: probably <code>name</code> or <code>accession</code>."},
-	"stages" : {
+	"workflows" : {
 		"target": 29,
-		"title": "analysis stages",
+		"title": "analysis workflows",
 		"text": "A list of workflows that should be applied to a dataset. In this example, these two workflows will be applied to all four datasets in the analysis."},
 	"index" : {
 		"target": 32,
