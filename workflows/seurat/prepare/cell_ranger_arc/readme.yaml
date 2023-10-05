@@ -19,7 +19,7 @@ steps:
 
   - name: Create Seurat object
     description: Collect the miscellaneous data and assays and create a Seurat object, saved as an RDS file.
-    anchor: 130
+    anchor: 133
     modules:
       - R/Seurat/make_object
 
@@ -31,7 +31,8 @@ output:
 channel tags:
   - ':barcoded_matrices_to_read': Parameters to read filtered expression matrices in both accession or name modes using.
   - ':barcoded_matrices': Paths to the created matrix objects that will be used to write assays.
-  - ':rna_assays_branched': Parameters used to create RNA assays using either accessions or names.
+  - ':rna_assays_branched.accession': Paths to assays created using accessions.
+  - ':rna_assays_branched.name': Paths to assays created using names.
   - ':rna_assays': Merge of accession- and name-indexed assays.
   - ':chromatin_assays_to_create': Parameters used to make a Signac chromatin accessibility assay.
   - ':chromatin_assays': Paths to the created chromatin accessibility assays.

@@ -87,6 +87,9 @@ workflow cell_ranger_arc {
 				name: identifier == 'name'})
 			.set{rna_assays_branched}
 
+		rna_assays_branched.accession.dump(tag: 'seurat:prepare:cell_ranger_arc:rna_assays_branched.accession', pretty: true)
+		rna_assays_branched.name.dump(tag: 'seurat:prepare:cell_ranger_arc:rna_assays_branched.name', pretty: true)
+
 		rna_assays_branched.accession
 			.combine(rna_assays_branched.name)
 			.filter{check_for_matching_key_values(it, 'quantification path')}
