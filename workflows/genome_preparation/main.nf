@@ -118,21 +118,19 @@ workflow genome_preparation {
 		gtf_file.to_skip.dump(tag: 'genome_preparation:gtf_file.to_skip', pretty: true)
 
 		// make channels of parameters
-		gtf_paths    = gtf_file.to_make.map{it.get('gtf path')}
+		gtf_path    = gtf_file.to_make.map{it.get('gtf path')}
 		output_file = gtf_file.to_make.map{it.get('id') + '.gtf'}
 
 		// run the process
-		cat_gtfs([:], gtf_paths, output_file)
+		cat_gtfs([:], gtf_path, output_file)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'gtf file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(gtf_file.to_skip)
-			.merge(genome_parameters)
-			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:gtf_file', pretty: true)
-			.set{genome_parameters}
+			.set{gtf_file}
 
 		// -------------------------------------------------------------------------------------------------
 		// make GRanges objects for gene annotations of the genomes
