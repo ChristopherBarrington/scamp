@@ -52,6 +52,7 @@ workflow quantification {
 		// concatenate output channels from each subworkflow
 		concat_workflow_emissions(all_quantifications, 'result')
 			.concat(quantification.unknown)
+			.dump(tag: 'quantification:result', pretty: true)
 			.set{result}
 
 	emit:

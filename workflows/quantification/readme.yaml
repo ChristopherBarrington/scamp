@@ -23,6 +23,7 @@ channel tags:
   - ':quantification.cell_ranger': Datasets that include a `quantification/cell_ranger` stage.
   - ':quantification.cell_ranger_arc': Datasets that include a `quantification/cell_ranger_arc` stage.
   - ':quantification.unknown': Any datasets that contain an as-yet unimplemented quantification method.
+  - ':result': Channel containing all of the parameters with new keys added.
 
 authors:
   - "@ChristopherBarrington"
