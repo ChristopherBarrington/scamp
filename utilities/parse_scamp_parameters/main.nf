@@ -34,17 +34,17 @@ def parse_scamp_parameters() {
 		// .collect{it + ['feature identifiers': it.get('feature identifiers') ?: 'name']}                           // feature identifiers
 
 		// try to make parameters safe by regex
-		.collect{it + [stages: it.get('stages').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}                                          // reformat the stages collection to lower-case, non-space
+		.collect{it + [workflows: it.get('workflows').collect{it.toLowerCase().replaceAll(' ', '_').replaceAll('/', ':')}]}                                          // reformat the workflows collection to lower-case, non-space
 		.collect{it + (it.keySet().contains('quantification method') ? ['quantification method': it.get('quantification method').replaceAll(' ', '_')] : [:])} // if `quantification method` is provided, make it safe
 
 		// convert strings to absolute file paths for expected keys
 		.collect{convert_map_keys_to_files(it, possible_file_keys)}
 }
 
-// filter for datasets that contain a specific processing stage
+// filter for datasets that contain a specific processing workflow
 
-def parse_scamp_parameters(String stage) {
-		parse_scamp_parameters().findAll{it.get('stages', []).contains(stage)}
+def parse_scamp_parameters(String workflow) {
+		parse_scamp_parameters().findAll{it.get('workflows', []).contains(workflow)}
 }
 
 // get a hash of genome parameters
