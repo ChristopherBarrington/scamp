@@ -54,6 +54,7 @@ channel tags:
   - ':granges_file': Parameters with GRanges object file.
   - ':mart_file.{to_make,to_skip}': Genomes that provide an `ensembl release` will have a biomaRt connection created.
   - ':mart_file': Channel of `mart` objects.
+  - ':complete_genome_parameters': Genome parameters with process output keys added.
   - ':result': Channel containing all of the parameters with these new keys added.
 
 parameters:
