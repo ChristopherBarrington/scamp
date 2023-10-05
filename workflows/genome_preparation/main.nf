@@ -182,21 +182,19 @@ workflow genome_preparation {
 		mart_file.to_skip.dump(tag: 'genome_preparation:mart_file.to_skip', pretty: true)
 
 		// make channels of parameters
-		organisms        = mart_file.to_make.map{it.get('organism')}
-		ensembl_releases = mart_file.to_make.map{it.get('ensembl release')}
+		organism        = mart_file.to_make.map{it.get('organism')}
+		ensembl_release = mart_file.to_make.map{it.get('ensembl release')}
 
 		// run the process
-		get_mart([:], organisms, ensembl_releases)
+		get_mart([:], organism, ensembl_release)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(get_mart, ['opt', 'mart'])
 			.map{rename_map_keys(it, 'mart', 'biomart connection')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(mart_file.to_skip)
-			.merge(genome_parameters)
-			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:mart_file', pretty: true)
-			.set{genome_parameters}
+			.set{mart_file}
 
 		// -------------------------------------------------------------------------------------------------
 		// get ready to emit
