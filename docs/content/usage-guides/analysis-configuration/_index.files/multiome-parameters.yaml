@@ -30,7 +30,7 @@ _defaults:
             - AHM4688A5
             - AHM4688A6
     feature identifiers: name
-    stages:
+    workflows:
         - quantification/cell ranger arc
         - seurat/prepare/cell ranger arc
 

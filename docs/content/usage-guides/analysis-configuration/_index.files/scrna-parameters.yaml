@@ -26,7 +26,7 @@ _defaults:
             - COO4671A3
             - COO4671A4
     feature identifiers: name
-    stages:
+    workflows:
         - quantification/cell ranger
         - seurat/prepare/cell ranger
     index path: inputs/10x_indexes/refdata-cellranger-mm10-3.0.0
