@@ -22,27 +22,26 @@ conda activate /nemo/stp/babs/working/barrinc/conda/envs/scamp
 
 {scamp} can be used to generate a best-guess parameters file. The file it creates is dependent on the sample sheet and directory structure on Nemo of the ASF's `data` directory in `babs/inputs`. The file it creates should be checked - especially for cases where multiple libraries contribute to individual samples, such as 10X multiome projects.
 
-(It is currently a bit of a faff though it may move into a container)
+The following snippet will use the `guess_scamp_file.py` script that is included with {scamp} to find the data directory for the project and parse the accompanying design file. When the Conda environment is loaded, `NXF_HOME` is checked and set to a reasonable default if not defined. But really, `NXF_HOME` should be defined in your `.bashrc` alongside the other Nextflow environment variables. If you want to, a path under `working` could be used, for example `/nemo/stp/babs/working/${USER}/nextflow`. The `PATH` is then modified to include the `bin` for {scamp} so that the `guess_scamp_file.py` executable from {scamp} can be found in your shell.
 
-The following snippet will use the `guess_scamp_file.py` script that is included in {scamp} to find the data directory for the project and parse the accompanying design file. First, we need to ensure that the Nextflow environment is configured with `NXF_HOME` set to the path that Nextflow uses to store downloaded pipelines (and other things). The following snippet will check if `NXF_HOME` is defined already and assign it to a reasonable default if it is undefined. But really, `NXF_HOME` should be defined in your `.bashrc` alongside the other Nextflow environment variables. If you want to, a path under `working` could be used, for example `/nemo/stp/babs/working/${USER}/nextflow`.
+Using `nextflow pull`, the most recent version of a pipeline can be downloaded into `NXF_HOME`. In the following chunk we direct a specific version of {scamp} to be downloaded using `-revision`. This is optional, but recommended to ensure you have the most-recent release available.
 
-{scamp} must be pulled and its `bin` added to your `PATH` so that the `guess_scamp_file.py` executable can be found in your shell. In the following chunk, {scamp} is downloaded into `NXF_HOME` and the path to {scamp} executables added to the `PATH`.
-
-{{< tab title="bash" >}}
+{{< tabs title="cache {scamp}" >}}
+{{< tab title="with specific release" >}}
 {{< highlight bash >}}
-if [[ -n ${NXF_HOME} ]]; then
-  export NXF_HOME=/nemo/project/home/${USER}/.nextflow
-fi
-
 nextflow pull ChristopherBarrington/scamp -revision {{% getenv "SCAMP_TAG" %}}
-export PATH=$PATH:$NXF_HOME/assets/ChristopherBarrington/scamp/bin
 {{< /highlight >}}
 {{< /tab >}}
+{{< tab title="most recent commit" >}}
+{{< highlight bash >}}
+nextflow pull ChristopherBarrington/scamp
+{{< /highlight >}}
+{{< /tab >}}
+{{< /tabs >}}
 
 `guess_scamp_file.py` includes a set of default parameters, which will need to be updated as we include new protocols. Example usage is shown below, where we indicate the genome that we want to use for the project, the LIMS ID under which the data was produced and the name of the output YAML file. For command line options, use `guess_scamp_file.py --help`.
 
 {{< tabs title="guess_scamp_file.py usage examples" >}}
-
 {{< tab title="lims id" >}}
 {{< highlight bash >}}
 guess_scamp_file.py \
@@ -77,7 +76,6 @@ guess_scamp_file.py \
 guess_scamp_file.py --help
 {{< /highlight >}}
 {{< /tab >}}
-
 {{< /tabs >}}
 
 {{% notice style="warning" title=" " icon=" " %}}
