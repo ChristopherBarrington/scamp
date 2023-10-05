@@ -3,7 +3,7 @@ title: modules
 weight: 1
 ---
 
-Modules represent specific steps of a pipeline that can be reused in multiple instances. A module should be written to be generic and not specifically tied to a pipeline, workflow or subworkflow (etc). Each module performs a specific task and usually includes only a few different programs.
+Modules represent specific steps of a pipeline that can be reused in multiple instances. A module should be written to be generic and not specifically tied to a pipeline, workflow or (sub)workflow. Each module performs a specific task and usually includes only a few different programs.
 
 <!--more-->
 

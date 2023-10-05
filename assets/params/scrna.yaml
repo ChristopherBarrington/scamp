@@ -35,7 +35,7 @@ _defaults:
             - COO4671A4
             - COO4671A5
             - COO4671A6
-    stages:
+    workflows:
         - quantification/cell ranger
         - seurat/prepare/cell ranger
     quantification method: cell ranger

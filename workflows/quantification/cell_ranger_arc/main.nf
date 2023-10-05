@@ -130,7 +130,7 @@ workflow cell_ranger_arc {
 			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
-		// make summary report for cell ranger arc stage
+		// make summary report for the workflow
 		// -------------------------------------------------------------------------------------------------
 
 		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel

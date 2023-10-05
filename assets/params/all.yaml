@@ -98,7 +98,7 @@ _datasets:
         description: PGCLC sorted by STELLA at 120 hours
         limsid: COO4671A1
         dataset tag: ST120R1
-        # stages:
+        # workflows:
         #     - quantification/cell ranger
         #     - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A1/outs
@@ -109,7 +109,7 @@ _datasets:
         description: PGCLC sorted by PECAM1 at 120 hours
         limsid: COO4671A2
         dataset tag: P120R1
-        stages:
+        workflows:
             # - quantification/cell ranger
             # - seurat/prepare/cell ranger
         quantification path: inputs/cellranger_nm322/COO4671A2/outs
@@ -120,7 +120,7 @@ _datasets:
         description: PGCLC sorted by SSEA1 at 120 hours
         limsid: COO4671A3
         dataset tag: SS120R1
-        stages:
+        workflows:
             # - quantification/cell ranger
             # - seurat/prepare/cell ranger
         quantification path: inputs/cellranger_nm322/COO4671A3/outs
@@ -131,7 +131,7 @@ _datasets:
         description: PGCLC sorted by BLIMP1 and SSEA1 at 120 hours
         limsid: COO4671A4
         dataset tag: BS120R1
-        stages:
+        workflows:
             # - quantification/cell ranger
             # - seurat/prepare/cell ranger
         quantification path: inputs/cellranger_nm322/COO4671A4/outs
@@ -144,7 +144,7 @@ _datasets:
         limsid:
             - AHM4688A1
             - AHM4688A4
-        stages:
+        workflows:
             # - quantification/cell_ranger_arc
             # - seurat/prepare/cell_ranger_arc
         quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
@@ -157,7 +157,7 @@ _datasets:
         limsid:
             - AHM4688A2
             - AHM4688A5
-        stages:
+        workflows:
             # - quantification/cell_ranger_arc
             # - seurat/prepare/cell_ranger_arc
         quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
@@ -170,7 +170,7 @@ _datasets:
         limsid:
             - AHM4688A3
             - AHM4688A6
-        # stages:
+        # workflows:
         #     - quantification/cell_ranger_arc
         #     - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs

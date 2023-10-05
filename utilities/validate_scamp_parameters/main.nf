@@ -32,19 +32,19 @@ def validate_scamp_parameters() {
 		def msg = '[ ------- ] undefined message'
 		def dataset_parameters = project_parameters.get(dataset)
 
-		// for this dataset, get the analysis stages and then get the expected parameters for those stages
-		def stage_validation = validate_parameter_type(dataset_parameters['_dataset']['stages'], parameter_specifications['_dataset']['stages'])
-		if(stage_validation.get('validation').get('outcome') != 'pass') {
-			output_messages[dataset] += [warning_message('stages', stage_validation)]
-			continue // if there are `stages` then move on to the next dataset
+		// for this dataset, get the analysis workflows and then get the expected parameters for those workflows
+		def workflow_validation = validate_parameter_type(dataset_parameters['_dataset']['workflows'], parameter_specifications['_dataset']['workflows'])
+		if(workflow_validation.get('validation').get('outcome') != 'pass') {
+			output_messages[dataset] += [warning_message('workflows', workflow_validation)]
+			continue // if there are `workflows` then move on to the next dataset
 		}
 
-		// for each stage in this dataset's analysis, load the documentation and pluck out the expected parameters stanza
+		// for each workflow in this dataset's analysis, load the documentation and pluck out the expected parameters stanza
 		// merge the _dataset and _genome stanzas into a unique set of required parameters for this dataset
 		// `dataset name` and `dataset id` are used for other defaults, so add them here even if they're not used in the workflow
-		def dataset_stages = project_parameters
-			.get(dataset).get('_dataset').get('stages')
-		def required_parameters = dataset_stages
+		def dataset_workflows = project_parameters
+			.get(dataset).get('_dataset').get('workflows')
+		def required_parameters = dataset_workflows
 			*.replaceAll(':', '/')
 			.collect{read_yaml_file(Paths.get(workflow.projectDir.toString(), 'workflows', it, 'readme.yaml')).get('parameters')}
 			.inject([_genome: [], _dataset: ['dataset name', 'dataset id']]) {
@@ -64,7 +64,7 @@ def validate_scamp_parameters() {
 				def result = validate_parameter_type(parameter, specification)
 
 				// interpret the result of validation and adding the messages to `output_messages` and updating the default value for the parameter if possible and it was missing
-				def result_interpretation = interpret_validatation_result(parameter_name, result, dataset_stages, dataset_parameters, stanza_parameters, parameter_specifications)
+				def result_interpretation = interpret_validatation_result(parameter_name, result, dataset_workflows, dataset_parameters, stanza_parameters, parameter_specifications)
 				output_messages[dataset] += result_interpretation.get('messages')
 				if(result_interpretation.get('default_value'))
 					project_parameters[dataset][stanza][parameter_name] = result_interpretation.get('default_value')
@@ -125,7 +125,7 @@ def warning_message(parameter_name, r) {
 }
 
 def process_provider_message(parameter_name) {
-	['[ WARN    ] ', parameter_name, ': ', 'missing, but may be provided by another stage'].join('')
+	['[ WARN    ] ', parameter_name, ': ', 'missing, but may be provided by another workflow task'].join('')
 }
 
 def process_provider_message(parameter_name, r) {
@@ -144,10 +144,10 @@ def using_default_message(parameter_name, value) {
 	['[ DEFAULT ] ', parameter_name, ': ', 'using default value of `' + value + '`'].join('')
 }
 
-// interpret the result of parameter validation and implement parameter- and stage-specific checks
+// interpret the result of parameter validation and implement parameter- and workflow-specific checks
 // returns a map with the messages to add and (optionally) the default value to add back into `project_parameters`
 
-def interpret_validatation_result(parameter_name, result, dataset_stages, dataset_parameters, stanza_parameters, parameter_specifications) {
+def interpret_validatation_result(parameter_name, result, dataset_workflows, dataset_parameters, stanza_parameters, parameter_specifications) {
 	def messages = []
 	if(result == null) {
 		messages = fail_required_parameter_not_specced(parameter_name)
@@ -156,10 +156,10 @@ def interpret_validatation_result(parameter_name, result, dataset_stages, datase
 		messages = pass_message(parameter_name)
 	}
 	else if((parameter_name == 'index path')) { // these are special cases; a process could provide these if provided the right parameters
-		if('quantification:cell_ranger' in dataset_stages) // index path was not provided, but is expected. check for fasta/gtf file/path
+		if('quantification:cell_ranger' in dataset_workflows) // index path was not provided, but is expected. check for fasta/gtf file/path
 			messages = check_for_cell_ranger_index_path(parameter_name, result, dataset_parameters, parameter_specifications)
 
-		if('quantification:cell_ranger_arc' in dataset_stages) // index path was not provided, but is expected. check for fasta/gtf file/path, organism, motifs file and non-nuclear contigs
+		if('quantification:cell_ranger_arc' in dataset_workflows) // index path was not provided, but is expected. check for fasta/gtf file/path, organism, motifs file and non-nuclear contigs
 			messages = check_for_cell_ranger_arc_index_path(parameter_name, result, dataset_parameters, parameter_specifications)
 	}
 	else if(parameter_name == 'fasta index path') {
@@ -167,11 +167,11 @@ def interpret_validatation_result(parameter_name, result, dataset_stages, datase
 		messages = process_provider_message(parameter_name, [validation: [reason: result.get('validation').get('reason') + ' checking for fasta files, from which the fasta index could be built.']])
 	}
 	else if(parameter_name == 'quantification path') {
-		if(dataset_parameters.get('_dataset').get('stages').any{it ==~ 'quantification:.*'}) messages = process_provider_message(parameter_name)
+		if(dataset_parameters.get('_dataset').get('workflows').any{it ==~ 'quantification:.*'}) messages = process_provider_message(parameter_name)
 		else messages = fail_message(parameter_name, result)
 	}
 	else if(parameter_name == 'quantification method') {
-		if(dataset_parameters.get('_dataset').get('stages').any{it ==~ 'quantification:.*'}) messages = process_provider_message(parameter_name)
+		if(dataset_parameters.get('_dataset').get('workflows').any{it ==~ 'quantification:.*'}) messages = process_provider_message(parameter_name)
 		else messages = fail_message(parameter_name, result)
 	}
 	else { // these parameters should be provided by the user/defaults provided but did not pass validation

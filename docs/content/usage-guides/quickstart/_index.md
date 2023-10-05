@@ -84,7 +84,7 @@ guess_scamp_file.py --help
 Check the guessed parameters file! Pay particular attention to the LIMS IDs associated to dataset, the feature types and sample names!
 {{% /notice %}}
 
-The parameters in the guessed `scamp_file.yaml` should now be checked, the values may need to be corrected and/or amended or new information included. For example, certain samples may need to be removed or different analysis stages my be required. Examples of analysis parameters files can be found in the [analysis configuration][analysis configuration] post.
+The parameters in the guessed `scamp_file.yaml` should now be checked, the values may need to be corrected and/or amended or new information included. For example, certain samples may need to be removed or different analysis workflows my be required. Examples of analysis parameters files can be found in the [analysis configuration][analysis configuration] post.
 
 Once the pipeline parameters are encoded in the parameters file, the pipeline can then be launched using a [specific release][scamp releases] such as `{{% getenv "SCAMP_TAG" %}}` or the current version using `main`. Using a specific tag is recommended for reproducibility.
 
@@ -107,4 +107,4 @@ nextflow run ChristopherBarrington/scamp -revision {{% getenv "SCAMP_TAG" %}} \
 {{< /highlight >}}
 {{< /tab >}}
 
-This should now start the pipeline and show the processes being run for each of the analysis `stages` detailed in your configuration file.
+This should now start the pipeline and show the processes being run for each of the analysis `workflows` detailed in your configuration file.
