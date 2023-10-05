@@ -55,21 +55,19 @@ workflow genome_preparation {
 		fasta_file.to_skip.dump(tag: 'genome_preparation:fasta_file.to_skip', pretty: true)
 
 		// make channels of parameters
-		fasta_paths = fasta_file.to_make.map{it.get('fasta path')}
+		fasta_path  = fasta_file.to_make.map{it.get('fasta path')}
 		output_file = fasta_file.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
-		cat_fastas([:], fasta_paths, output_file)
+		cat_fastas([:], fasta_path, output_file)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
 			.map{rename_map_keys(it, 'path', 'fasta file')}
 			.map{merge_metadata_and_process_output(it)}
 			.concat(fasta_file.to_skip)
-			.merge(genome_parameters)
-			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:fasta_file', pretty: true)
-			.set{genome_parameters}
+			.set{fasta_file}
 
 		// -------------------------------------------------------------------------------------------------
 		// make fai for genome
