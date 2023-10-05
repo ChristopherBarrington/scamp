@@ -301,7 +301,7 @@ def get_feature_types():
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
 
-def get_stages():
+def get_workflows():
 	match args.project_type:
 		case '10X-3prime': return(['quantification/cell_ranger', 'seurat/prepare/cell_ranger'])
 		case '10X-Multiomics': return(['quantification/cell_ranger_arc', 'seurat/prepare/cell_ranger_arc'])
@@ -373,7 +373,7 @@ def main():
 	validate_arguments()
 
 	# get parameters from args-dependent information
-	stages = get_stages()
+	workflows = get_workflows()
 	genome = get_genome_parameters()
 	fastq_paths = get_fastq_paths_from_data_path()
 	dataset_index = get_dataset_index()
@@ -397,7 +397,7 @@ def main():
 			'fastq paths': fastq_paths,
 			'feature types': library_types,
 			'index path': dataset_index,
-			'stages': stages,
+			'workflows': workflows,
 			'feature identifiers': 'name'},
 		'_datasets': datasets}
 
