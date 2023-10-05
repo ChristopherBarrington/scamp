@@ -16,9 +16,11 @@ _genome:
     mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
     cell cycle genes: inputs/cell_cycle_genes.yaml
     fasta path: inputs/fastas
-    gtf path: inputs/gtfs
-    # motifs file: inputs/motifs
     # fasta file: inputs/fasta.fa
+    # fasta index file: inputs/fasta.fai
+    gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+    motifs file: inputs/motifs
 
 _defaults:
     feature identifiers: name
@@ -96,9 +98,9 @@ _datasets:
         description: PGCLC sorted by STELLA at 120 hours
         limsid: COO4671A1
         dataset tag: ST120R1
-        stages:
-            - quantification/cell ranger
-            - seurat/prepare/cell ranger
+        # stages:
+        #     - quantification/cell ranger
+        #     - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A1/outs
         quantification method: cell ranger
         # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
@@ -168,9 +170,9 @@ _datasets:
         limsid:
             - AHM4688A3
             - AHM4688A6
-        stages:
-            - quantification/cell_ranger_arc
-            - seurat/prepare/cell_ranger_arc
+        # stages:
+        #     - quantification/cell_ranger_arc
+        #     - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
         quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
