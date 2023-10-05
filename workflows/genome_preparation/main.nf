@@ -138,6 +138,9 @@ workflow genome_preparation {
 
 		// branch parameters into multiple channels using key(s)
 		genome_parameters
+			.combine(fasta_index_file)
+			.combine(gtf_file)
+			.map{concatenate_maps_list(it)}
 			.branch{
 				def has_fasta_index_file = it.containsKey('fasta index file')
 				def has_gtf_file = it.containsKey('gtf file')
@@ -149,21 +152,19 @@ workflow genome_preparation {
 		granges_file.to_skip.dump(tag: 'genome_preparation:granges_file.to_skip', pretty: true)
 
 		// make channels of parameters
-		genomes = granges_file.to_make.map{it.get('assembly')}
-		gtfs    = granges_file.to_make.map{it.get('gtf file')}
-		fais    = granges_file.to_make.map{it.get('fasta index file')}
+		genome = granges_file.to_make.map{it.get('id')}
+		gtf    = granges_file.to_make.map{it.get('gtf file')}
+		fai    = granges_file.to_make.map{it.get('fasta index file')}
 
 		// run the process
-		convert_gtf_to_granges([:], genomes, gtfs, fais)
+		convert_gtf_to_granges([:], genome, gtf, fai)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(convert_gtf_to_granges, ['opt', 'granges'])
 			.map{merge_metadata_and_process_output(it)}
 			.concat(granges_file.to_skip)
-			.merge(genome_parameters)
-			.map{it.last() + it.first()}
 			.dump(tag: 'genome_preparation:granges_file', pretty: true)
-			.set{genome_parameters}
+			.set{granges_file}
 
 		// -------------------------------------------------------------------------------------------------
 		// make a biomaRt object for the genome
