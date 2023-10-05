@@ -16,7 +16,7 @@
       type: string
       provider: default
 
-    - name: stages
+    - name: workflows
       description: A collection of (unordered) workflows to apply in an analysis. These are a curated list of workflows available in {scamp} and should be specified as a path. (Spaces will be converted to underscores). Omitting this parameter will prevent workflows from launching but will not cause {scamp} to fail.
       type: strings
 
@@ -50,13 +50,13 @@
       provider: default
 
     - name: quantification path
-      description: Path to quantified data that can be read and used by an analysis stage. Can be provided by a {scamp} stage.
+      description: Path to quantified data that can be read and used by an analysis workflow. Can be provided by a {scamp} workflow.
       type: path
       provider: process
 
     - name: quantification method
       description: |
-        The method used to create the data in `quantification path`. This is a curated set of methods and depends on the analysis stages: `cell_ranger` and `cell_ranger_arc` for example. This will be provided by {scamp} if a quantification stage is applied, otherwise it is required.
+        The method used to create the data in `quantification path`. This is a curated set of methods and depends on the analysis workflows: `cell_ranger` and `cell_ranger_arc` for example. This will be provided by {scamp} if a quantification workflow is applied, otherwise it is required.
       type: string
       provider: process
 
@@ -166,6 +166,6 @@
       provider: default
 
     - name: only_validate_parameters
-      description: Do not start the piipeline but check and validate that the parameters in `--scamp_file` are probably OK to use. The checks are for types against the expected and whether sufficent parameters were provided for each of a dataset's `stages`. Defaults to `false`.
+      description: Do not start the piipeline but check and validate that the parameters in `--scamp_file` are probably OK to use. The checks are for types against the expected and whether sufficent parameters were provided for each of a dataset's `workflows`. Defaults to `false`.
       type: boolean
       provider: default
