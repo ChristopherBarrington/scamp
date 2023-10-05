@@ -15,25 +15,25 @@ steps:
 
   - name: Make FastA index
     description: If not provided by the `fasta index file` parameter, the `fasta file` will be indexed using `samtools faidx`.
-    anchor: 75
+    anchor: 73
     modules:
       - samtools/faidx
 
   - name: Merge GTF files
     description: If provided and required, the GTF files in `gtf path` can be merged to provide the `gtf file` parameter. This is only used when `gtf file` is not already provided.
-    anchor: 107
+    anchor: 105
     modules:
       - tools/cat
 
   - name: Make GRanges object
     description: Create a GRanges object using the gneome `name`, `gtf file` and `fasta index file`.
-    anchor: 140
+    anchor: 136
     modules:
       - R/GenomicRanges/convert_gtf_to_granges
 
   - name: Connect to biomaRt
     description: Creates a `mart` object to connect to the `organism` and `ensembl release` for the genome.
-    anchor: 173
+    anchor: 170
     modules:
       - R/biomaRt/get_mart
 
