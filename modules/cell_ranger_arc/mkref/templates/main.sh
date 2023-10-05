@@ -1,7 +1,7 @@
 #! bash
 
 # rename any gene_biotype keys to gene_type
-sed --in-place 's/ gene_biotype / gene_type /' features.gtf
+sed 's/ gene_biotype / gene_type /' features.gtf > parsed_features.gtf
 
 # reformat non-nuclear contigs
 NON_NUCLEAR_CONTIGS=`echo -n $non_nuclear_contigs | sed --regexp-extended 's/\\[|,|\\]//g' | jq -R -s -c 'split(" ")'`
@@ -12,7 +12,7 @@ cat <<-CONFIG > config
     organism: "$organism"
     genome: ["$assembly"]
     input_fasta: ["assembly.fasta"]
-    input_gtf: ["features.gtf"]
+    input_gtf: ["parsed_features.gtf"]
     input_motifs: "motifs.txt"
     non_nuclear_contigs: \${NON_NUCLEAR_CONTIGS}
 }
@@ -36,7 +36,7 @@ cat <<-END_TASK > task.yaml
     organism: $organism
     assembly: $assembly
     assembly_fasta: `pwd`/assembly.fasta
-    features_gtf: `pwd`/features.gtf
+    features_gtf: `pwd`/parsed_features.gtf
     task_index: ${task.index}
     ext:
         mkref: ${mkref_args}

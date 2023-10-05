@@ -1,13 +1,13 @@
 #! bash
 
 # rename any gene_biotype keys to gene_type
-sed --in-place 's/ gene_biotype / gene_type /' features.gtf
+sed 's/ gene_biotype / gene_type /' features.gtf > parsed_features.gtf
 
 # create the index
 cellranger mkref $mkref_args \\
     --genome $assembly \\
     --fasta assembly.fasta \\
-    --genes features.gtf \\
+    --genes parsed_features.gtf \\
 	--nthreads ${task.cpus} \\
 	--memgb ${task.memory.toGiga()}
 
@@ -22,7 +22,7 @@ cat <<-END_TASK > task.yaml
 "${task.process}":
     assembly: $assembly
     assembly_fasta: `pwd`/assembly.fasta
-    features_gtf: `pwd`/features.gtf
+    features_gtf: `pwd`/parsed_features.gtf
     task_index: ${task.index}
     ext:
         mkref: ${mkref_args}
