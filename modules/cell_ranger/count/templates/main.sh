@@ -24,7 +24,7 @@ cat <<-END_VERSIONS > versions.yaml
     cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
 END_VERSIONS
 
-# write parameters to a (yaml) file
+# write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
     id: $id
@@ -34,5 +34,7 @@ cat <<-END_TASK > task.yaml
     task_index: ${task.index}
     ext:
         count: ${count_args}
+    versions:
+        cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
     work_dir: `pwd`
 END_TASK
