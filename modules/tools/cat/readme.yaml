@@ -9,7 +9,10 @@ input:
     description: A map of task-specific variables.
   - name: input_?
     type: files
-    description: A collection of files that will be concatenated.
+    description: A collection of directories containing files that will be concatenated.
+  - name: pattern
+    type: string
+    description: Regular expression to filter files in `input_?` directories, for example `.*.(fa|fasta)`. Should be "*" if no filtering is to be applied.
   - name: output_file
     type: file
     description: File that will be written.

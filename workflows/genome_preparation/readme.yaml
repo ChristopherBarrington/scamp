@@ -8,7 +8,7 @@ tags:
 
 steps:
   - name: Merge FastA files
-    description: If provided and required, the FastA files in `fasta path` can be  merged to provide a reference `fasta file`. Only used when `fasta file` is not already provided.
+    description: If provided and required, the FastA files in `fasta path` can be  merged to provide a reference `fasta file`. Only used when `fasta file` is not already provided. Files in the directory should have a "fa" or "fasta" extension and be plain text.
     anchor: 42
     modules:
       - tools/cat
@@ -20,7 +20,7 @@ steps:
       - samtools/faidx
 
   - name: Merge GTF files
-    description: If provided and required, the GTF files in `gtf path` can be merged to provide the `gtf file` parameter. This is only used when `gtf file` is not already provided.
+    description: If provided and required, the GTF files in `gtf path` can be merged to provide the `gtf file` parameter. This is only used when `gtf file` is not already provided. Files in the directory should have a "gtf" extension and be plain text.
     anchor: 105
     modules:
       - tools/cat
