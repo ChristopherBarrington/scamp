@@ -59,7 +59,7 @@ workflow genome_preparation {
 		output_file = fasta_file.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
-		cat_fastas([:], fasta_path, output_file)
+		cat_fastas([:], fasta_path, '.*.(fa|fasta)', output_file)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
