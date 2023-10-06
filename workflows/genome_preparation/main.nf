@@ -122,7 +122,7 @@ workflow genome_preparation {
 		output_file = gtf_file.to_make.map{it.get('id') + '.gtf'}
 
 		// run the process
-		cat_gtfs([:], gtf_path, output_file)
+		cat_gtfs([:], gtf_path, '.*.gtf', output_file)
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
