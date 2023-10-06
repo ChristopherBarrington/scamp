@@ -49,10 +49,10 @@ workflow {
 		// branch parameters into two channels: {provided,required} according to presence of the 'quantification path' key
 		complete_analysis_parameters
 			.branch{
-				def has_a_quantification_stage = it.get('stages').collect{it.startsWith('quantification:')}.any()
+				def has_a_quantification_workflow = it.get('workflows').collect{it.startsWith('quantification:')}.any()
 				def quantification_provided = it.containsKey('quantification path')
 				provided: quantification_provided
-				required: has_a_quantification_stage & !quantification_provided}
+				required: has_a_quantification_workflow & !quantification_provided}
 			.set{dataset_quantification}
 
 		dataset_quantification.required.dump(tag: 'scamp:dataset_quantification.required', pretty: true)
@@ -75,8 +75,8 @@ workflow {
 		// branch parameters into channels according to the analysis workflow
 		quantification_results
 			.branch{
-				def has_a_seurat_stage = it.get('stages').collect{it.startsWith('seurat:')}.any()
-				seurat: has_a_seurat_stage
+				def has_a_seurat_workflow = it.get('workflows').collect{it.startsWith('seurat:')}.any()
+				seurat: has_a_seurat_workflow
 				unknown: true
 			}
 			.set{analysis_workflows}
