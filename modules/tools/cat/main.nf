@@ -8,6 +8,7 @@ process cat {
 	input:
 		val opt
 		path 'input_?'
+		val regex
 		val output_file
 
 	output:
