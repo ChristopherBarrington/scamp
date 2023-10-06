@@ -17,3 +17,17 @@ cat <<-CONFIG > config
     non_nuclear_contigs: \${NON_NUCLEAR_CONTIGS}
 }
 CONFIG
+
+# write parameters to a (yaml) file
+cat <<-END_TASK > task.yaml
+"${task.process}":
+    organism: $organism
+    assembly: $assembly
+    assembly_fasta: `pwd`/assembly.fasta
+    features_gtf: `pwd`/parsed_features.gtf
+    task_index: ${task.index}
+    ext:
+        mkref: ${mkref_args}
+    versions:
+    work_dir: `pwd`
+END_TASK
