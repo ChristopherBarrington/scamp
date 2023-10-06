@@ -27,14 +27,16 @@ END_VERSIONS
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    id: $id
-    description: $description
-    sample: $sample
-    index_path: `realpath index_path`
-    task_index: ${task.index}
-    ext:
-        count: ${count_args}
-    versions:
-        cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
-    work_dir: `pwd`
+    ${task.index}:
+        ext:
+            count: $count_args
+        params:
+            id: $id
+            description: $description
+            sample: $sample
+            index_path: `realpath index_path`
+        task:
+            work_dir: `pwd`
+        versions:
+            cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
 END_TASK

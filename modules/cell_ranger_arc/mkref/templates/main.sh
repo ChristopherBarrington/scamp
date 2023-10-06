@@ -33,12 +33,16 @@ END_VERSIONS
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    organism: $organism
-    assembly: $assembly
-    assembly_fasta: `pwd`/assembly.fasta
-    features_gtf: `pwd`/parsed_features.gtf
-    task_index: ${task.index}
-    ext:
-        mkref: ${mkref_args}
-    work_dir: `pwd`
+    ${task.index}:
+        ext:
+            mkref: ${mkref_args}
+        params:
+            organism: $organism
+            assembly: $assembly
+            assembly_fasta: `pwd`/assembly.fasta
+            features_gtf: `pwd`/parsed_features.gtf
+        task:
+            work_dir: `pwd`
+        versions:
+            cell ranger arc: `cellranger-arc --version | sed 's/cellranger-arc cellranger-arc-//'`
 END_TASK

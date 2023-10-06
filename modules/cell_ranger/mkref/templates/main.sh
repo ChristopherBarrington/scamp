@@ -20,13 +20,15 @@ END_VERSIONS
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
-    assembly: $assembly
-    assembly_fasta: `pwd`/assembly.fasta
-    features_gtf: `pwd`/parsed_features.gtf
-    task_index: ${task.index}
-    ext:
-        mkref: ${mkref_args}
-    versions:
-        cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
-    work_dir: `pwd`
+    ${task.index}:
+        ext:
+            mkref: ${mkref_args}
+        params:
+            assembly: $assembly
+            assembly_fasta: `pwd`/assembly.fasta
+            features_gtf: `pwd`/parsed_features.gtf
+        task:
+            work_dir: `pwd`
+        versions:
+            cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
 END_TASK
