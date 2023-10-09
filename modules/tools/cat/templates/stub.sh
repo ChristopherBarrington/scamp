@@ -15,8 +15,8 @@ cat <<-END_TASK > task.yaml
         regex: "$regex"
         files:
           `sed '2,\$ s/^/          /' catted_files`
-        meta:
-          work_dir: `pwd`
+      meta:
+        work_dir: `pwd`
   process:
     ext: []
     versions: []

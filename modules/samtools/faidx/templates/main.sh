@@ -9,8 +9,8 @@ cat <<-END_TASK > task.yaml
     '${task.index}':
       params:
         fasta: $fasta
-    meta:
-      work_dir: `pwd`
+      meta:
+        work_dir: `pwd`
   process:
     ext: []
     versions:
