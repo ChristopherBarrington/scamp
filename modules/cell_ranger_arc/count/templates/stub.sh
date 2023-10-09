@@ -14,7 +14,7 @@ cat <<-END_TASK > task.yaml
         samples: $samples
         description: $description
         index_path: `realpath index_path`
-        complete_libraries `realpath all_libraries.csv`
+        complete_libraries: `realpath all_libraries.csv`
       meta:
         workDir: `pwd`
   process:
