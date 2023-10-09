@@ -1,0 +1,31 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: labb
+    scientist: scientist.b
+    lims id: SC23002
+    babs id: sn002
+
+_genome:
+    name: mm10
+    organism: mus musculus
+    assembly: mm10
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
+    fasta path: inputs/fastas
+    # fasta file: inputs/fasta.fa
+    gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+
+_defaults:
+    workflows: []
+
+_datasets:
+    an example dataset: []
+        # description: PGCLC sorted by STELLA at 120 hours
+        # limsid: COO4671A1
+        # dataset tag: ST120R1
+        #quantification path: inputs/cellranger_nm322/COO4671A1/outs
