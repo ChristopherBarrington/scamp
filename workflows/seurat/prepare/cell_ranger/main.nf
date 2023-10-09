@@ -8,6 +8,7 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
+include { cat as cat_tasks }          from '../../../../modules/tools/cat'
 include { make_assay }                from '../../../../modules/R/Seurat/make_assay'
 include { make_object }               from '../../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices } from '../../../../modules/R/Seurat/write_10x_counts_matrices'
@@ -20,8 +21,6 @@ include { make_map }                          from '../../../../utilities/make_m
 include { merge_metadata_and_process_output } from '../../../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_tasks }   from '../../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -152,7 +151,7 @@ workflow cell_ranger {
 			.dump(tag: 'seurat:prepare:cell_ranger:tasks', pretty: true)
 			.set{tasks}
 
-		merge_tasks(tasks)
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis

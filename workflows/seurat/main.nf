@@ -3,13 +3,13 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
+include { cat as cat_tasks }  from '../../modules/tools/cat'
+
 include { check_for_matching_key_values } from '../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }     from '../../utilities/concat_workflow_emissions'
 
 include { cell_ranger as prepare_cell_ranger }         from './prepare/cell_ranger'
 include { cell_ranger_arc as prepare_cell_ranger_arc } from './prepare/cell_ranger_arc'
-
-include { merge_yaml as merge_tasks }   from '../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -74,8 +74,10 @@ workflow seurat {
 			.collect()
 			.dump(tag: 'seurat:tasks', pretty: true)
 			.set{tasks}
-		merge_tasks(tasks)
+
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
 	emit:
 		result = result
+		tasks = tasks
 }

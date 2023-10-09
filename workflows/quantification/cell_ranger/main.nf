@@ -3,17 +3,15 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-// include { mkref } from '../../modules/cell_ranger/mkref'
-include { count } from '../../../modules/cell_ranger/count'
-include { mkref } from '../../../modules/cell_ranger/mkref'
+include { cat as cat_tasks }  from '../../../modules/tools/cat'
+include { count }             from '../../../modules/cell_ranger/count'
+include { mkref }             from '../../../modules/cell_ranger/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
 include { merge_metadata_and_process_output } from '../../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_tasks } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -113,7 +111,7 @@ workflow cell_ranger {
 			.dump(tag: 'quantification:cell_ranger:tasks', pretty: true)
 			.set{tasks}
 
-		merge_tasks(tasks)
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis

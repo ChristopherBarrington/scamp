@@ -3,6 +3,7 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
+include { cat as cat_tasks }   from '../../../modules/tools/cat'
 include { count }              from '../../../modules/cell_ranger_arc/count'
 include { make_libraries_csv } from '../../../modules/cell_ranger_arc/make_libraries_csv'
 include { mkref }              from '../../../modules/cell_ranger_arc/mkref'
@@ -12,8 +13,6 @@ include { concat_workflow_emissions }         from '../../../utilities/concat_wo
 include { merge_metadata_and_process_output } from '../../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_tasks }   from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -141,7 +140,7 @@ workflow cell_ranger_arc {
 			.dump(tag: 'quantification:cell_ranger_arc:tasks', pretty: true)
 			.set{tasks}
 
-		merge_tasks(tasks)
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis

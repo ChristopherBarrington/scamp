@@ -4,6 +4,7 @@
 
 include { cat as cat_fastas } from '../../modules/tools/cat'
 include { cat as cat_gtfs }   from '../../modules/tools/cat'
+include { cat as cat_tasks }  from '../../modules/tools/cat'
 
 include { faidx } from '../../modules/samtools/faidx'
 
@@ -17,8 +18,6 @@ include { make_map }                          from '../../utilities/make_map'
 include { merge_metadata_and_process_output } from '../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_tasks }   from '../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -210,7 +209,7 @@ workflow genome_preparation {
 			.dump(tag: 'genome_preparation:tasks', pretty: true)
 			.set{tasks}
 
-		merge_tasks(tasks)
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
 		// -------------------------------------------------------------------------------------------------
 		// get ready to emit
