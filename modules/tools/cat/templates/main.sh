@@ -13,7 +13,7 @@ cat <<-END_TASK > task.yaml
       params:
         regex: "$regex"
         files:
-          `sed '2,\$ s/^/          /' catted_files`
+          - `sed '2,\$ s/^/          - /' catted_files`
       meta:
         work_dir: `pwd`
   process:
