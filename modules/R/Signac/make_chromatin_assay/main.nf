@@ -19,7 +19,6 @@ process make_chromatin_assay {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'assay.rds', emit: assay
 
 	// define any additional nextflow properties to pass to the template script

@@ -11,7 +11,7 @@ process faidx {
 
 	output:
 		val opt, emit: opt
-		path 'versions.yaml', emit: versions
+		path 'task.yaml', emit: task
 		path '*.fai', emit: path
 
 	script:

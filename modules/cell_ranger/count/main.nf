@@ -17,7 +17,6 @@ process count {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path "$id/outs", emit: quantification_path
 		path 'web_summary.html', emit: cell_ranger_report
 

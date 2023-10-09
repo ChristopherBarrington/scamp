@@ -15,7 +15,6 @@ process percentage_feature_set {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'seurat.rds', emit: seurat
 
 	script:

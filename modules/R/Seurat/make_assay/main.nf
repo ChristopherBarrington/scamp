@@ -14,7 +14,6 @@ process make_assay {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'assay.rds', emit: assay
 
 	script:

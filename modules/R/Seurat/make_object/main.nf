@@ -18,7 +18,6 @@ process make_object {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'seurat.rds', emit: seurat
 
 	script:

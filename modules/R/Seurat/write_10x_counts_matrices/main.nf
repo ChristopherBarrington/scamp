@@ -17,7 +17,6 @@ process write_10x_counts_matrices {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'counts_matrices.rds', emit: counts_matrices
 		path 'features.rds', emit: features
 
