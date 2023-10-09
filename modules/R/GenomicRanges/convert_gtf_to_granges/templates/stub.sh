@@ -1,3 +1,3 @@
 #! bash
 
-touch granges.rds {task,versions}.yaml
+touch granges.rds task.yaml

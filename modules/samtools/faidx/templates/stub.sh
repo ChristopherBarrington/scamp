@@ -1,11 +1,11 @@
 #! bash
 
-touch versions.yaml ${fasta}.fai
+touch ${fasta}.fai
 
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
-"${task.process}":
-    ${task.index}:
+'${task.process}':
+    '${task.index}':
         ext:
         params:
             fasta: $fasta
@@ -14,3 +14,4 @@ cat <<-END_TASK > task.yaml
         task:
             work_dir: `pwd`
 END_TASK
+

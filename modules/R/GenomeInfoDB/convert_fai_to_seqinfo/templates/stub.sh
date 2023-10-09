@@ -1,3 +1,3 @@
 #! bash
 
-touch $output_seqinfo {versions,task}.yaml
+touch $output_seqinfo task.yaml

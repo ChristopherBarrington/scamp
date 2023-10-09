@@ -1,3 +1,3 @@
 #! bash
 
-touch assay.rds {task,versions}.yaml
+touch assay.rds task.yaml

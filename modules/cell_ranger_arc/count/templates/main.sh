@@ -23,12 +23,6 @@ find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/GEX_SUMMARIZE_REPORTS -name 
 	head --lines 1 |
 	xargs --max-args 1 -I @ ln --symbolic @ rna_summary.html
 
-# write software versions used in this module
-cat <<-END_VERSIONS > versions.yaml
-"${task.process}":
-    cell ranger arc: `cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc-//'`
-END_VERSIONS
-
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":

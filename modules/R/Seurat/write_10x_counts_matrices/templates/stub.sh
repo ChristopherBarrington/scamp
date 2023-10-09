@@ -1,3 +1,3 @@
 #! bash
 
-touch {counts_matrices,features}.rds {versions,task}.yaml
+touch {counts_matrices,features}.rds task.yaml

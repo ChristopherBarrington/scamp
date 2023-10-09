@@ -1,3 +1,3 @@
 #! bash
 
-touch {task,versions}.yaml mart.rds
+touch mart.rds task.yaml

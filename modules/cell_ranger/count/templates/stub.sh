@@ -21,12 +21,6 @@ mkdir --parents $id/outs
 touch $id/outs/web_summary.html
 ln --symbolic $id/outs/web_summary.html
 
-# write software versions used in this module
-cat <<-END_VERSIONS > versions.yaml
-"${task.process}":
-    cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
-END_VERSIONS
-
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":

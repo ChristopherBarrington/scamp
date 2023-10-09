@@ -1,6 +1,6 @@
 #! bash
 
-touch {task,versions}.yaml parsed_features.gtf
+touch parsed_features.gtf
 mkdir --parents $assembly
 
 # reformat non-nuclear contigs

@@ -1,3 +1,3 @@
 #! bash
 
-touch {versions,task}.yaml seurat.rds
+touch seurat.rds task.yaml

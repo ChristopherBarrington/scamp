@@ -1,6 +1,6 @@
 #! bash
 
-touch {versions,task}.yaml $output_file
+touch ${output_file}
 
 find -L input_* -regextype posix-extended -regex '$regex' -type f \\
 | sort --version-sort \\

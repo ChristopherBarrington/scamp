@@ -11,12 +11,6 @@ cellranger mkref $mkref_args \\
 	--nthreads ${task.cpus} \\
 	--memgb ${task.memory.toGiga()}
 
-# write software versions used in this module
-cat <<-END_VERSIONS > versions.yaml
-"${task.process}":
-    cell ranger: `cellranger --version | cut -f2 -d' ' | sed 's/cellranger cellranger-//'`
-END_VERSIONS
-
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
