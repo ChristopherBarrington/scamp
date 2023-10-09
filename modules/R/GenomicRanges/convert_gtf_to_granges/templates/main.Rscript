@@ -17,18 +17,19 @@ library(GenomeInfoDb)
 library(rtracklayer)
 library(scampr)
 
-record_package_versions(root_name="${task.process}")
-
 log_message('making a granges from a gtf file', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
+task.process <- "${task.process}"
+task.index <- "${task.index}"
+
 list(genome = "$genome",
      gtf_file = "$gtf",
      fai_file = "$fai") |>
-	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+	assign_and_record_task()
 
 # -------------------------------------------------------------------------------------------------
 # make a Seqinfo object for the genome
