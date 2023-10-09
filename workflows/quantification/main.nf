@@ -8,6 +8,8 @@ include { concat_workflow_emissions } from '../../utilities/concat_workflow_emis
 include { cell_ranger }     from './cell_ranger'
 include { cell_ranger_arc } from './cell_ranger_arc'
 
+include { merge_yaml as merge_tasks }   from '../../modules/yq/merge_yaml'
+
 // -------------------------------------------------------------------------------------------------
 // define the workflow
 // -------------------------------------------------------------------------------------------------
@@ -55,6 +57,12 @@ workflow quantification {
 			.dump(tag: 'quantification:result', pretty: true)
 			.set{result}
 
+		concat_workflow_emissions(all_quantifications, 'tasks')
+			.dump(tag: 'seurat:tasks', pretty: true)
+			.set{tasks}
+		merge_tasks(tasks)
+
 	emit:
 		result = result
+		tasks = tasks
 }

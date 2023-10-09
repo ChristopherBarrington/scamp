@@ -9,6 +9,8 @@ include { concat_workflow_emissions }     from '../../utilities/concat_workflow_
 include { cell_ranger as prepare_cell_ranger }         from './prepare/cell_ranger'
 include { cell_ranger_arc as prepare_cell_ranger_arc } from './prepare/cell_ranger_arc'
 
+include { merge_yaml as merge_tasks }   from '../../modules/yq/merge_yaml'
+
 // -------------------------------------------------------------------------------------------------
 // define the workflow
 // -------------------------------------------------------------------------------------------------
@@ -65,9 +67,14 @@ workflow seurat {
 		all_workflows = [prepare_cell_ranger, prepare_cell_ranger_arc]
 		concat_workflow_emissions(all_workflows, 'result')
 			.concat(quantified_by.unknown)
-			.dump(tag: 'seurat:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'seurat:result', pretty: true)
+			.set{result}
+
+		concat_workflow_emissions(all_workflows, 'tasks')
+			.dump(tag: 'seurat:tasks', pretty: true)
+			.set{tasks}
+		merge_tasks(tasks)
 
 	emit:
-		result = final_results
+		result = result
 }
