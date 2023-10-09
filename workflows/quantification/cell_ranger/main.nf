@@ -123,5 +123,5 @@ workflow cell_ranger {
 
 	emit:
 		result = final_results
-		report = channel.of('report.document')
+		tasks = tasks
 }

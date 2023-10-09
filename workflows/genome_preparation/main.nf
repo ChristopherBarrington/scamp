@@ -233,4 +233,5 @@ workflow genome_preparation {
 
 	emit:
 		result = result
+		tasks = tasks
 }
