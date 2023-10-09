@@ -21,16 +21,18 @@ ln --symbolic $id/outs/web_summary.html
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 '${task.process}':
+  task:
     '${task.index}':
-        ext:
-            count: $count_args
-        params:
-            id: $id
-            description: $description
-            sample: $sample
-            index_path: `realpath index_path`
-        task:
-            work_dir: `pwd`
-        versions:
-            cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
+      params:
+        id: $id
+        description: $description
+        sample: $sample
+        index_path: `realpath index_path`
+      meta:
+        workDir: `pwd`
+  process:
+    ext:
+      count: $count_args
+    versions:
+      cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
 END_TASK

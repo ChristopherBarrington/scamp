@@ -25,18 +25,20 @@ find $id/SC_ATAC_GEX_COUNTER_CS/SC_ATAC_GEX_COUNTER/GEX_SUMMARIZE_REPORTS -name 
 
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
-"${task.process}":
-    ${task.index}:
-        ext:
-            count: ${count_args}
-        params:
-            id: $id
-            samples: $samples
-            description: $description
-            index_path: `realpath index_path`
-            complete_libraries `realpath all_libraries.csv`
-        task:
-            work_dir: `pwd`
-        versions:
-            cell ranger arc: `cellranger-arc --version | sed 's/cellranger-arc cellranger-arc-//'`
+'${task.process}':
+  task:
+    '${task.index}':
+      params:
+        id: $id
+        samples: $samples
+        description: $description
+        index_path: `realpath index_path`
+        complete_libraries `realpath all_libraries.csv`
+      meta:
+        workDir: `pwd`
+  process:
+    ext:
+      count: ${count_args}
+    versions:
+      cell ranger arc: `cellranger-arc --version | sed 's/cellranger-arc cellranger-arc-//'`
 END_TASK

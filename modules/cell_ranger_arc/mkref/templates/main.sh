@@ -26,17 +26,19 @@ cellranger-arc mkref \\
 
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
-"${task.process}":
-    ${task.index}:
-        ext:
-            mkref: ${mkref_args}
-        params:
-            organism: $organism
-            assembly: $assembly
-            assembly_fasta: `pwd`/assembly.fasta
-            features_gtf: `pwd`/parsed_features.gtf
-        task:
-            work_dir: `pwd`
-        versions:
-            cell ranger arc: `cellranger-arc --version | sed 's/cellranger-arc cellranger-arc-//'`
+'${task.process}':
+  task:
+    '${task.index}':
+      params:
+        organism: $organism
+        assembly: $assembly
+        assembly_fasta: `pwd`/assembly.fasta
+        features_gtf: `pwd`/parsed_features.gtf
+      meta:
+        work_dir: `pwd`
+  process:
+    ext:
+      mkref: ${mkref_args}
+    versions:
+      cell ranger arc: `cellranger-arc --version | sed 's/cellranger-arc cellranger-arc-//'`
 END_TASK
