@@ -13,6 +13,7 @@ process cat {
 
 	output:
 		val opt, emit: opt
+		path 'task.yaml', emit: task
 		path output_file, emit: path
 
 	script:
