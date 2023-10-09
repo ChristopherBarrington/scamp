@@ -18,6 +18,8 @@ include { merge_metadata_and_process_output } from '../../utilities/merge_metada
 include { merge_process_emissions }           from '../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../utilities/rename_map_keys'
 
+include { merge_yaml as merge_tasks }   from '../../modules/yq/merge_yaml'
+
 // -------------------------------------------------------------------------------------------------
 // define the workflow
 // -------------------------------------------------------------------------------------------------
@@ -195,6 +197,20 @@ workflow genome_preparation {
 			.concat(mart_file.to_skip)
 			.dump(tag: 'genome_preparation:mart_file', pretty: true)
 			.set{mart_file}
+
+		// -------------------------------------------------------------------------------------------------
+		// make summary report for the workflow
+		// -------------------------------------------------------------------------------------------------
+
+		all_processes = [cat_fastas, cat_gtfs, faidx, convert_gtf_to_granges, get_mart]
+
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
+			.collect()
+			.dump(tag: 'genome_preparation:tasks', pretty: true)
+			.set{tasks}
+
+		merge_tasks(tasks)
 
 		// -------------------------------------------------------------------------------------------------
 		// get ready to emit

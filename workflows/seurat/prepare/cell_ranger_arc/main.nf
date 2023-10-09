@@ -23,8 +23,7 @@ include { merge_metadata_and_process_output } from '../../../../utilities/merge_
 include { merge_process_emissions }           from '../../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../../utilities/rename_map_keys'
 
-include { merge_yaml as merge_software_versions } from '../../../../modules/yq/merge_yaml'
-include { merge_yaml as merge_task_properties }   from '../../../../modules/yq/merge_yaml'
+include { merge_yaml as merge_tasks }   from '../../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -183,19 +182,13 @@ workflow cell_ranger_arc {
 
 		all_processes = [write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
 
-		// collate the software version yaml files into one
-		concat_workflow_emissions(all_processes, 'versions')
-			.collect()
-			.set{versions}
-
-		merge_software_versions(versions)
-
-		// collate the software version yaml files into one
+		// collate the task yaml files into one
 		concat_workflow_emissions(all_processes, 'task')
 			.collect()
-			.set{task_properties}
+			.dump(tag: 'seurat:prepare:cell_ranger_arc:tasks', pretty: true)
+			.set{tasks}
 
-		merge_task_properties(task_properties)
+		merge_tasks(tasks)
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis

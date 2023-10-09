@@ -13,7 +13,7 @@ include { merge_metadata_and_process_output } from '../../../utilities/merge_met
 include { merge_process_emissions }           from '../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../utilities/rename_map_keys'
 
-include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
+include { merge_yaml as merge_tasks } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -105,15 +105,15 @@ workflow cell_ranger {
 		// make summary report for the workflow
 		// -------------------------------------------------------------------------------------------------
 
-		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel
+		all_processes = [mkref, count]
 
-		// collate the software version yaml files into one channel
-		concat_workflow_emissions([count], 'versions')
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
 			.collect()
-			.set{versions}
+			.dump(tag: 'quantification:cell_ranger:tasks', pretty: true)
+			.set{tasks}
 
-		// write a yaml with versions from all processes
-		merge_software_versions(versions)
+		merge_tasks(tasks)
 
 		// -------------------------------------------------------------------------------------------------
 		// render a report for this part of the analysis
