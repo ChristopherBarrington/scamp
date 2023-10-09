@@ -71,6 +71,7 @@ workflow seurat {
 			.set{result}
 
 		concat_workflow_emissions(all_workflows, 'tasks')
+			.collect()
 			.dump(tag: 'seurat:tasks', pretty: true)
 			.set{tasks}
 		merge_tasks(tasks)

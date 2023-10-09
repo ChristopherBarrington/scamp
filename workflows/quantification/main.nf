@@ -58,7 +58,8 @@ workflow quantification {
 			.set{result}
 
 		concat_workflow_emissions(all_quantifications, 'tasks')
-			.dump(tag: 'seurat:tasks', pretty: true)
+			.collect()
+			.dump(tag: 'quantification:tasks', pretty: true)
 			.set{tasks}
 		merge_tasks(tasks)
 
