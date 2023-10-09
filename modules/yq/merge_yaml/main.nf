@@ -13,9 +13,4 @@ process merge_yaml {
 		"""
 		yq eval-all '. as \$item ireduce ({}; . * \$item )' input_*.yaml > output.yaml
 		"""
-
-	stub:
-		"""
-		touch output.yaml
-		"""
 }
