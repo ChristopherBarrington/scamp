@@ -37,6 +37,13 @@ input:
     description: Ensembl database release version (eg. 101).
 
 output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters and software versions used by the task.
+    pattern: task.yaml
   - name: mart
     type: file
     description: RDS object of a biomaRt connection.

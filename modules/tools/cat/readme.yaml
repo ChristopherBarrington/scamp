@@ -21,6 +21,10 @@ output:
   - name: opt
     type: map
     description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters and software versions used by the task.
+    pattern: task.yaml
   - name: path
     type: file
     description: Concatenation of input files.

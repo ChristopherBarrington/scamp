@@ -28,10 +28,10 @@ output:
   - name: opt
     type: map
     description: A map of task-specific variables.
-  - name: versions
+  - name: task
     type: file
-    description: YAML-formatted file of software versions used by the task.
-    pattern: versions.yaml
+    description: YAML-formatted file of task parameters and software versions used by the task.
+    pattern: task.yaml
   - name: '<fasta>.fai'
     type: file
     description: FastA index file.

@@ -45,12 +45,8 @@ output:
     description: A map of task-specific variables.
   - name: task
     type: file
-    description: YAML-formatted file of task parameters.
+    description: YAML-formatted file of task parameters and software versions used by the task.
     pattern: task.yaml
-  - name: versions
-    type: file
-    description: YAML-formatted file of software versions used by the task.
-    pattern: versions.yaml
   - name: seurat
     type: file
     description: A Seurat object written to RDS file with additional metadata varaibles for feature(s) listed in `feature_sets.yaml`. ***This may change to provide a data frame that can be collated with other similar results.*** 
