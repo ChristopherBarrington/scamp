@@ -198,21 +198,7 @@ workflow genome_preparation {
 			.set{mart_file}
 
 		// -------------------------------------------------------------------------------------------------
-		// make summary report for the workflow
-		// -------------------------------------------------------------------------------------------------
-
-		all_processes = [cat_fastas, cat_gtfs, faidx, convert_gtf_to_granges, get_mart]
-
-		// collate the task yaml files into one
-		concat_workflow_emissions(all_processes, 'task')
-			.collect()
-			.dump(tag: 'genome_preparation:tasks', pretty: true)
-			.set{tasks}
-
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
-
-		// -------------------------------------------------------------------------------------------------
-		// get ready to emit
+		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
 		genome_parameters
@@ -229,6 +215,20 @@ workflow genome_preparation {
 			.map{it.first().findAll{it.key != 'genome parameters'} + ['genome parameters': it.last()]}
 			.dump(tag: 'genome_preparation:result', pretty: true)
 			.set{result}
+
+		// -------------------------------------------------------------------------------------------------
+		// make summary report for the workflow
+		// -------------------------------------------------------------------------------------------------
+
+		all_processes = [cat_fastas, cat_gtfs, faidx, convert_gtf_to_granges, get_mart]
+
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
+			.collect()
+			.dump(tag: 'genome_preparation:tasks', pretty: true)
+			.set{tasks}
+
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
 	emit:
 		result = result
