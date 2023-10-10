@@ -1,7 +1,7 @@
 name: Calculate percentage feature expression
 
 description: |
-  A short description of the module's function.
+  Adds a metadata variable that shows the perentage of a cell's data that originates from features that match a regex.
 
 tags:
   - r
