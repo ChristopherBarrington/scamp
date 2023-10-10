@@ -15,7 +15,7 @@ cat <<-END_TASK > task.yaml
         files:
           - `sed '2,\$ s/^/          - /' catted_files`
       meta:
-        work_dir: `pwd`
+        workDir: `pwd`
   process:
     ext: []
     versions: []

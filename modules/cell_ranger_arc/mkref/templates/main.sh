@@ -35,7 +35,7 @@ cat <<-END_TASK > task.yaml
         assembly_fasta: `pwd`/assembly.fasta
         features_gtf: `pwd`/parsed_features.gtf
       meta:
-        work_dir: `pwd`
+        workDir: `pwd`
   process:
     ext:
       mkref: ${mkref_args}
