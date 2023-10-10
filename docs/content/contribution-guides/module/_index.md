@@ -16,11 +16,13 @@ Modules represent specific steps of a pipeline that can be reused in multiple in
 
 [docs scamp modules]: {{< ref "/modules" >}}
 
+[gh scampr]: https://github.com/ChristopherBarrington/scampr
+
 {{< notice style="tip" title=" " icon=" " >}}
-Working modules can be written independently from their inclusion in a pipeline, so do not worry about learning Nextflow if you don't want to - you can write the module scripts that can be wrapped in Nextflow later.
+Working modules can be written independently from their inclusion in a pipeline, so do not worry about learning Nextflow if you don't want to - you can write a module script that can be wrapped in Nextflow later.
 {{< /notice >}}
 
-A suggested module structure could be as follows. The example module is called "a_new_module" and contains one subdirectory and two files. These will be described more thoroughly below. Briefly, the `main.nf` file is where the Nextflow process is defined, this is the part of the module that controls the execution of the `main.sh` script (in this example). The `stub.sh` is an optional file that can be used to generate placeholder files or output so that a pipeline can be tested without taking the time to analyse any data. The `readme.yaml` will be used to create documentation for this website.
+A suggested module structure could be as follows. The example module is called "a_new_module" and contains one subdirectory and four files. These will be described more thoroughly below. Briefly, the `main.nf` file is where the Nextflow process is defined, this is the part of the module that controls the execution of the `main.sh` script (in this example). The `stub.sh` is an optional file that can be used to generate placeholder output files so that a pipeline can be tested without taking the time to analyse any data. The `readme.yaml` will be used to create documentation for this website.
 
 {{< highlight "linenos=false" >}}
 a_new_module/
@@ -31,7 +33,7 @@ a_new_module/
     `-- stub.sh
 {{< /highlight >}}
 
-The following are suggestions. This is the way that I have been writing modules. But there is flexibility, if you don't like the way I have written the R script below you don't have to do it the same way!
+The following are suggestions. This is the way that I have been writing modules. But there is flexibility, if you don't like the way I have written the scripts, you don't have to do it the same way!
 
 ## Nextflow process
 
@@ -43,13 +45,13 @@ An example process "complicated_analysis" is defined below, in the `main.nf` fil
 
 The [`inputs` to a process][nf docs process inputs] are passed as channels from the Nextflow pipeline. The order and type of channel is important. The definitions here must be adhered to in the pipeline. In this example, there are four inputs: `opt`, `tag`, `sample` and `db`. Their types are specified as either `val` or `file`. A `val` is a value which can be substituted into the script. The `file` will be a symlink to the target named, in this case, "db".
 
-For {scamp} processes, the `opt` and `tag` inputs should be used universally. The `opt` channel is a `map` of key value pairs that can be accessed by the configuration file, allowing pipeline parameters that are not necessarily used in the process to be accessed outside the task, and used to track input parameters in output channels. But beware that only variables that affect the process's execution should be included because they could invalidate the cache. The `tag` is a string that will be added to the Nextflow output log to identify an individual task.
+For {scamp} processes, the `opt` input should be used universally. The `opt` channel is a `map` of key value pairs that can be accessed by the configuration file, allowing pipeline parameters that are not necessarily used in the process to be accessed outside the task, and used to track input parameters in output channels. But beware that only variables that affect the process's execution should be included because they could invalidate the cache. The `tag` is a string that will be added to the Nextflow output log to identify an individual task. If omitted, a number is shown in the log instead.
 
-The [`outputs` of a process][nf docs process outputs] are the files or variables produced by the script. The "complicated_analysis" module emits four output channels: the `opt` without modification from it's input, two `yaml` files to track the software versions and task parameters and the analysis output file: `output.file`. These are emitted to the pipeline in channels named `opt`, `task`, `versions` and `output`.
+The [`outputs` of a process][nf docs process outputs] are the files or variables produced by the script. The "complicated_analysis" module emits three output channels: the `opt` without modification from it's input, a `task.yaml` file to track software versions of a process and task parameters, and the analysis output file: `output.file`. These are emitted to the pipeline in channels named `opt`, `task` and `output`.
 
-For {scamp} processes the `opt`, `task` and `versions` should be used. The `task` and `versions` may be used in the future to compose markdown reports.
+For {scamp} processes the `opt` and `task` should be used. The `task` may be used in the future to compose markdown reports.
 
-The [`script` stanza][nf docs process script] defines what analysis actually happens. I favour using templates here so that the scripts are kept separate from Nextflow. In this example, if the user has provided the [`-stub-run` argument][nf docs process stub] when invoking the pipeline, the `stub.sh` script is executed, otherwise it is `main.sh`.
+The [`script` stanza][nf docs process script] defines what analysis actually happens. I favour using templates here so that the scripts are kept separate from Nextflow. In this example, if the user has provided the [`-stub-run` argument][nf docs process stub] when invoking the pipeline, the `stub.sh` script is executed, otherwise `main.sh` will be executed.
 
 Other [Nextflow directives][nf docs process directives] can be included but may not be completely relevant in the context of a module. For example, using `publishDir` should be the choice of the pipeline creator so may not be sensible to include here. Directives included here can be overridden by a suitable configuration file, however. In this case we include some resource requests - `cpus`, `memory` and `time` - but no execution method (eg `SLURM`) which should be defined at execution by the user.
 
@@ -61,15 +63,15 @@ Other [Nextflow directives][nf docs process directives] can be included but may 
 
 {{% linkout title="Nextflow's script documentation" url="nf docs process script" %}}
 
-Nextflow is language agnostic and so long as the interpreter is available in the task's `PATH` the script should run. These scripts can be tested outside Nextlfow with equivalent parameters passed as environment variables, for example. Containers can be used and should be included in the directives of the process.
+Nextflow is language agnostic and so long as the interpreter is available in the task's `PATH` the script should run. These scripts can be tested outside Nextflow with equivalent parameters passed as environment variables, for example. Containers can be used and should be included in the directives of the process.
 
-In this example there are two programs being used to create an output file from two inputs. The first tool uses the task's `sample` variable and the `db` file from the `inputs`. The value of `sample` is interpolated into the script by `$sample`. For `db`, a symlink is created, in the work directory of the task, between the target file and "db" so we can specify `db` in the script as if it were that file, irrespective of its location in the filesystem.
+In this example there are two programs being used to create an output file from two inputs. The first tool uses the task's `sample` variable and the `db` file from the `inputs`. The value of `sample` is interpolated into the script by `$sample`. For `db`, a symlink is staged in the work directory of the task, between the target file and "db" so we can specify `db` in the script as if it were that file, irrespective of its location in the filesystem.
 
 Once `analysis_tool` has completed its work the intermediate output file is parsed and `output.file` is written. Nextflow will provide this file to the pipeline since it was listed in the `output` stanza for the process.
 
-The `task.yaml` and `versions.yaml` files may be used in the future so that task-specific information can be included in reports.
+The `task.yaml` file can be aggregated across workflow tasks, processes and the pipeline and could be used used in the future so that task-specific information and software versions can be included in reports.
 
-An R script could be used here too, specifying `Rscript` instead of `bash` in the shebang line. Nextlfow variables are similarly interpolated into the script though so be wary when accessing lists. Writing the `task` and `versions` can be taken care of using the {scampr} package.
+An R script could be used here too, specifying `Rscript` instead of `bash` in the shebang line. Nextflow variables are similarly interpolated into the script though so be wary when accessing lists. Writing `task.yaml` can be taken care of using the [{scampr} package][[gh scampr].
 
 {{% notice style="warning" title=" " icon=" " %}}
 Nextflow will interpolate variables using `$variable` so any scripts using `$` may have unexpected behaviour. Where possible use non-dollar alternatives or delimit the symbol.
@@ -109,7 +111,7 @@ A template module documentation file can be created using `hugo`. Suppose we wan
 {{< highlight bash >}}
 hugo new --kind module-readme \
          --contentDir scamp \
-         ${MODULE_PATH}/readme.md &&
+         ${MODULE_PATH}/readme.md && \
 rename --remove-extension \
        --append \
        .yaml scamp/$_
@@ -119,7 +121,7 @@ rename --remove-extension \
 {{< highlight bash >}}
 hugo new --kind module-readme \
          --contentDir scamp \
-         ${MODULE_PATH}/readme.md &&
+         ${MODULE_PATH}/readme.md && \
 rename .md .yaml scamp/$_
 {{< /highlight >}}
 {{% /tab %}}

@@ -1,4 +1,19 @@
 #! bash
 
 touch output.file
-touch versions.yaml task.yaml
+
+# write task information to a (yaml) file
+cat <<-END_TASK > task.yaml
+'${task.process}':
+  task:
+    '${task.index}':
+      params:
+        sample: $sample
+      meta:
+        workDir: `pwd`
+  process:
+    ext: []
+    versions:
+      analysis tool: `analysis_tool --version`
+      parsing tool: `parsing_tool -v`
+END_TASK
