@@ -1,7 +1,7 @@
 name: cat
 
 description: |
-  Concatenate multiple files into a single output file.
+  Concatenate multiple files into a single output file. Different input formats can be used; based on the extension, YAML files are concatenated using `yq`, otherwise `cat` is used.
 
 input:
   - name: opt
