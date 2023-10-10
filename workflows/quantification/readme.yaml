@@ -9,21 +9,25 @@ tags:
 steps:
   - name: Quantify datasets
     description: Datasets are grouped according to the presence of `quantification/*` in the `workflows`. Quantification workflows are dispatched according to the workflow values.
-    anchor: 22
+    anchor: 24
     workflows:
       - quantification/cell_ranger
       - quantification/cell_ranger_arc
 
 output:
-  - name:  all_results
+  - name: result
     type: channel
     description: A parameters channel with datasets now including `quantification path` and `quantification method` parameters.
+  - name: tasks
+    type: channel
+    description: Concatenation of all task's parameters and process software versions.
 
 channel tags:
   - ':quantification.cell_ranger': Datasets that include a `quantification/cell_ranger` workflow.
   - ':quantification.cell_ranger_arc': Datasets that include a `quantification/cell_ranger_arc` workflow.
   - ':quantification.unknown': Any datasets that contain an as-yet unimplemented quantification method.
   - ':result': Channel containing all of the parameters with new keys added.
+  - ':tasks': Each task's output `task.yaml` files from the `task` channel.
 
 authors:
   - "@ChristopherBarrington"

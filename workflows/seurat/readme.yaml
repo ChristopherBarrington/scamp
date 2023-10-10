@@ -15,15 +15,19 @@ steps:
       - prepare/cell_ranger_arc
 
 output:
-  - name:  final_results
+  - name: result
     type: channel
     description: A parameters channel with datasets now including the parameters provided by workflows.
+  - name: tasks
+    type: channel
+    description: Concatenation of all task's parameters and process software versions.
 
 channel tags:
-  - 'quantified_by.cell_ranger': Channel of datasets for which a Seurat oject is required and was quantified by Cell Ranger.
-  - 'quantified_by.cell_ranger_arc': Cell Ranger ARC-qauntified datasets that do not have a `seurat file`.
-  - 'quantified_by.unknown': Datasets that lack both `seurat file` and `quantification method`.
-  - 'final_results': The parameters channels with workflow parameters included.
+  - ':quantified_by.cell_ranger': Channel of datasets for which a Seurat oject is required and was quantified by Cell Ranger.
+  - ':quantified_by.cell_ranger_arc': Cell Ranger ARC-qauntified datasets that do not have a `seurat file`.
+  - ':quantified_by.unknown': Datasets that lack both `seurat file` and `quantification method`.
+  - ':result': The parameters channels with workflow parameters included.
+  - ':tasks': Each task's output `task.yaml` files from the `task` channel.
 
 authors:
   - "@ChristopherBarrington"

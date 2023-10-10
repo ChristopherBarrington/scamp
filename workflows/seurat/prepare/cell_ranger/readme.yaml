@@ -11,21 +11,24 @@ tags:
 steps:
   - name: Read Cell Ranger output into assays
     description: "Read the Cell Ranger `filtered_feature_bc_matrix` and save the result, ready to create assay(s). Two RNA assays are created for each dataset: one using features indexed by accession and another by feature name."
-    anchor: 38
+    anchor: 36
     modules:
       - R/Seurat/write_10x_counts_matrices
       - R/Seurat/make_assay
 
   - name: Create Seurat object
     description: Collect the miscellaneous data and assays and create a Seurat object, saved as an RDS file.
-    anchor: 99
+    anchor: 97
     modules:
       - R/Seurat/make_object
 
 output:
-  - name: final_results
+  - name: result
     type: channel
     description: A channel of maps that are the same as the input parameters sets but now include `index path` _and_ `quantification path` parameters.
+  - name: tasks
+    type: channel
+    description: Concatenation of all task's parameters and process software versions.
 
 channel tags:
   - ':barcoded_matrices_to_read': Parameters to read filtered expression matrices in both accession or name modes using.
@@ -35,7 +38,8 @@ channel tags:
   - ':rna_assays': Merge of accession- and name-indexed assays.
   - ':objects_to_create': Parameters used to create Seurat objects.
   - ':objects': Paths to created Seurat objects.
-  - ':final_result': Input parameters with `seurat path` key added.
+  - ':result': Input parameters with `seurat path` key added.
+  - ':tasks': Each task's output `task.yaml` files from the `task` channel.
 
 parameters:
   _dataset:
