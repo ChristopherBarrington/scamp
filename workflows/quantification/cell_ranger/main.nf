@@ -96,8 +96,8 @@ workflow cell_ranger {
 			.filter{check_for_matching_key_values(it, ['dataset id'])}
 			.map{it.first() + it.last().subMap(['index path', 'quantification path'])}
 			.map{it + ['quantification method': 'cell_ranger']}
-			.dump(tag: 'quantification:cell_ranger:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'quantification:cell_ranger:result', pretty: true)
+			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for the workflow
@@ -113,13 +113,7 @@ workflow cell_ranger {
 
 		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
-		// -------------------------------------------------------------------------------------------------
-		// render a report for this part of the analysis
-		// -------------------------------------------------------------------------------------------------
-
-		// TODO: add process to render a chapter of a report
-
 	emit:
-		result = final_results
+		result = result
 		tasks = tasks
 }

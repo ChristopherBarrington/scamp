@@ -153,12 +153,6 @@ workflow cell_ranger {
 
 		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
 
-		// -------------------------------------------------------------------------------------------------
-		// render a report for this part of the analysis
-		// -------------------------------------------------------------------------------------------------
-
-		// TODO: add process to render a chapter of a report
-
 	emit:
 		result = result
 		tasks = tasks
