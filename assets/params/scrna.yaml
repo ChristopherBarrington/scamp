@@ -15,10 +15,10 @@ _genome:
         - chrM
     mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
     cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
-    fasta path: inputs/fastas
+    # fasta path: inputs/fastas
     # gtf path: inputs/gtfs
     # fasta file: inputs/fasta.fa
-    gtf file: inputs/gtf.gtf
+    # gtf file: inputs/gtf.gtf
 
 _defaults:
     fastq paths:
