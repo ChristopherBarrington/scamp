@@ -102,7 +102,7 @@ _datasets:
             - quantification/cell ranger
             - seurat/prepare/cell ranger
         # quantification path: inputs/cellranger_nm322/COO4671A1/outs
-        quantification method: cell ranger
+        # quantification method: cell ranger
         # index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     pecam1 120h rep1:
@@ -112,8 +112,8 @@ _datasets:
         workflows:
             - quantification/cell ranger
             - seurat/prepare/cell ranger
-        quantification path: inputs/cellranger_nm322/COO4671A2/outs
-        quantification method: cell ranger
+        # quantification path: inputs/cellranger_nm322/COO4671A2/outs
+        # quantification method: cell ranger
         index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     ssea1 120h rep1:
@@ -123,8 +123,8 @@ _datasets:
         workflows:
             - quantification/cell ranger
             - seurat/prepare/cell ranger
-        quantification path: inputs/cellranger_nm322/COO4671A3/outs
-        quantification method: cell ranger
+        # quantification path: inputs/cellranger_nm322/COO4671A3/outs
+        # quantification method: cell ranger
         index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     blimp1 + ssea1 120h rep1:
@@ -134,8 +134,8 @@ _datasets:
         workflows:
             - quantification/cell ranger
             - seurat/prepare/cell ranger
-        quantification path: inputs/cellranger_nm322/COO4671A4/outs
-        quantification method: cell ranger
+        # quantification path: inputs/cellranger_nm322/COO4671A4/outs
+        # quantification method: cell ranger
         index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0
 
     8 weeks sample1:
@@ -147,8 +147,8 @@ _datasets:
         workflows:
             - quantification/cell_ranger_arc
             - seurat/prepare/cell_ranger_arc
-        quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
-        quantification method: cell ranger arc
+        # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
+        # quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
 
     8 weeks sample2:
@@ -160,8 +160,8 @@ _datasets:
         workflows:
             - quantification/cell_ranger_arc
             - seurat/prepare/cell_ranger_arc
-        quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
-        quantification method: cell ranger arc
+        # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
+        # quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
 
     8 weeks sample3:
@@ -174,5 +174,5 @@ _datasets:
             - quantification/cell_ranger_arc
             - seurat/prepare/cell_ranger_arc
         # quantification path: inputs/cellranger_sa154/8weeks_sample3/outs
-        quantification method: cell ranger arc
+        # quantification method: cell ranger arc
         # index path: inputs/cellranger_arc_ref
