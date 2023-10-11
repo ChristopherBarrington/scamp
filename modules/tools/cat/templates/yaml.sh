@@ -2,6 +2,10 @@
 
 yq eval-all '. as \$item ireduce ({}; . * \$item )' input_* > $output_file
 
+ls -1 input_* \\
+| sort --version-sort \\
+> catted_files
+
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
 "${task.process}":
