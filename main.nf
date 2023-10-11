@@ -7,13 +7,14 @@ include { genome_preparation } from './workflows/genome_preparation'
 include { quantification }     from './workflows/quantification'
 include { seurat }             from './workflows/seurat'
 
-include { print_as_json } from './utilities/print_as_json'
-
 include { concat_workflow_emissions } from './utilities/concat_workflow_emissions'
 include { make_map }                  from './utilities/make_map'
-// include { parse_scamp_parameters }    from './utilities/parse_scamp_parameters'
 include { print_pipeline_title }      from './utilities/print_pipeline_title'
 include { validate_scamp_parameters } from './utilities/validate_scamp_parameters'
+
+include { cat as cat_tasks } from './modules/tools/cat'
+
+include { print_as_json } from './utilities/print_as_json'
 
 print_pipeline_title()
 
@@ -40,7 +41,6 @@ workflow {
 		genome_preparation(validated_scamp_parameters).result
 			.dump(tag: 'scamp:complete_analysis_parameters', pretty: true)
 			.set{complete_analysis_parameters}
-
 
 		// -------------------------------------------------------------------------------------------------
 		// run quantification workflows
@@ -93,4 +93,16 @@ workflow {
 			.concat(analysis_workflows.unknown)
 			.dump(tag: 'scamp:analysis_results', pretty: true)
 			.set{analysis_results}
+
+		// -------------------------------------------------------------------------------------------------
+		// concatenate the results of all workflows
+		// -------------------------------------------------------------------------------------------------
+
+		all_workflows = [quantification, seurat]
+		concat_workflow_emissions(all_workflows, 'tasks')
+			.collect()
+			.dump(tag: 'scamp:tasks', pretty: true)
+			.set{tasks}
+
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 }
