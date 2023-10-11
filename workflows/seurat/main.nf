@@ -75,7 +75,7 @@ workflow seurat {
 			.dump(tag: 'seurat:tasks', pretty: true)
 			.set{tasks}
 
-		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_workflow_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result
