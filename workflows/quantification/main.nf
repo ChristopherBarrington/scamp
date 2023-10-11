@@ -3,7 +3,7 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_tasks }  from '../../modules/tools/cat'
+include { cat as combine_task_records } from '../../modules/tools/cat'
 
 include { concat_workflow_emissions } from '../../utilities/concat_workflow_emissions'
 
@@ -62,7 +62,7 @@ workflow quantification {
 			.dump(tag: 'quantification:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

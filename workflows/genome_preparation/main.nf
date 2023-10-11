@@ -2,9 +2,9 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_fastas } from '../../modules/tools/cat'
-include { cat as cat_gtfs }   from '../../modules/tools/cat'
-include { cat as cat_tasks }  from '../../modules/tools/cat'
+include { cat as cat_fastas }           from '../../modules/tools/cat'
+include { cat as cat_gtfs }             from '../../modules/tools/cat'
+include { cat as combine_task_records } from '../../modules/tools/cat'
 
 include { faidx } from '../../modules/samtools/faidx'
 
@@ -228,7 +228,7 @@ workflow genome_preparation {
 			.dump(tag: 'genome_preparation:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

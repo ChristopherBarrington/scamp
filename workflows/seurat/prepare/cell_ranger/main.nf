@@ -8,10 +8,10 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_tasks }          from '../../../../modules/tools/cat'
-include { make_assay }                from '../../../../modules/R/Seurat/make_assay'
-include { make_object }               from '../../../../modules/R/Seurat/make_object'
-include { write_10x_counts_matrices } from '../../../../modules/R/Seurat/write_10x_counts_matrices'
+include { cat as combine_task_records } from '../../../../modules/tools/cat'
+include { make_assay }                  from '../../../../modules/R/Seurat/make_assay'
+include { make_object }                 from '../../../../modules/R/Seurat/make_object'
+include { write_10x_counts_matrices }   from '../../../../modules/R/Seurat/write_10x_counts_matrices'
 
 include { check_for_matching_key_values }     from '../../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../../utilities/concat_workflow_emissions'
@@ -151,7 +151,7 @@ workflow cell_ranger {
 			.dump(tag: 'seurat:prepare:cell_ranger:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

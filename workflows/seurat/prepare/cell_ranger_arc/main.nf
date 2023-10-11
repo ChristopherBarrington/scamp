@@ -8,7 +8,7 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_tasks }             from '../../../../modules/tools/cat'
+include { cat as combine_task_records }  from '../../../../modules/tools/cat'
 include { make_assay as make_rna_assay } from '../../../../modules/R/Seurat/make_assay'
 include { make_object }                  from '../../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices }    from '../../../../modules/R/Seurat/write_10x_counts_matrices'
@@ -187,7 +187,7 @@ workflow cell_ranger_arc {
 			.dump(tag: 'seurat:prepare:cell_ranger_arc:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

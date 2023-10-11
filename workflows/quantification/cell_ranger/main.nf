@@ -3,9 +3,9 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_tasks }  from '../../../modules/tools/cat'
-include { count }             from '../../../modules/cell_ranger/count'
-include { mkref }             from '../../../modules/cell_ranger/mkref'
+include { cat as combine_task_records } from '../../../modules/tools/cat'
+include { count }                       from '../../../modules/cell_ranger/count'
+include { mkref }                       from '../../../modules/cell_ranger/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
@@ -111,7 +111,7 @@ workflow cell_ranger {
 			.dump(tag: 'quantification:cell_ranger:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

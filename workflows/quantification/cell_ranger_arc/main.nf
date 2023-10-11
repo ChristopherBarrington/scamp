@@ -3,10 +3,10 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_tasks }   from '../../../modules/tools/cat'
-include { count }              from '../../../modules/cell_ranger_arc/count'
-include { make_libraries_csv } from '../../../modules/cell_ranger_arc/make_libraries_csv'
-include { mkref }              from '../../../modules/cell_ranger_arc/mkref'
+include { cat as combine_task_records } from '../../../modules/tools/cat'
+include { count }                       from '../../../modules/cell_ranger_arc/count'
+include { make_libraries_csv }          from '../../../modules/cell_ranger_arc/make_libraries_csv'
+include { mkref }                       from '../../../modules/cell_ranger_arc/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
@@ -140,7 +140,7 @@ workflow cell_ranger_arc {
 			.dump(tag: 'quantification:cell_ranger_arc:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

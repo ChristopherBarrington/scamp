@@ -12,7 +12,7 @@ include { make_map }                  from './utilities/make_map'
 include { print_pipeline_title }      from './utilities/print_pipeline_title'
 include { validate_scamp_parameters } from './utilities/validate_scamp_parameters'
 
-include { cat as cat_tasks } from './modules/tools/cat'
+include { cat as combine_workflow_records } from './modules/tools/cat'
 
 include { print_as_json } from './utilities/print_as_json'
 
@@ -104,5 +104,5 @@ workflow {
 			.dump(tag: 'scamp:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		combine_workflow_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 }
