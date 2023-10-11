@@ -14,7 +14,6 @@ process convert_gtf_to_granges {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'granges.rds', emit: granges
 
 	script:

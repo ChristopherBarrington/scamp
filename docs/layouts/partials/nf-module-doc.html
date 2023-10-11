@@ -1,9 +1,20 @@
 
 {{ $page_context := .Page }} <!-- not sure how this works, needed for the badges in the for loop... -->
+{{ $commit_id := getenv "SCAMP_COMMIT" }}
+{{ $viewURL := .Site.Params.viewURL }}
+{{ $pagePath := replaceRE ".md$" "" .File.Path }}
 
 <!-- show description -->
 
 <p>{{ .Params.description | markdownify | safeHTML }}</p>
+
+{{ partial "shortcodes/button.html" (dict
+           "context" $page_context
+           "href" (printf "%s/%s/%s" $viewURL $commit_id $pagePath)
+           "target" "_blank"
+           "style" "transparent"
+           "icon" "fab fa-github"
+           "content" "module") }}
 
 <!-- show inputs table -->
 

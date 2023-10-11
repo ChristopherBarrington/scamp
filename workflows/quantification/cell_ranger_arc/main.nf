@@ -3,17 +3,16 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { count }              from '../../../modules/cell_ranger_arc/count'
-include { make_libraries_csv } from '../../../modules/cell_ranger_arc/make_libraries_csv'
-include { mkref }              from '../../../modules/cell_ranger_arc/mkref'
+include { cat as combine_task_records } from '../../../modules/tools/cat'
+include { count }                       from '../../../modules/cell_ranger_arc/count'
+include { make_libraries_csv }          from '../../../modules/cell_ranger_arc/make_libraries_csv'
+include { mkref }                       from '../../../modules/cell_ranger_arc/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
 include { merge_metadata_and_process_output } from '../../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -133,23 +132,17 @@ workflow cell_ranger_arc {
 		// make summary report for the workflow
 		// -------------------------------------------------------------------------------------------------
 
-		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel
+		all_processes = [mkref, count]
 
-		// collate the software version yaml files into one channel
-		concat_workflow_emissions([mkref, count], 'versions')
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
 			.collect()
-			.set{versions}
+			.dump(tag: 'quantification:cell_ranger_arc:tasks', pretty: true)
+			.set{tasks}
 
-		// write a yaml with versions from all processes
-		merge_software_versions(versions)
-
-		// -------------------------------------------------------------------------------------------------
-		// render a report for this part of the analysis
-		// -------------------------------------------------------------------------------------------------
-
-		// TODO: add process to render a chapter of a report
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result
-		report = channel.of('report.document')
+		tasks = tasks
 }

@@ -13,16 +13,17 @@ library(scampr)
 library(Seurat)
 library(stringr)
 
-record_package_versions(root_name="${task.process}")
-
 log_message('making an assay using seurat', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
+task.process <- "${task.process}"
+task.index <- "${task.index}"
+
 list(feature_type = "$feature_type") |>
-	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+	assign_and_record_task()
 
 # -------------------------------------------------------------------------------------------------
 # create assay from the counts

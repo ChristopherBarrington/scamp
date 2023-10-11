@@ -1,7 +1,7 @@
 name: cat
 
 description: |
-  Concatenate multiple files into a single output file.
+  Concatenate multiple files into a single output file. Different input formats can be used; based on the extension, YAML files are concatenated using `yq`, otherwise `cat` is used.
 
 input:
   - name: opt
@@ -21,6 +21,10 @@ output:
   - name: opt
     type: map
     description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters and software versions used by the task.
+    pattern: task.yaml
   - name: path
     type: file
     description: Concatenation of input files.

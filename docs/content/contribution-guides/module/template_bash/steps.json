@@ -11,5 +11,5 @@
 	"yaml_records" : {
 		"target": 6,
 		"title": "versions and parameters",
-		"text": "These two YAML files record the versions of key software used by the process and parameters passed to the task. They may be used in reporting."}
+		"text": "This YAML file records the versions of key software used by the process and parameters passed to the task. They may be used in reporting."}
 }

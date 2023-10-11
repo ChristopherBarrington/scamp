@@ -10,13 +10,15 @@ process cat {
 		path 'input_?'
 		val regex
 		val output_file
+		val ignore_stub_run
 
 	output:
 		val opt, emit: opt
+		path 'task.yaml', emit: task
 		path output_file, emit: path
 
 	script:
 		catter = 'main.sh'
 		catter = output_file ==~ /.*.yaml/ ? 'yaml.sh' : catter
-		template workflow.stubRun ? 'stub.sh' : catter
+		template workflow.stubRun & ignore_stub_run!='true' ? 'stub.sh' : catter
 }

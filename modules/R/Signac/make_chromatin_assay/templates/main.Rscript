@@ -17,16 +17,17 @@ library(Seurat)
 library(Signac)
 library(stringr)
 
-record_package_versions(root_name="${task.process}")
-
 log_message('making a chromatin assay using signac', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
+task.process <- "${task.process}"
+task.index <- "${task.index}"
+
 list(feature_type = "$feature_type") |>
-	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+	assign_and_record_task()
 
 # -------------------------------------------------------------------------------------------------
 # get data to make the assay

@@ -3,6 +3,8 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
+include { cat as combine_workflow_records } from '../../modules/tools/cat'
+
 include { check_for_matching_key_values } from '../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }     from '../../utilities/concat_workflow_emissions'
 
@@ -65,9 +67,17 @@ workflow seurat {
 		all_workflows = [prepare_cell_ranger, prepare_cell_ranger_arc]
 		concat_workflow_emissions(all_workflows, 'result')
 			.concat(quantified_by.unknown)
-			.dump(tag: 'seurat:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'seurat:result', pretty: true)
+			.set{result}
+
+		concat_workflow_emissions(all_workflows, 'tasks')
+			.collect()
+			.dump(tag: 'seurat:tasks', pretty: true)
+			.set{tasks}
+
+		combine_workflow_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
-		result = final_results
+		result = result
+		tasks = tasks
 }

@@ -9,31 +9,31 @@ tags:
 steps:
   - name: Merge FastA files
     description: If provided and required, the FastA files in `fasta path` can be  merged to provide a reference `fasta file`. Only used when `fasta file` is not already provided. Files in the directory should have a "fa" or "fasta" extension and be plain text.
-    anchor: 42
+    anchor: 43
     modules:
       - tools/cat
 
   - name: Make FastA index
     description: If not provided by the `fasta index file` parameter, the `fasta file` will be indexed using `samtools faidx`.
-    anchor: 73
+    anchor: 74
     modules:
       - samtools/faidx
 
   - name: Merge GTF files
     description: If provided and required, the GTF files in `gtf path` can be merged to provide the `gtf file` parameter. This is only used when `gtf file` is not already provided. Files in the directory should have a "gtf" extension and be plain text.
-    anchor: 105
+    anchor: 106
     modules:
       - tools/cat
 
   - name: Make GRanges object
     description: Create a GRanges object using the gneome `name`, `gtf file` and `fasta index file`.
-    anchor: 136
+    anchor: 137
     modules:
       - R/GenomicRanges/convert_gtf_to_granges
 
   - name: Connect to biomaRt
     description: Creates a `mart` object to connect to the `organism` and `ensembl release` for the genome.
-    anchor: 170
+    anchor: 171
     modules:
       - R/biomaRt/get_mart
 
@@ -41,6 +41,9 @@ output:
   - name: result
     type: channel
     description: A parameters channel with datasets now including additional genome parameters.
+  - name: tasks
+    type: channel
+    description: Concatenation of all task's parameters and process software versions.
 
 channel tags:
   - ':genome_parameters': The genome parameters used by datasets in the project.
@@ -56,6 +59,7 @@ channel tags:
   - ':mart_file': Channel of `mart` objects.
   - ':complete_genome_parameters': Genome parameters with process output keys added.
   - ':result': Channel containing all of the parameters with these new keys added.
+  - ':tasks': Each task's output `task.yaml` files from the `task` channel.
 
 parameters:
   _genome:

@@ -18,21 +18,21 @@ cellranger count $count_args \\
 
 ln --symbolic $id/outs/web_summary.html
 
-# write software versions used in this module
-cat <<-END_VERSIONS > versions.yaml
-"${task.process}":
-    cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
-END_VERSIONS
-
-# write parameters to a (yaml) file
+# write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
-"${task.process}":
-    id: $id
-    description: $description
-    sample: $sample
-    index_path: `realpath index_path`
-    task_index: ${task.index}
+'${task.process}':
+  task:
+    '${task.index}':
+      params:
+        id: $id
+        description: $description
+        sample: $sample
+        index_path: `realpath index_path`
+      meta:
+        workDir: `pwd`
+  process:
     ext:
-        count: ${count_args}
-    work_dir: `pwd`
+      count: $count_args
+    versions:
+      cell ranger: `cellranger --version | sed 's/cellranger cellranger-//'`
 END_TASK

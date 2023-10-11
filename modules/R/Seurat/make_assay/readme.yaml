@@ -41,12 +41,8 @@ output:
     description: A map of task-specific variables.
   - name: task
     type: file
-    description: YAML-formatted file of task parameters.
+    description: YAML-formatted file of task parameters and software versions used by the task.
     pattern: task.yaml
-  - name: versions
-    type: file
-    description: YAML-formatted file of software versions used by the task.
-    pattern: versions.yaml
   - name: assay
     type: file
     description: RDS file of the assay object created from the counts matrix for the feature type.

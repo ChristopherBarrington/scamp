@@ -2,8 +2,9 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-include { cat as cat_fastas } from '../../modules/tools/cat'
-include { cat as cat_gtfs }   from '../../modules/tools/cat'
+include { cat as cat_fastas }           from '../../modules/tools/cat'
+include { cat as cat_gtfs }             from '../../modules/tools/cat'
+include { cat as combine_task_records } from '../../modules/tools/cat'
 
 include { faidx } from '../../modules/samtools/faidx'
 
@@ -59,7 +60,7 @@ workflow genome_preparation {
 		output_file = fasta_file.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
-		cat_fastas([:], fasta_path, '.*.(fa|fasta)', output_file)
+		cat_fastas([:], fasta_path, '.*.(fa|fasta)', output_file, 'false')
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
@@ -122,7 +123,7 @@ workflow genome_preparation {
 		output_file = gtf_file.to_make.map{it.get('id') + '.gtf'}
 
 		// run the process
-		cat_gtfs([:], gtf_path, '.*.gtf', output_file)
+		cat_gtfs([:], gtf_path, '.*.gtf', output_file, 'false')
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
@@ -197,7 +198,7 @@ workflow genome_preparation {
 			.set{mart_file}
 
 		// -------------------------------------------------------------------------------------------------
-		// get ready to emit
+		// join any/all information back onto the parameters ready to emit
 		// -------------------------------------------------------------------------------------------------
 
 		genome_parameters
@@ -215,6 +216,21 @@ workflow genome_preparation {
 			.dump(tag: 'genome_preparation:result', pretty: true)
 			.set{result}
 
+		// -------------------------------------------------------------------------------------------------
+		// make summary report for the workflow
+		// -------------------------------------------------------------------------------------------------
+
+		all_processes = [cat_fastas, cat_gtfs, faidx, convert_gtf_to_granges, get_mart]
+
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
+			.collect()
+			.dump(tag: 'genome_preparation:tasks', pretty: true)
+			.set{tasks}
+
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+
 	emit:
 		result = result
+		tasks = tasks
 }

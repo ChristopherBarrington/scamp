@@ -3,17 +3,15 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
-// include { mkref } from '../../modules/cell_ranger/mkref'
-include { count } from '../../../modules/cell_ranger/count'
-include { mkref } from '../../../modules/cell_ranger/mkref'
+include { cat as combine_task_records } from '../../../modules/tools/cat'
+include { count }                       from '../../../modules/cell_ranger/count'
+include { mkref }                       from '../../../modules/cell_ranger/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
 include { merge_metadata_and_process_output } from '../../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_software_versions } from '../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -98,30 +96,24 @@ workflow cell_ranger {
 			.filter{check_for_matching_key_values(it, ['dataset id'])}
 			.map{it.first() + it.last().subMap(['index path', 'quantification path'])}
 			.map{it + ['quantification method': 'cell_ranger']}
-			.dump(tag: 'quantification:cell_ranger:final_results', pretty: true)
-			.set{final_results}
+			.dump(tag: 'quantification:cell_ranger:result', pretty: true)
+			.set{result}
 
 		// -------------------------------------------------------------------------------------------------
 		// make summary report for the workflow
 		// -------------------------------------------------------------------------------------------------
 
-		// TODO: each task writes a version but all tasks have the same version information. use only first value of each process output channel
+		all_processes = [mkref, count]
 
-		// collate the software version yaml files into one channel
-		concat_workflow_emissions([count], 'versions')
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
 			.collect()
-			.set{versions}
+			.dump(tag: 'quantification:cell_ranger:tasks', pretty: true)
+			.set{tasks}
 
-		// write a yaml with versions from all processes
-		merge_software_versions(versions)
-
-		// -------------------------------------------------------------------------------------------------
-		// render a report for this part of the analysis
-		// -------------------------------------------------------------------------------------------------
-
-		// TODO: add process to render a chapter of a report
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
-		result = final_results
-		report = channel.of('report.document')
+		result = result
+		tasks = tasks
 }

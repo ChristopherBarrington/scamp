@@ -14,7 +14,6 @@ process convert_fai_to_seqinfo {
 	output:
 		val opt, emit: opt
 		path 'task.yaml', emit: task
-		path 'versions.yaml', emit: versions
 		path 'seqinfo.rds', emit: seqinfo
 
 	script:

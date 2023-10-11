@@ -46,12 +46,8 @@ output:
     description: A map of task-specific variables.
   - name: task
     type: file
-    description: YAML-formatted file of task parameters.
+    description: YAML-formatted file of task parameters and software versions used by the task.
     pattern: task.yaml
-  - name: versions
-    type: file
-    description: YAML-formatted file of software versions used by the task.
-    pattern: versions.yaml
   - name: libraries
     type: file
     description: CSV-formatted file of the libraries used by the task.

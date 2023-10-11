@@ -8,6 +8,7 @@ import java.nio.file.Paths
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
+include { cat as combine_task_records }  from '../../../../modules/tools/cat'
 include { make_assay as make_rna_assay } from '../../../../modules/R/Seurat/make_assay'
 include { make_object }                  from '../../../../modules/R/Seurat/make_object'
 include { write_10x_counts_matrices }    from '../../../../modules/R/Seurat/write_10x_counts_matrices'
@@ -22,9 +23,6 @@ include { make_map }                          from '../../../../utilities/make_m
 include { merge_metadata_and_process_output } from '../../../../utilities/merge_metadata_and_process_output'
 include { merge_process_emissions }           from '../../../../utilities/merge_process_emissions'
 include { rename_map_keys }                   from '../../../../utilities/rename_map_keys'
-
-include { merge_yaml as merge_software_versions } from '../../../../modules/yq/merge_yaml'
-include { merge_yaml as merge_task_properties }   from '../../../../modules/yq/merge_yaml'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -183,27 +181,15 @@ workflow cell_ranger_arc {
 
 		all_processes = [write_10x_counts_matrices, make_rna_assay, make_chromatin_assay, make_object]
 
-		// collate the software version yaml files into one
-		concat_workflow_emissions(all_processes, 'versions')
-			.collect()
-			.set{versions}
-
-		merge_software_versions(versions)
-
-		// collate the software version yaml files into one
+		// collate the task yaml files into one
 		concat_workflow_emissions(all_processes, 'task')
 			.collect()
-			.set{task_properties}
+			.dump(tag: 'seurat:prepare:cell_ranger_arc:tasks', pretty: true)
+			.set{tasks}
 
-		merge_task_properties(task_properties)
-
-		// -------------------------------------------------------------------------------------------------
-		// render a report for this part of the analysis
-		// -------------------------------------------------------------------------------------------------
-
-		// TODO: add process to render a chapter of a report
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result
-		report = channel.of('report.document')
+		tasks = tasks
 }

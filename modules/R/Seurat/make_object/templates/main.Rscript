@@ -15,19 +15,20 @@ library(Seurat)
 library(Signac)
 library(stringr)
 
-record_package_versions(root_name="${task.process}")
-
 log_message('making a seurat object from a collection of assays', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
+task.process <- "${task.process}"
+task.index <- "${task.index}"
+
 list(assay_names = "$assay_names",
      remove_barcode_suffix = $remove_barcode_suffix,
      misc_names = "$misc_names",
      project = "$project") |>
-	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+	assign_and_record_task()
 
 # -------------------------------------------------------------------------------------------------
 # create a seurat object with at least one assay

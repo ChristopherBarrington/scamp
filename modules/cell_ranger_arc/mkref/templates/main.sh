@@ -24,21 +24,21 @@ cellranger-arc mkref \\
 	--nthreads ${task.cpus} \\
 	--memgb ${task.memory.toGiga()}
 
-# write software versions used in this module
-cat <<-END_VERSIONS > versions.yaml
-"${task.process}":
-    cell ranger arc: `cellranger-arc --version | cut -f2 -d' ' | sed 's/cellranger-arc cellranger-arc-//'`
-END_VERSIONS
-
 # write parameters to a (yaml) file
 cat <<-END_TASK > task.yaml
-"${task.process}":
-    organism: $organism
-    assembly: $assembly
-    assembly_fasta: `pwd`/assembly.fasta
-    features_gtf: `pwd`/parsed_features.gtf
-    task_index: ${task.index}
+'${task.process}':
+  task:
+    '${task.index}':
+      params:
+        organism: $organism
+        assembly: $assembly
+        assembly_fasta: `pwd`/assembly.fasta
+        features_gtf: `pwd`/parsed_features.gtf
+      meta:
+        workDir: `pwd`
+  process:
     ext:
-        mkref: ${mkref_args}
-    work_dir: `pwd`
+      mkref: ${mkref_args}
+    versions:
+      cell ranger arc: `cellranger-arc --version | sed 's/cellranger-arc cellranger-arc-//'`
 END_TASK

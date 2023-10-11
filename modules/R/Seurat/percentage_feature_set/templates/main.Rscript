@@ -13,16 +13,17 @@ library(scampr)
 library(Seurat)
 library(yaml)
 
-record_package_versions(root_name="${task.process}")
-
 log_message('run Seurat::PercentageFeatureSet', level='main')
 
 # -------------------------------------------------------------------------------------------------
 # collect nextflow properties for the task
 # -------------------------------------------------------------------------------------------------
 
+task.process <- "${task.process}"
+task.index <- "${task.index}"
+
 list(assay = "$assay") |>
-	assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+	assign_and_record_task()
 
 # -------------------------------------------------------------------------------------------------
 # read the yaml file

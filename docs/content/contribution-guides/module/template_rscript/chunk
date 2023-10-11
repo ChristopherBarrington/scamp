@@ -3,12 +3,13 @@
 library(magrittr)
 library(scampr)
 
-record_package_versions(root_name="${task.process}")
-
 log_message('making a connection to biomart', level='main')
 
+task.process <- "${task.process}"
+task.index <- "${task.index}"
+
 list(nvalues = "$nvalues") |>
-    assign_and_record_nextflow_properties(root_name="${task.process}", work_dir=getwd())
+    assign_and_record_task()
 
 data.frame(x=rnorm(n=nvalues), y=rnorm(n=nvalues)) |>
     saveRDS(file='data.rds')

@@ -11,13 +11,13 @@ tags:
 steps:
   - name: Make genome index
     description: Use `cellranger mkref` to make an index against which expression can be quantified using `fasta file` and `gtf file`. The output index is named using the `id` key.
-    anchor: 29
+    anchor: 27
     modules:
       - cell_ranger/mkref
 
   - name: Quantify expression
     description: Run `cellranger count` to align and quantify gene expression using the FastQ files and a genome index.
-    anchor: 63
+    anchor: 61
     modules:
       - cell_ranger/count
 
@@ -25,14 +25,18 @@ output:
   - name: result
     type: channel
     description: A channel of maps that are the same as the input parameters sets but now include `quantification method` and `quantification path` keys.
+  - name: tasks
+    type: channel
+    description: Concatenation of all task's parameters and process software versions.
 
 channel tags:
   - ':genome_indexes.missing': Datasets that do not have an `index path`, the unique set of indexes are created from `fasta file` and `gtf file`.
   - ':genome_indexes.provided': Datasets that have an `index path` so do not need further work.
   - ':index_paths': A channel of index paths for the genomes in the project.
   - ':datasets_to_quantify': Dataset parameters passed into the workflow, subset for relevant keys.
-  - ':quantified_datasets': After quantifiaction, the `quantification path` key is added to the parameters.
-  - ':final_results': The new parameters from the workflow are merged back into the input parameters, with a `quantification method` key added. The channel is emitted from the workflow as `result`.
+  - ':quantified_datasets': After quantification, the `quantification path` key is added to the parameters.
+  - ':result': The new parameters from the workflow are merged back into the input parameters, with a `quantification method` key added. The channel is emitted from the workflow as `result`.
+  - ':tasks': Each task's output `task.yaml` files from the `task` channel.
 
 parameters:
   _genome:

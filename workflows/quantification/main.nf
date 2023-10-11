@@ -3,6 +3,8 @@
 // specify modules relevant to this workflow
 // -------------------------------------------------------------------------------------------------
 
+include { cat as combine_workflow_records } from '../../modules/tools/cat'
+
 include { concat_workflow_emissions } from '../../utilities/concat_workflow_emissions'
 
 include { cell_ranger }     from './cell_ranger'
@@ -55,6 +57,14 @@ workflow quantification {
 			.dump(tag: 'quantification:result', pretty: true)
 			.set{result}
 
+		concat_workflow_emissions(all_quantifications, 'tasks')
+			.collect()
+			.dump(tag: 'quantification:tasks', pretty: true)
+			.set{tasks}
+
+		combine_workflow_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+
 	emit:
 		result = result
+		tasks = tasks
 }
