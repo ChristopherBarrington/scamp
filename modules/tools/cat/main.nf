@@ -10,6 +10,7 @@ process cat {
 		path 'input_?'
 		val regex
 		val output_file
+		val ignore_stub_run
 
 	output:
 		val opt, emit: opt
@@ -19,5 +20,5 @@ process cat {
 	script:
 		catter = 'main.sh'
 		catter = output_file ==~ /.*.yaml/ ? 'yaml.sh' : catter
-		template workflow.stubRun ? 'stub.sh' : catter
+		template workflow.stubRun & ignore_stub_run!='true' ? 'stub.sh' : catter
 }

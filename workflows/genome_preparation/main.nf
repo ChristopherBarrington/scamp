@@ -60,7 +60,7 @@ workflow genome_preparation {
 		output_file = fasta_file.to_make.map{it.get('id') + '.fa'}
 
 		// run the process
-		cat_fastas([:], fasta_path, '.*.(fa|fasta)', output_file)
+		cat_fastas([:], fasta_path, '.*.(fa|fasta)', output_file, 'false')
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_fastas, ['opt', 'path'])
@@ -123,7 +123,7 @@ workflow genome_preparation {
 		output_file = gtf_file.to_make.map{it.get('id') + '.gtf'}
 
 		// run the process
-		cat_gtfs([:], gtf_path, '.*.gtf', output_file)
+		cat_gtfs([:], gtf_path, '.*.gtf', output_file, 'false')
 
 		// make a channel of newly created parameters
 		merge_process_emissions(cat_gtfs, ['opt', 'path'])
@@ -228,7 +228,7 @@ workflow genome_preparation {
 			.dump(tag: 'genome_preparation:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

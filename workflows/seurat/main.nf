@@ -75,7 +75,7 @@ workflow seurat {
 			.dump(tag: 'seurat:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

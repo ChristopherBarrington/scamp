@@ -151,7 +151,7 @@ workflow cell_ranger {
 			.dump(tag: 'seurat:prepare:cell_ranger:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result

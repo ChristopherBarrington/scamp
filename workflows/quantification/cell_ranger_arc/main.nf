@@ -140,7 +140,7 @@ workflow cell_ranger_arc {
 			.dump(tag: 'quantification:cell_ranger_arc:tasks', pretty: true)
 			.set{tasks}
 
-		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml')
+		cat_tasks([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
 		result = result
