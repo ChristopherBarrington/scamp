@@ -1,3 +1,20 @@
 #! bash
 
-touch granges.rds task.yaml
+touch granges.rds
+
+# write task information to a (yaml) file
+cat <<-END_TASK > task.yaml
+'${task.process}':
+  task:
+    '${task.index}':
+      params:
+        genome: $genome
+        gtf_file: $gtf
+        fai_file: $fai
+      meta:
+        workDir: `pwd`
+  process:
+    ext: []
+    versions:
+      R: `R --version | head -n 1 | sed --regexp-extended 's/R version (\\S+) .*/\\1/'`
+END_TASK
