@@ -17,7 +17,7 @@ _genome:
     cell cycle genes: inputs/cell_cycle_genes/mus_musculus.yaml
     # fasta path: inputs/fastas
     # gtf path: inputs/gtfs
-    fasta file: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0/fasta/genome.gtf
+    fasta file: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0/fasta/genome.fa
     gtf file: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-mm10-3.0.0/genes/genes.gtf
 
 _defaults:
