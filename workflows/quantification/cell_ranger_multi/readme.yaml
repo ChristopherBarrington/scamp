@@ -68,8 +68,6 @@ parameters:
     - limsid
     - probe set path
     - vdj index path
-    - limsid
-    - fastq paths
 
 authors:
   - "@ChristopherBarrington"
