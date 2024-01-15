@@ -68,13 +68,6 @@ fi
 if [[ '$type' =~ -adt(-|\$) ]] || [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|\$) ]]; then
 	if [[ ! '$type' =~ -hto(-|\$) ]]; then
 		FEATURES_REFERENCE_PATH=`readlink adt_set.csv`
-		# printf '\\n[feature]\\n' \\
-		# >> input.csv
-
-		# echo reference `readlink adt_set.csv` $feature_section_params \\
-		# | sed 's/ /\\n/g' \\
-		# | paste --delimiter , - - \
-		# >> input.csv
 	elif [[ '$type' =~ -adt- && '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
 		cat adt_set.csv \\
 		> features.csv
@@ -83,15 +76,7 @@ if [[ '$type' =~ -adt(-|\$) ]] || [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|
 		| sed 's/,Multiplexing Capture/,Antibody Capture/' \\
 		>> features.csv
 
-		FEATURES_REFERENCE_PATH=`readlink features.csv`
-		# printf '\\n[feature]\\n' \\
-		# >> input.csv
-
-		# echo reference `realpath features.csv` $feature_section_params \\
-		# | sed 's/ /\\n/g' \\
-		# | paste --delimiter , - - \\
-		# >> input.csv
-
+		FEATURES_REFERENCE_PATH=`realpath features.csv`
 	elif [[ '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
 
 
@@ -109,13 +94,6 @@ if [[ '$type' =~ -adt(-|\$) ]] || [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|
 		sed --in-place 's/,Multiplexing Capture/, Antibody Capture/' features.csv
 
 		FEATURES_REFERENCE_PATH=`realpath features.csv`
-		# printf '\\n[feature]\\n' \\
-		# >> input.csv
-		
-		# echo reference `realpath features.csv` $feature_section_params \\
-		# | sed 's/ /\\n/g' \\
-		# | paste --delimiter , - - \
-		# >> input.csv
 	fi
 
 	printf '\\n[feature]\\n' \\
