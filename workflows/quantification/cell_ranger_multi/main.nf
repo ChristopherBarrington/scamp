@@ -86,25 +86,25 @@ workflow cell_ranger_multi {
 			      vdj_index_path: it.collect{it.getOrDefault('vdj index path', file('.undefined'))}.unique().first()]}
 			.map{it + [feature_types: [it.get('limsid')].flatten().collect{x -> find_key_of_value(it.get('feature_types'), x)}]}
 			.map{it + [fastq_paths: convert_to_files(it.get('fastq_paths'))]}
-			.dump(tag: 'quantification:cell_ranger_multi:barcode_params', pretty: true)
-			.set{barcode_params}
+			.dump(tag: 'quantification:cell_ranger_multi:configuration_params', pretty: true)
+			.set{configuration_params}
 
 		// make channels to create the libraries csv file that cell ranger arc count expects
-		adt_set_paths   = barcode_params.map{it.get('adt_set_path')}
-		barcodes        = barcode_params.map{it.get('barcodes')}
-		dataset_ids     = barcode_params.map{it.get('dataset_ids')}
-		descriptions    = barcode_params.map{it.get('descriptions')}
-		fastq_paths     = barcode_params.map{it.get('fastq_paths')}
-		feature_types   = barcode_params.map{it.get('feature_types')}
-		hto_set_paths   = barcode_params.map{it.get('hto_set_path')}
-		index_paths     = barcode_params.map{it.get('index_path')}
-		limsids         = barcode_params.map{it.get('limsid')}
-		probe_set_paths = barcode_params.map{it.get('probe_set_path')}
-		project_types   = barcode_params.map{it.get('project_type')}
-		vdj_index_paths = barcode_params.map{it.get('vdj_index_path')}
+		adt_set_paths   = configuration_params.map{it.get('adt_set_path')}
+		barcodes        = configuration_params.map{it.get('barcodes')}
+		dataset_ids     = configuration_params.map{it.get('dataset_ids')}
+		descriptions    = configuration_params.map{it.get('descriptions')}
+		fastq_paths     = configuration_params.map{it.get('fastq_paths')}
+		feature_types   = configuration_params.map{it.get('feature_types')}
+		hto_set_paths   = configuration_params.map{it.get('hto_set_path')}
+		index_paths     = configuration_params.map{it.get('index_path')}
+		limsids         = configuration_params.map{it.get('limsid')}
+		probe_set_paths = configuration_params.map{it.get('probe_set_path')}
+		project_types   = configuration_params.map{it.get('project_type')}
+		vdj_index_paths = configuration_params.map{it.get('vdj_index_path')}
 
 		// make a sample sheet for each cell ranger multi task
-		make_input_csv(barcode_params,
+		make_input_csv(configuration_params,
 		               project_types, limsids, dataset_ids, descriptions, barcodes, feature_types,
 		               fastq_paths, index_paths, vdj_index_paths,
 		               probe_set_paths, adt_set_paths, hto_set_paths)
@@ -135,11 +135,6 @@ workflow cell_ranger_multi {
 		multi(libraries_to_quantify, ids, dataset_ids, config_files)
 
 		// make a channel of newly quantified datasets, each defined in a map
-		// merge_process_emissions(multi, ['opt', 'multi_quantification_path', 'per_sample_quantification_path'])
-		// 	.map{make_map([it.get('per_sample_quantification_path')].flatten(), [it.get('per_sample_quantification_path')].flatten{it.getFileName().toString()})}
-		// 	.dump(tag: 'quantification:cell_ranger_multi:quantified_datasets', pretty: true)
-		// 	.set{quantified_datasets}
-
 		merge_process_emissions(multi, ['opt', 'multi_quantification_path', 'per_sample_quantification_path'])
 			.map{it + ['quantification path': make_map([it.get('per_sample_quantification_path')].flatten(), [it.get('per_sample_quantification_path')].flatten{it.getFileName().toString()})]}
 			.map{make_map([it]*it.get('per_sample_quantification_path').size(), [it.get('per_sample_quantification_path')].flatten{it.getFileName().toString()})}
