@@ -13,6 +13,7 @@ steps:
     workflows:
       - quantification/cell_ranger
       - quantification/cell_ranger_arc
+      - quantification/cell_ranger_multi
 
 output:
   - name: result
@@ -25,6 +26,7 @@ output:
 channel tags:
   - ':quantification.cell_ranger': Datasets that include a `quantification/cell_ranger` workflow.
   - ':quantification.cell_ranger_arc': Datasets that include a `quantification/cell_ranger_arc` workflow.
+  - ':quantification.cell_ranger_multi': Datasets that include a `quantification/cell_ranger_multi` workflow.
   - ':quantification.unknown': Any datasets that contain an as-yet unimplemented quantification method.
   - ':result': Channel containing all of the parameters with new keys added.
   - ':tasks': Each task's output `task.yaml` files from the `task` channel.
