@@ -9,6 +9,7 @@ include { concat_workflow_emissions } from '../../utilities/concat_workflow_emis
 
 include { cell_ranger }     from './cell_ranger'
 include { cell_ranger_arc } from './cell_ranger_arc'
+include { cell_ranger_multi } from './cell_ranger_multi'
 
 // -------------------------------------------------------------------------------------------------
 // define the workflow
@@ -30,11 +31,13 @@ workflow quantification {
 				def workflows = it.get('workflows')
 				cell_ranger: workflows.contains('quantification:cell_ranger')
 				cell_ranger_arc: workflows.contains('quantification:cell_ranger_arc')
+				cell_ranger_multi: workflows.contains('quantification:cell_ranger_multi')
 				unknown: true}
 			.set{quantification}
 
 		quantification.cell_ranger.dump(tag: 'quantification:quantification.cell_ranger', pretty: true)
 		quantification.cell_ranger_arc.dump(tag: 'quantification:quantification.cell_ranger_arc', pretty: true)
+		quantification.cell_ranger_multi.dump(tag: 'quantification:quantification.cell_ranger_multi', pretty: true)
 		quantification.unknown.dump(tag: 'quantification:quantification.unknown', pretty: true)
 
 		// -------------------------------------------------------------------------------------------------
@@ -43,6 +46,7 @@ workflow quantification {
 
 		cell_ranger(quantification.cell_ranger)
 		cell_ranger_arc(quantification.cell_ranger_arc)
+		cell_ranger_multi(quantification.cell_ranger_multi)
 
 		// -------------------------------------------------------------------------------------------------
 		// make channels of all outputs from the workflows
