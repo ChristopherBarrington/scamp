@@ -230,7 +230,10 @@ def get_default_parameters() {
 	 'dataset tag'        : {it -> it.get('dataset id')} ,
 	 'description'        : {it -> it.get('dataset name')},
 	 'feature identifiers': {'name'},
-	 'barcode'            : {'none'}] // barcode should be optional??
+	 'barcode'            : {'none'}, // barcode should be optional??
+	 'adt set path'       : {'undefined-adt-set-path'},
+	 'hto set path'       : {'undefined-hto-set-path'},
+	 'probe set path'     : {'undefined-probe-set-path'}]
 }
 
 // define some checker functions for often used or process-provided parameters
