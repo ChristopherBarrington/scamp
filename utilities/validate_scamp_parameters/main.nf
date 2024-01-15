@@ -156,7 +156,7 @@ def interpret_validatation_result(parameter_name, result, dataset_workflows, dat
 		messages = pass_message(parameter_name)
 	}
 	else if((parameter_name == 'index path')) { // these are special cases; a process could provide these if provided the right parameters
-		if('quantification:cell_ranger' in dataset_workflows) // index path was not provided, but is expected. check for fasta/gtf file/path
+		if(['quantification:cell_ranger', 'quantification:cell_ranger_multi'].stream().anyMatch{it in dataset_workflows}) // index path was not provided, but is expected. check for fasta/gtf file/path
 			messages = check_for_cell_ranger_index_path(parameter_name, result, dataset_parameters, parameter_specifications)
 
 		if('quantification:cell_ranger_arc' in dataset_workflows) // index path was not provided, but is expected. check for fasta/gtf file/path, organism, motifs file and non-nuclear contigs
