@@ -231,10 +231,10 @@ def get_default_parameters() {
 	 'description'        : {it -> it.get('dataset name')},
 	 'feature identifiers': {'name'},
 	 'barcode'            : {'none'}, // barcode should be optional??
-	 'adt set path'       : {'undefined-adt-set-path'},
-	 'hto set path'       : {'undefined-hto-set-path'},
-	 'probe set path'     : {'undefined-probe-set-path'},
-	 'vdj index path'     : {'undefined-vdj-index-path'}]
+	 'adt set path'       : {java.nio.file.Path('undefined-adt-set-path')},
+	 'hto set path'       : {java.nio.file.Path('undefined-hto-set-path')},
+	 'probe set path'     : {java.nio.file.Path('undefined-probe-set-path')},
+	 'vdj index path'     : {java.nio.file.Path('undefined-vdj-index-path')}]
 }
 
 // define some checker functions for often used or process-provided parameters
