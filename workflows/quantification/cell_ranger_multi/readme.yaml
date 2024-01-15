@@ -67,7 +67,6 @@ parameters:
     - index path
     - limsid
     - probe set path
-    - project parameters
     - vdj index path
     - limsid
     - fastq paths
