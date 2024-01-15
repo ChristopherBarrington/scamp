@@ -266,27 +266,36 @@ def get_dataset_index():
 	indexes_10x_root = os.path.join(indexes_root, '10x')
 	indexes_10x_3prime_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
 	indexes_10x_multiomics_root = os.path.join(indexes_10x_root, '10x_arc')
+	indexes_10x_vdj_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
 
 	match args.project_type:
-		case '10X-3prime':
+		case '10x-3prime':
 			return({
 				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
 				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
 
-		case '10X-Multiomics':
+		case '10x-multiome':
 			return({
 				'mm10': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-mm10-2020-A-2.0.0'),
 				'GRCh38': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-GRCh38-2020-A-2.0.0')}.get(args.genome))
 
-		case '10X-FeatureBarcoding':
+		case '10x-featurebarcoding':
 			return({
 				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
 				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
 
+		case '10x-5prime-vdj':
+			return({
+				'mm10': {
+					gex: os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
+					vdj: os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCm38-alts-ensembl-7.0.0')},
+				'GRCh38': {
+					gex: os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A'),
+					vdj: os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCm38-alts-ensembl-7.1.0')}}.get(args.genome))
+
 		case 'hive':
 			return({
-				'GRCh38': 'unknown'
-				}.get(args.genome))
+				'GRCh38': 'unknown'}.get(args.genome))
 
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
