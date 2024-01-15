@@ -229,7 +229,8 @@ def get_default_parameters() {
 	 'dataset id'         : {it -> make_string_directory_safe(it.get('dataset name'))},
 	 'dataset tag'        : {it -> it.get('dataset id')} ,
 	 'description'        : {it -> it.get('dataset name')},
-	 'feature identifiers': {'name'}]
+	 'feature identifiers': {'name'},
+	 'barcode'            : {'none'}] // barcode should be optional??
 }
 
 // define some checker functions for often used or process-provided parameters
