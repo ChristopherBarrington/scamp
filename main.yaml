@@ -70,15 +70,15 @@
 
     - name: adt set path
       description: Path to antibody-derived tags reference file.
-      type: string
+      type: path
 
     - name: hto set path
       description: Path to hashtag oligos reference file.
-      type: string
+      type: path
 
     - name: probe set path
       description: A 10x-provided file linking probes and gene targets.
-      type: string
+      type: path
 
 - title: Project parameters
   name: _project
