@@ -1,0 +1,110 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC22051
+    babs id: cb000
+    type: 10x-multiome
+
+_genome:
+    name: mm10 + mCherry
+    organism: mus musculus
+    assembly: mm10_mcherry
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    cell cycle genes: inputs/cell_cycle_genes.yaml
+    fasta path: inputs/fastas
+    gtf path: inputs/gtfs
+    motifs file: inputs/motifs
+    # fasta file: inputs/fasta
+
+_defaults:
+    fastq paths:
+        - inputs/10x-multiome/data/220406_A01366_0169_AHC3HVDMXY/fastq
+        - inputs/10x-multiome/data/220407_A01366_0171_AH3W3LDRX2/fastq
+        - inputs/10x-multiome/data/220420_A01366_0179_BH72WWDMXY/fastq
+        - inputs/10x-multiome/data/220422_A01366_0180_BHJLLNDSX3/fastq
+        - inputs/10x-multiome/data/220425_A01366_0182_BH7HJ3DMXY/fastq
+        - inputs/10x-multiome/data/220428_A01366_0187_BHCFHLDMXY/fastq
+        - inputs/10x-multiome/data/220505_A01366_0193_BHKC3MDSX3/fastq
+        - inputs/10x-multiome/data/220526_A01366_0207_BHCGLCDMXY/fastq
+        - inputs/10x-multiome/data/220531_A01366_0211_AHCGNYDMXY/fastq
+        - inputs/10x-multiome/data/220615_A01366_0219_AHK7WHDSX3/fastq
+        - inputs/10x-multiome/data/220726_A01366_0242_BHN3GKDSX3/fastq
+        - inputs/10x-multiome/data/220726_A01366_0243_AH5KL2DRX2/fastq
+        - inputs/10x-multiome/data/220823_A01366_0268_AH5HJJDRX2/fastq
+        - inputs/10x-multiome/data/220826_A01366_0270_BHGFMVDMXY/fastq
+        - inputs/10x-multiome/data/220907_A01366_0275_AHGFV2DMXY/fastq
+        - inputs/10x-multiome/data/220920_A01366_0282_AHCMHFDRX2/fastq
+        - inputs/10x-multiome/data/220922_A01366_0283_AHF7FYDMXY/fastq
+        - inputs/10x-multiome/data/221117_A01366_0317_BHGG3KDMXY/fastq
+        - inputs/10x-multiome/data/221118_A01366_0319_AH7GYHDRX2/fastq
+        - inputs/10x-multiome/data/221215_A01366_0329_AH7VKTDSX5/fastq
+        - inputs/10x-multiome/data/221215_A01366_0330_BHNGLVDRX2/fastq
+        - inputs/10x-multiome/data/221222_A01366_0333_AHGMKHDMXY/fastq
+        - inputs/10x-multiome/data/230105_A01366_0334_BHJJ5VDSX5/fastq
+        - inputs/10x-multiome/data/230106_A01366_0336_AHKFGJDSX5/fastq
+        - inputs/10x-multiome/data/230201_A01366_0347_AHVLN5DRX2/fastq
+        - inputs/10x-multiome/data/230420_A01366_0377_AHNFLGDRX2/fastq
+        - inputs/10x-multiome/data/230511_A01366_0386_AHKC5TDMXY/fastq
+        - inputs/10x-multiome/data/230526_A01366_0392_AHF3LVDSX7/fastq
+    feature types:
+        Gene Expression:
+            - AHM4688A1
+            - AHM4688A2
+            - AHM4688A3
+            - AHM4688A7
+            - AHM4688A9
+            - AHM4688A11
+            - AHM4688A15
+            - AHM4688A17
+            - AHM4688A19
+            - AHM4688A21
+            - AHM4688A23
+            - AHM4688A25
+            - AHM4688A27
+        Chromatin Accessibility:
+            - AHM4688A4
+            - AHM4688A5
+            - AHM4688A6
+            - AHM4688A8
+            - AHM4688A10
+            - AHM4688A12
+            - AHM4688A16
+            - AHM4688A18
+            - AHM4688A20
+            - AHM4688A22
+            - AHM4688A24
+            - AHM4688A26
+            - AHM4688A28
+    workflows:
+        - quantification/cell_ranger_arc
+        - seurat/prepare/cell_ranger_arc
+    index path: inputs/cellranger_arc_ref
+    feature identifiers: name
+    quantification method: cell ranger arc
+
+_datasets:
+    8 weeks sample1:
+        description: 8 week old, replicate 1
+        limsid:
+            - AHM4688A1
+            - AHM4688A4
+        # quantification path: inputs/cellranger_sa154/8weeks_sample1/outs
+
+    8 weeks sample2:
+        description: 8 week old, replicate 2
+        limsid:
+            - AHM4688A2
+            - AHM4688A5
+        # quantification path: inputs/cellranger_sa154/8weeks_sample2/outs
+
+    8 weeks sample3:
+        description: 8 week old, replicate 3
+        limsid:
+            - AHM4688A3
+            - AHM4688A6
+        quantification path: inputs/cellranger_sa154/8weeks_sample3/outs

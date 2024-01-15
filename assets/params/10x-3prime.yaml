@@ -1,10 +1,14 @@
 _project:
     github:
         remote: ChristopherBarrington/scamp-push-test
-    lab: labb
-    scientist: scientist.b
-    lims id: SC23002
-    babs id: sn002
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC22034
+    babs id: cb000
+    type: 10x-3prime
+    types:
+        - 10x
+        - 3prime
 
 _genome:
     name: mm10
@@ -22,10 +26,10 @@ _genome:
 
 _defaults:
     fastq paths:
-        - inputs/data_nm322/220221_A01366_0148_AH7HYGDMXY/fastq
-        - inputs/data_nm322/220310_A01366_0156_AH5YTYDMXY/fastq
-        - inputs/data_nm322/220818_A01366_0266_BHCJK7DMXY/fastq
-        - inputs/data_nm322/230221_A01366_0353_AHNH37DSX5/fastq
+        - inputs/10x-3prime/data/220221_A01366_0148_AH7HYGDMXY/fastq
+        - inputs/10x-3prime/data/220310_A01366_0156_AH5YTYDMXY/fastq
+        - inputs/10x-3prime/data/220818_A01366_0266_BHCJK7DMXY/fastq
+        - inputs/10x-3prime/data/230221_A01366_0353_AHNH37DSX5/fastq
     feature identifiers: name
     feature types:
         Gene Expression:
