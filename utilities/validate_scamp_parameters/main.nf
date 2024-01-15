@@ -233,7 +233,8 @@ def get_default_parameters() {
 	 'barcode'            : {'none'}, // barcode should be optional??
 	 'adt set path'       : {'undefined-adt-set-path'},
 	 'hto set path'       : {'undefined-hto-set-path'},
-	 'probe set path'     : {'undefined-probe-set-path'}]
+	 'probe set path'     : {'undefined-probe-set-path'},
+	 'vdj index path'     : {'undefined-vdj-index-path'}]
 }
 
 // define some checker functions for often used or process-provided parameters
