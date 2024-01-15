@@ -63,26 +63,27 @@
     - name: barcode
       description: A barcode identifier, for example BC001.
       type: string(s)
+      provider: optional
 
     - name: vdj index path
       description: Path to VDJ reference index.
       type: path
-      provider: default
+      provider: optional
 
     - name: adt set path
       description: Path to antibody-derived tags reference file.
       type: path
-      provider: default
+      provider: optional
 
     - name: hto set path
       description: Path to hashtag oligos reference file.
       type: path
-      provider: default
+      provider: optional
 
     - name: probe set path
       description: A 10x-provided file linking probes and gene targets.
       type: path
-      provider: default
+      provider: optional
 
 - title: Project parameters
   name: _project
