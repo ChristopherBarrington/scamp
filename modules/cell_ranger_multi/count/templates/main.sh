@@ -8,12 +8,6 @@ cellranger multi ${multi_args} \\
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
 	--disable-ui
 
-mkdir --parents ${id}/outs/{multi,per_sample_outs}
-touch ${id}/outs/config.csv
-
-mkdir --parents ${id}/outs/per_sample_outs/{${expected_datasets},${expected_datasets}}/count
-touch ${id}/outs/per_sample_outs/{${expected_datasets},${expected_datasets}}/{metrics_summary.csv,web_summary.html}
-
 # make links to summary reports
 
 # write task information to a (yaml) file
