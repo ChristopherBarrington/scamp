@@ -66,19 +66,23 @@
 
     - name: vdj index path
       description: Path to VDJ reference index.
-      type: string
+      type: path
+      provider: default
 
     - name: adt set path
       description: Path to antibody-derived tags reference file.
       type: path
+      provider: default
 
     - name: hto set path
       description: Path to hashtag oligos reference file.
       type: path
+      provider: default
 
     - name: probe set path
       description: A 10x-provided file linking probes and gene targets.
       type: path
+      provider: default
 
 - title: Project parameters
   name: _project
