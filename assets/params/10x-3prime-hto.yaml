@@ -1,0 +1,134 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC23164
+    babs id: cb000
+    type: 10x-3prime-hto
+
+_genome:
+    assembly: GRCh38
+    name: GRCh38
+    organism: homo sapiens
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    # mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    # cell cycle genes: inputs/cell_cycle_genes.yaml
+    # fasta path: inputs/fastas
+    # fasta file: inputs/fasta.fa
+    # fasta index file: inputs/fasta.fai
+    # gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+    # motifs file: inputs/motifs
+
+_defaults:
+    feature identifiers: name
+    feature types:
+        Gene Expression:
+            - GHA6309A2
+            - GHA6309A3
+            - GHA6309A4
+            - GHA6309A5
+            - GHA6309A6
+            - GHA6309A7
+        Multiplexing Capture:
+            - GHA6309A13
+            - GHA6309A14
+            - GHA6309A15
+            - GHA6309A16
+            - GHA6309A17
+            - GHA6309A18
+    fastq paths:
+        - inputs/10x-3prime-hto/data/230630_A01366_0410_AHF37NDSX7/fastq
+        - inputs/10x-3prime-hto/data/230630_A01366_0409_BHF577DSX7/fastq
+        - inputs/10x-3prime-hto/data/230714_A01366_0416_BHHCT7DSX7/fastq
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-2020-A
+    workflows:
+        - quantification/cell ranger multi
+
+_datasets:
+    day0 A rep1:
+        description: day0 A rep1 CMO311
+        limsid:
+            - GHA6309A2
+            - GHA6309A13
+        barcode: CMO311
+
+    day0 A rep2:
+        description: day0 A rep2 CMO312
+        limsid:
+            - GHA6309A2
+            - GHA6309A13
+        barcode: CMO312
+
+    day0 B rep1:
+        description: day0 B rep1 CMO311
+        limsid:
+            - GHA6309A3
+            - GHA6309A14
+        barcode: CMO311
+
+    day0 B rep2:
+        description: day0 B rep2 CMO312
+        limsid:
+            - GHA6309A3
+            - GHA6309A14
+        barcode: CMO312
+
+    day1 rep1:
+        description: day1 rep1 CMO309
+        limsid:
+            - GHA6309A4
+            - GHA6309A15
+        barcode: CMO309
+
+    day1 rep2:
+        description: day1 rep2 CMO310
+        limsid:
+            - GHA6309A4
+            - GHA6309A15
+        barcode: CMO310
+
+    day1 Chimera rep1:
+        description: day1 Chimera rep1 CMO311
+        limsid:
+            - GHA6309A5
+            - GHA6309A16
+        barcode: CMO311
+
+    day1 Chimera rep2:
+        description: day1 Chimera rep2 CMO312
+        limsid:
+            - GHA6309A5
+            - GHA6309A16
+        barcode: CMO312
+
+    day3 rep1:
+        description: day3 rep1 CMO305
+        limsid:
+            - GHA6309A6
+            - GHA6309A17
+        barcode: CMO305
+
+    day3 rep2:
+        description: day3 rep2 CMO306
+        limsid:
+            - GHA6309A6
+            - GHA6309A17
+        barcode: CMO306
+
+    day3 Chimera rep1:
+        description: day3 Chimera rep1 CMO307
+        limsid:
+            - GHA6309A7
+            - GHA6309A18
+        barcode: CMO307
+
+    day3 Chimera rep2:
+        description: day3 Chimera rep2 CMO308
+        limsid:
+            - GHA6309A7
+            - GHA6309A18
+        barcode: CMO308

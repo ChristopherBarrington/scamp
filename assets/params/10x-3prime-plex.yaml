@@ -1,0 +1,79 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC23068
+    babs id: cb000
+    type: 10x-3prime-plex
+
+_genome:
+    assembly: GRCh38
+    name: GRCh38
+    organism: homo sapiens
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    # mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    # cell cycle genes: inputs/cell_cycle_genes.yaml
+    # fasta path: inputs/fastas
+    # fasta file: inputs/fasta.fa
+    # fasta index file: inputs/fasta.fai
+    # gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+    # motifs file: inputs/motifs
+
+_defaults:
+    feature identifiers: name
+    feature types:
+        Gene Expression:
+            - NGO5802A3
+            - NGO5802A4
+            - NGO5802A5
+        Multiplexing Capture:
+            - NGO5802A6
+            - NGO5802A7
+            - NGO5802A8
+    fastq paths:
+        - inputs/10x-3prime-plex/data/230511_A01366_0386_AHKC5TDMXY/fastq
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-2020-A
+    workflows:
+        - quantification/cell ranger multi
+
+_datasets:
+    CD25pos pos A CMO301:
+        limsid:
+            - NGO5802A3
+            - NGO5802A6
+        barcode: CMO301
+
+    CD25pos pos A CMO302:
+        limsid:
+            - NGO5802A3
+            - NGO5802A6
+        barcode: CMO302
+
+    CD25pos pos B CMO301:
+        limsid:
+            - NGO5802A4
+            - NGO5802A7
+        barcode: CMO301
+
+    CD25pos pos B CMO302:
+        limsid:
+            - NGO5802A4
+            - NGO5802A7
+        barcode: CMO302
+
+    CD25pos neg CMO301:
+        limsid:
+            - NGO5802A5
+            - NGO5802A8
+        barcode: CMO301
+
+    CD25pos neg CMO302:
+        limsid:
+            - NGO5802A5
+            - NGO5802A8
+        barcode: CMO302
+

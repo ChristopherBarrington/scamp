@@ -1,0 +1,92 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC22169
+    babs id: cb000
+    type: 10x-5prime-adt-hto-vdj
+
+_genome:
+    assembly: mm10
+    name: mm10
+    organism: mus musculus
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    # mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    # cell cycle genes: inputs/cell_cycle_genes.yaml
+    # fasta path: inputs/fastas
+    # fasta file: inputs/fasta.fa
+    # fasta index file: inputs/fasta.fai
+    # gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+    # motifs file: inputs/motifs
+
+_defaults:
+    feature identifiers: name
+    feature types:
+        Gene Expression:
+            - XUY4926A1
+            - XUY4926A2
+            - XUY4926A3
+            - XUY4926A4
+        VDJ-B:
+            - XUY4926A5
+            - XUY4926A6
+            - XUY4926A7
+            - XUY4926A8
+        Antibody Capture:
+            - XUY4926A9
+            - XUY4926A10
+            - XUY4926A11
+            - XUY4926A12
+    fastq paths:
+        - inputs/10x-5prime-adt-hto-vdj/data/220628_A01366_0230_BH7HNNDMXY/fastq
+        - inputs/10x-5prime-adt-hto-vdj/data/220712_A01366_0235_AHCGTJDMXY/fastq
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-mm10-2020-A
+    adt set path: inputs/10x-5prime-adt-hto-vdj/feature_set.adt.csv
+    hto set path: inputs/10x-5prime-adt-hto-vdj/feature_set.hto.csv
+    vdj index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-vdj-GRCm38-alts-ensembl-7.0.0
+    workflows:
+        - quantification/cell ranger multi
+    barcode:
+        - C0301
+        - C0302
+
+_datasets:
+    Control:
+        limsid:
+            - XUY4926A1
+            - XUY4926A5
+            - XUY4926A9
+        barcode:
+            - C0301
+            - C0302
+
+    Cplus:
+        limsid:
+            - XUY4926A2
+            - XUY4926A6
+            - XUY4926A10
+        barcode:
+            - C0303
+            - C0304
+
+    OEhet:
+        limsid:
+            - XUY4926A3
+            - XUY4926A7
+            - XUY4926A11
+        barcode:
+            - C0305
+            - C0306
+
+    Cplus:
+        limsid:
+            - XUY4926A4
+            - XUY4926A8
+            - XUY4926A12
+        barcode:
+            - C0307
+            - C0308

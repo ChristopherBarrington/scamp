@@ -1,0 +1,52 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC23190
+    babs id: cb000
+    type: 10x-3prime-adt
+
+_genome:
+    assembly: mm10
+    name: mm10
+    organism: mus musculus
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    # mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    # cell cycle genes: inputs/cell_cycle_genes.yaml
+    # fasta path: inputs/fastas
+    # fasta file: inputs/fasta.fa
+    # fasta index file: inputs/fasta.fai
+    # gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+    # motifs file: inputs/motifs
+
+_defaults:
+    feature identifiers: name
+    feature types:
+        Gene Expression:
+            - BIR6352A1
+            - BIR6352A2
+        Antibody Capture:
+            - BIR6352A3
+            - BIR6352A4
+    fastq paths:
+        - inputs/10x-3prime-adt/data/230726_A01366_0423_BHHGNYDSX7/fastq
+        - inputs/10x-3prime-adt/data/230803_A01366_0428_BHJWLFDSX7/fastq
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-mm10-2020-A
+    adt set path: inputs/10x-3prime-adt/feature_set.adt.csv
+    workflows:
+        - quantification/cell ranger multi
+
+_datasets:
+    5p partial1:
+        limsid:
+            - BIR6352A1
+            - BIR6352A3
+
+    5p partial2:
+        limsid:
+            - BIR6352A2
+            - BIR6352A4
