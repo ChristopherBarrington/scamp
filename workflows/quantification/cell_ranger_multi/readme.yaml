@@ -70,7 +70,7 @@ parameters:
     - project parameters
     - vdj index path
     - limsid
-    - fastq_paths
+    - fastq paths
 
 authors:
   - "@ChristopherBarrington"

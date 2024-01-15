@@ -76,6 +76,10 @@
       description: Path to hashtag oligos reference file.
       type: string
 
+    - name: probe set path
+      description: A 10x-provided file linking probes and gene targets.
+      type: string
+
 - title: Project parameters
   name: _project
   description: A reserved stanza that defines the project, rather than specifc data.
