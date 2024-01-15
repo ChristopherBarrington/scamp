@@ -60,6 +60,22 @@
       type: string
       provider: process
 
+    - name: barcode
+      description: A barcode identifier, for example BC001.
+      type: string(s)
+
+    - name: vdj index path
+      description: Path to VDJ reference index.
+      type: string
+
+    - name: adt set path
+      description: Path to antibody-derived tags reference file.
+      type: string
+
+    - name: hto set path
+      description: Path to hashtag oligos reference file.
+      type: string
+
 - title: Project parameters
   name: _project
   description: A reserved stanza that defines the project, rather than specifc data.
