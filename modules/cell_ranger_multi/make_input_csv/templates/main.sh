@@ -109,8 +109,13 @@ fi
 if [[ '$type' =~ -flex(-|\$) ]] ||
    [[ '$type' =~ -plex(-|\$) ]] ||
    [[ '$type' =~ -hto(-|\$) && ! '$type' =~ -adt- && ! '$type' =~ -vdj(-|\$) ]]; then
-	printf '\\n[samples]\\nsample_id,probe_barcode_ids,description\\n' \\
-	>> input.csv
+   	if [[ '$type' =~ -hto(-|\$) ]]; then
+		printf '\\n[samples]\\nsample_id,cmo_ids,description\\n' \\
+		>> input.csv
+   	else
+		printf '\\n[samples]\\nsample_id,probe_barcode_ids,description\\n' \\
+		>> input.csv
+   	fi
 
 	sort --key 1,1  --field-separator , <<< "$sample_barcodes" \\
 	>> input.csv
