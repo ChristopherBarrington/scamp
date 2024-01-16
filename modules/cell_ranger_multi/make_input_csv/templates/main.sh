@@ -27,6 +27,11 @@ printf '\\n[libraries]\\n' \\
 sort --key 2,2  --field-separator , <<< "$sample_types" \\
 > sample_types.csv
 
+## change the feature_types when needed
+if [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|\$) ]]; then
+	sed --inplace 's/^Multiplexing Capture,/Antibody Capture,/' sample_types.csv
+fi
+
 ## write a table of paths and sample name
 find -L fastq_path_* -mindepth 1 -maxdepth 1 -regextype posix-extended -regex '.*/$fastq_files_regex' \\
 | sed --regexp-extended --expression 's/$fastq_files_regex/\\1/' \\
@@ -46,11 +51,6 @@ join -j 2 -t , -o 1.1,1.2,2.1 fastqs.csv sample_types.csv \\
 | awk --assign FS=',' --assign OFS=',' 'NR==1{print "fastq_id", "fastqs", "feature_types"} {print \$2, \$1, \$3}' \\
 >> input.csv
 
-## change the feature_types when needed
-if [[ '$type' =~ -hto(-|\$) ]] && [[ '$type' =~ -vdj(-|\$) ]]; then
-	sed --inplace 's/,Multiplexing Capture/,Antibody Capture/' input.csv
-fi
-
 # --- write the [vdj] section to file ------------------------------------------------------------
 
 if [[ '$type' =~ -vdj(-|\$) ]]; then
@@ -65,7 +65,8 @@ fi
 
 # --- write the [feature] section to file --------------------------------------------------------
 
-if [[ '$type' =~ -adt(-|\$) ]] || [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|\$) ]]; then
+if [[ '$type' =~ -adt(-|\$) ]] ||
+   [[ '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
 	if [[ ! '$type' =~ -hto(-|\$) ]]; then
 		FEATURES_REFERENCE_PATH=`readlink adt_set.csv`
 	elif [[ '$type' =~ -adt- && '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
@@ -78,20 +79,18 @@ if [[ '$type' =~ -adt(-|\$) ]] || [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|
 
 		FEATURES_REFERENCE_PATH=`realpath features.csv`
 	elif [[ '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
-
-
 		if [[ ! -e hto_set.csv ]]; then
-		  head --lines 1 ${moduleDir}/assets/hto_reference.csv \\
+		  head --lines 1 $moduleDir/assets/hto_reference.csv \\
 		  > features.csv
 		  
-		  tail --lines +1 ${moduleDir}/assets/hto_reference.csv \\
-		  | grep --extended-regexp '${barcodes_regex}' \
+		  tail --lines +1 $moduleDir/assets/hto_reference.csv \\
+		  | grep --extended-regexp '$barcodes_regex' \
 		  >> features.csv
 		else
 		  cp `readlink hto_set.csv` features.csv
 		fi
 
-		sed --in-place 's/,Multiplexing Capture/, Antibody Capture/' features.csv
+		sed --in-place 's/,Multiplexing Capture/,Antibody Capture/' features.csv
 
 		FEATURES_REFERENCE_PATH=`realpath features.csv`
 	fi
@@ -99,7 +98,7 @@ if [[ '$type' =~ -adt(-|\$) ]] || [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|
 	printf '\\n[feature]\\n' \\
 	>> input.csv
 
-	echo reference \$FEATURES_REFERENCE_PATH $feature_section_params \\
+	echo reference \${FEATURES_REFERENCE_PATH} $feature_section_params \\
 	| sed 's/ /\\n/g' \\
 	| paste --delimiter , - - \\
 	>> input.csv
@@ -107,7 +106,9 @@ fi
 
 # --- write the [samples] section to file --------------------------------------------------------
 
-if [[ '$type' =~ -flex(-|\$) ]] || [[ '$type' =~ -plex(-|\$) ]] || [[ '$type' =~ -hto && ! '$type' =~ -adt(-|\$) && ! '$type' =~ -vdj(-|\$) ]]; then
+if [[ '$type' =~ -flex(-|\$) ]] ||
+   [[ '$type' =~ -plex(-|\$) ]] ||
+   [[ '$type' =~ -hto(-|\$) && ! '$type' =~ -adt- && ! '$type' =~ -vdj(-|\$) ]]; then
 	printf '\\n[samples]\\nsample_id,probe_barcode_ids,description\\n' \\
 	>> input.csv
 
