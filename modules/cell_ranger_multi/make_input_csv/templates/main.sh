@@ -29,7 +29,7 @@ sort --key 2,2  --field-separator , <<< "$sample_types" \\
 
 ## change the feature_types when needed
 if [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|\$) ]]; then
-	sed --inplace 's/^Multiplexing Capture,/Antibody Capture,/' sample_types.csv
+	sed --in-place 's/^Multiplexing Capture,/Antibody Capture,/' sample_types.csv
 fi
 
 ## write a table of paths and sample name
