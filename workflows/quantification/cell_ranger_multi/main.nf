@@ -4,7 +4,7 @@
 // -------------------------------------------------------------------------------------------------
 
 include { cat as combine_task_records } from '../../../modules/tools/cat'
-include { multi }                       from '../../../modules/cell_ranger_multi/count'
+include { count }                       from '../../../modules/cell_ranger_multi/count'
 include { make_input_csv }              from '../../../modules/cell_ranger_multi/make_input_csv'
 include { mkref }                       from '../../../modules/cell_ranger_arc/mkref'
 
@@ -132,10 +132,10 @@ workflow cell_ranger_multi {
 		dataset_ids   = libraries_to_quantify.map{it.get('dataset_ids')}
 
 		// quantify the libraries into datasets
-		multi(libraries_to_quantify, ids, dataset_ids, config_files)
+		count(libraries_to_quantify, ids, dataset_ids, config_files)
 
 		// make a channel of newly quantified datasets, each defined in a map
-		merge_process_emissions(multi, ['opt', 'multi_quantification_path', 'per_sample_quantification_path'])
+		merge_process_emissions(count, ['opt', 'multi_quantification_path', 'per_sample_quantification_path'])
 			.map{it + ['quantification path': make_map([it.get('per_sample_quantification_path')].flatten(), [it.get('per_sample_quantification_path')].flatten{it.getFileName().toString()})]}
 			.map{make_map([it]*it.get('per_sample_quantification_path').size(), [it.get('per_sample_quantification_path')].flatten{it.getFileName().toString()})}
 			.map{it.collectEntries{k,v -> [k, v + ['dataset id': k, 'quantification path': v.get('quantification path').get(k)]]}}
