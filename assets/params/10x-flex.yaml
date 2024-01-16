@@ -33,7 +33,7 @@ _defaults:
         - inputs/10x-flex/data/230714_A01366_0416_BHHCT7DSX7/fastq
         - inputs/10x-flex/data/231201_A01366_0489_BHTNK2DSX7/fastq
     index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-2020-A
-    probe set path: inputs/10x-flex/Chromium_Human_Transcriptome_Probe_Set_v1.0_GRCh38-2020-A.csv
+    probe set path: inputs/10x-flex/Chromium_Human_Transcriptome_Probe_Set_v1.0.1_GRCh38-2020-A.csv
     workflows:
         - quantification/cell ranger multi
 

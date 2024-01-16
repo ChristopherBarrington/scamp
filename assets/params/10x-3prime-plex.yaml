@@ -8,8 +8,8 @@ _project:
     type: 10x-3prime-plex
 
 _genome:
-    assembly: GRCh38
-    name: GRCh38
+    assembly: GRCh38+mm10
+    name: GRCh38+mm10
     organism: homo sapiens
     ensembl release: 98
     non-nuclear contigs:
@@ -36,7 +36,7 @@ _defaults:
             - NGO5802A8
     fastq paths:
         - inputs/10x-3prime-plex/data/230511_A01366_0386_AHKC5TDMXY/fastq
-    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-2020-A
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-and-mm10-2020-A
     workflows:
         - quantification/cell ranger multi
 

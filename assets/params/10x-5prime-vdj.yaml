@@ -36,7 +36,7 @@ _defaults:
     fastq paths:
         - inputs/10x-5prime-vdj/data/211215_A01366_0116_AH53C7DMXY/fastq
     index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-mm10-2020-A
-    vdj index path: inputs/10x-5prime-vdj/refdata-cellranger-vdj-GRCm38-alts-ensembl-5.0.0
+    vdj index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-vdj-GRCm38-alts-ensembl-7.0.0
     workflows:
         - quantification/cell ranger multi
 

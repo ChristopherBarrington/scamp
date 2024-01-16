@@ -41,7 +41,7 @@ _defaults:
         - inputs/10x-5prime-hto-vdj/data/230803_A01366_0428_BHJWLFDSX7/fastq
     index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-mm10-2020-A
     adt set path: inputs/10x-5prime-hto-vdj/feature_set.adt.csv
-    vdj index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-vdj-GRCm38-alts-ensembl-4.0.0
+    vdj index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-vdj-GRCm38-alts-ensembl-7.0.0
     workflows:
         - quantification/cell ranger multi
 
