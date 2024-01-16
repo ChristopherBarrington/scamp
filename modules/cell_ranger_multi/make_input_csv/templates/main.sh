@@ -110,7 +110,7 @@ if [[ '$type' =~ -flex(-|\$) ]] ||
    [[ '$type' =~ -plex(-|\$) ]] ||
    [[ '$type' =~ -hto(-|\$) && ! '$type' =~ -adt- && ! '$type' =~ -vdj(-|\$) ]]; then
 	if [[ '$type' =~ -hto(-|\$) ]] ||
-	   [[ '$type' =~ -plex(-|$) ]]; then
+	   [[ '$type' =~ -plex(-|\$) ]]; then
 		printf '\\n[samples]\\nsample_id,cmo_ids,description\\n' \\
 		>> input.csv
 	else
