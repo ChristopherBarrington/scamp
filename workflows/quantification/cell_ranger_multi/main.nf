@@ -122,17 +122,17 @@ workflow cell_ranger_multi {
 		// make a channel containing all information for the quantification process
 		quantification_configs
 			.map{it.subMap(['config_file', 'limsid', 'dataset_ids'])}
-			.map{it + [id: it.get('limsid').sort{it - ~/^\w+\d+A/ as int}.join('-')]}
+			.map{it + [output_dir: it.get('limsid').sort{it - ~/^\w+\d+A/ as int}.join('-')]}
 			.dump(tag: 'quantification:cell_ranger_multi:libraries_to_quantify', pretty: true)
 			.set{libraries_to_quantify}
 
 		// make channels of parameters for libraries that need to be analysed
-		ids           = libraries_to_quantify.map{it.get('id')}
+		output_dirs   = libraries_to_quantify.map{it.get('output_dir')}
 		config_files  = libraries_to_quantify.map{it.get('config_file')}
 		dataset_ids   = libraries_to_quantify.map{it.get('dataset_ids')}
 
 		// quantify the libraries into datasets
-		count(libraries_to_quantify, ids, dataset_ids, config_files)
+		count(libraries_to_quantify, output_dirs, dataset_ids, config_files)
 
 		// make a channel of newly quantified datasets, each defined in a map
 		merge_process_emissions(count, ['opt', 'multi_quantification_path', 'per_sample_quantification_path'])
