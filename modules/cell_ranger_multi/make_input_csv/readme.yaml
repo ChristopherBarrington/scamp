@@ -1,0 +1,72 @@
+name: make configuration file
+
+description: |
+  Creates a configuration file for a library, listing the sample names, assay types and paths to FastQ files (etc).
+
+tags:
+  - 10x
+  - quantification
+  - rna
+  - flex
+  - plex
+  - antibody derived tags (adt)
+  - hashtag oligos (hto)
+  - variable diversity joining (vdj)
+  - 5' gene expression
+  - 3' gene expression
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: type
+    type: string
+    description: A hyphen-separated collection of assays, for example '10x-hto-vdj', to determine the type of configuration file to produce.
+  - name: library ids
+    type: strings
+    description: An array of library identifiers. These will be used to find the library type from the `_project/library types` map.
+  - name: sample ids
+    type: strings
+    description: A list of sample names that are expected in the library(s).
+  - name: descriptions
+    type: strings
+    description: A list of descriptions of the samples, added to the configuration file.
+  - name: barcodes
+    type: strings
+    description: A list of lists of barcodes for each sample.
+  - name: feature types
+    type: strings
+    description: An array of "Gene Expression" (etc) for each sample.
+  - name: fastq path
+    type: paths
+    description: An array of paths that contain FastQ files that could be added to the sample sheet. 
+  - name: index
+    type: path
+    description: A Cell Ranger (gene expression) index. Can be created with `mkref` or downloaded.
+  - name: index_vdj
+    type: path
+    description: A Cell Ranger (VDJ) index. Can be created with `mkvdjref` or downloaded. May be a non-existent path if not rewquired.
+  - name: probe_set.csv
+    type: file
+    description: A CSV file to map probes to genes. Can be downloaded from 10x. May be set to a non-existent file if not required.
+  - name: adt_set.csv
+    type: file
+    description: A CSV file that defines which sequenced tag is associated to which antibody. May be a non-existent file if not required.
+  - name: hto_set.csv
+    type: file
+    description: A CSV file that defines the sequences that identify barcodes. The reference in `assets` may be used. The file is subset for barcodes of samples in the library.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: input csv
+    type: file
+    description: CSV-formatted sample sheet for a Cell Ranger multi analysis.
+    pattern: input.csv
+  - name: features csv
+    type: file
+    description: A CSV file of features, referenced in the `input.csv`
+
+authors:
+  - "@ChristopherBarrington"

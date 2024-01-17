@@ -6,6 +6,7 @@ description: |
 tags:
   - 10x
   - quantification
+  - rna
   - flex
   - plex
   - antibody derived tags (adt)
@@ -25,13 +26,13 @@ steps:
     description: Write a formatted configuration file that includes all libraries in this project which will be subset for libraries in a dataset.
     anchor: 68
     modules:
-      - cell_ranger_multi/make_libraries_csv
+      - cell_ranger_multi/make_input_csv
 
   - name: Quantify assays
     description: Use the FastQ files to quantify RNA expression and additional assays in single cells.
     anchor: 119
     modules:
-      - cell_ranger_multi/multi
+      - cell_ranger_multi/count
 
 output:
   - name: result
