@@ -28,12 +28,12 @@ input:
   - name: opt
     type: map
     description: A map of task-specific variables.
-  - name: id
+  - name: output dir
     type: string
-    description: Directory-safe name for the output directory.
+    description: A path to use as the Cell Ranger multi output directory.
   - name: dataset_ids
-    type: string array
-    description: An array of datasets that should be in the library, this may be more than one.
+    type: strings
+    description: An array of datasets that should be in the library, there may be only one. When there is only one sample in the `per_sample_outs`, the sample is renamed to the hyphen-joined list of dataset IDs.
   - name: config.csv
     type: file
     description: Path to the configuration file.
