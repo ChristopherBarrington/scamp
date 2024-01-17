@@ -231,10 +231,10 @@ def get_default_parameters() {
 	 'description'        : {it -> it.get('dataset name')},
 	 'feature identifiers': {'name'},
 	 'barcode'            : {'none'}, // barcode should be optional??
-	 'adt set path'       : {Paths.get('undefined-adt-set-path')},
-	 'hto set path'       : {Paths.get('undefined-hto-set-path')},
-	 'probe set path'     : {Paths.get('undefined-probe-set-path')},
-	 'vdj index path'     : {Paths.get('undefined-vdj-index-path')}]
+	 'adt set path'       : {file('undefined-adt-set-path')},
+	 'hto set path'       : {file('undefined-hto-set-path')},
+	 'probe set path'     : {file('undefined-probe-set-path')},
+	 'vdj index path'     : {file('undefined-vdj-index-path')}]
 }
 
 // define some checker functions for often used or process-provided parameters
