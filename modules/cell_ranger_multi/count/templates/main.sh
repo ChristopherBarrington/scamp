@@ -2,13 +2,21 @@
 
 # run cell ranger multi
 cellranger multi ${multi_args} \\
-	--id=${id} \\
-	--description="Cell Ranger (multi) analysis of ${id}" \\
+	--id=${output_dir} \\
+	--description="Cell Ranger (multi) analysis of ${output_dir}" \\
 	--csv=config.csv \\
 	--jobmode=local --localcores=${task.cpus} --localmem=${task.memory.toGiga()} \\
 	--disable-ui
 
 # make links to summary reports
+mkdir --parents ${output_dir}/outs/per_sample_summaries \\
+&& ls ${output_dir}/outs/per_sample_outs \\
+| xargs --max-args 1 -I @ sh -c "mkdir ${output_dir}/outs/per_sample_summaries/@ && cp ${output_dir}/outs/per_sample_outs/@/{metrics_summary.csv,web_summary.html} ${output_dir}/outs/per_sample_summaries/@/"
+
+# if the library contains only one sample, rename the per_sample_outs from id to single_sample_out
+if [[ `find ${output_dir}/outs/per_sample_outs -mindepth 1 -maxdepth 1 -type d -printf '%P'` == ${output_dir} ]]; then
+        mv ${output_dir}/outs/per_sample_outs/{${output_dir},${single_sample_out}}
+fi
 
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml
@@ -16,7 +24,7 @@ cat <<-END_TASK > task.yaml
   task:
     '${task.index}':
       params:
-        id: ${id}
+        id: ${output_dir}
         csv: `realpath config.csv`
       meta:
         workDir: `pwd`
