@@ -383,9 +383,9 @@ def get_dataset_barcodes():
 
 def get_set_files():
 	set_files = {}
-	if args.antibodies_file is not None: set_files.update({'adt set path', args.antibodies_file})
-	if args.hto_file is not None: set_files.update({'hto set path', args.hto_file})
-	if args.probes_file is not None: set_files.update({'probe set path', args.probes_file})
+	if args.antibodies_file is not None: set_files.update({'adt set path': args.antibodies_file})
+	if args.hto_file is not None: set_files.update({'hto set path': args.hto_file})
+	if args.probes_file is not None: set_files.update({'probe set path': args.probes_file})
 	return(set_files)
 
 # ------------------------------------------------------------------------------------------------
