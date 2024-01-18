@@ -75,6 +75,14 @@ parser.add_argument(
 	'--antibodies-file', type=str, required=False, dest='antibodies_file',
 	help='Path to antibodies CSV file with antibody and tag information.')
 
+parser.add_argument(
+	'--hto-file', type=str, required=False, dest='hot_file',
+	help='Path to CSV for HTO antibody tags. Can be omitted in which case the default TotalSeq set is used from the module assets.')
+
+parser.add_argument(
+	'--probes-file', type=set, required=False, dest='probes_file',
+	help='Path to 10x probes file for Flex analyses.')
+
 args = parser.parse_args()
 
 # ------------------------------------------------------------------------------------------------
