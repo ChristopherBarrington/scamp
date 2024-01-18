@@ -43,10 +43,10 @@ if [[ `find ${output_dir}/outs/per_sample_outs -mindepth 1 -maxdepth 1 -type d -
 	mv ${output_dir}/outs/per_sample_outs/{${output_dir},${single_sample_out}}
 fi
 
-# make links to summary reports
-mkdir --parents ${output_dir}/outs/per_sample_summaries \\
-&& ls ${output_dir}/outs/per_sample_outs \\
-| xargs --max-args 1 -I @ sh -c "mkdir ${output_dir}/outs/per_sample_summaries/@ && cp ${output_dir}/outs/per_sample_outs/@/{metrics_summary.csv,web_summary.html} ${output_dir}/outs/per_sample_summaries/@/"
+# move summary reports
+# mkdir --parents ${output_dir}/outs/per_sample_summaries \\
+# && ls ${output_dir}/outs/per_sample_outs \\
+# | xargs --max-args 1 -I @ sh -c "mkdir ${output_dir}/outs/per_sample_summaries/@ && mv ${output_dir}/outs/per_sample_outs/@/{metrics_summary.csv,web_summary.html} ${output_dir}/outs/per_sample_summaries/@/"
 
 # write task information to a (yaml) file
 cat <<-END_TASK > task.yaml

@@ -14,11 +14,7 @@ process count {
 		path 'task.yaml', emit: task
 		path "$output_dir/outs/config.csv", emit: config_csv
 		path "$output_dir/outs/multi", emit: multi_quantification_path
-		path "$output_dir/outs/per_sample_outs/*/count", emit: per_sample_quantification_path
-		path "$output_dir/outs/per_sample_outs/*/vdj_b", emit: per_sample_vdjb_path, optional: true
-		path "$output_dir/outs/per_sample_outs/*/vdj_t", emit: per_sample_vdjt_path, optional: true
-		path "$output_dir/outs/per_sample_summaries/*/metrics_summary.csv", emit: per_sample_metrics_summary
-		path "$output_dir/outs/per_sample_summaries/*/web_summary.html", emit: per_sample_web_summary
+		path "$output_dir/outs/per_sample_outs/*", emit: per_sample_quantification_path
 
 	script:
 		multi_args = task.ext.multi ?: ''
