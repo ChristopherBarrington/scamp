@@ -55,7 +55,7 @@ parser.add_argument(
 parser.add_argument(
 	'--project-type', type=str, required=False, dest='project_type',
 	help='Protocol used to generate these datasets.',
-	choices=['10X-3prime', '10X-Multiomics', '10X-FeatureBarcoding', 'hive'])
+	choices=['10X-3prime', '10X-Multiomics', '10X-FeatureBarcoding'])
 
 parser.add_argument(
 	'--design-file', type=str, required=False, dest='design_file',
@@ -292,10 +292,6 @@ def get_dataset_index():
 				'GRCh38': {
 					gex: os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A'),
 					vdj: os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCm38-alts-ensembl-7.1.0')}}.get(args.genome))
-
-		case 'hive':
-			return({
-				'GRCh38': 'unknown'}.get(args.genome))
 
 		case _:
 			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
