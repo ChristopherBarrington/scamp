@@ -47,7 +47,7 @@ nextflow pull ChristopherBarrington/scamp
 guess_scamp_file.py \
   --lims-id SC22034 \
   --genome mm10 \
-  --output-file scamp_file.yaml
+  --project-assays 10x 3prime
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -56,7 +56,7 @@ guess_scamp_file.py \
 guess_scamp_file.py \
   --data-path /nemo/stp/babs/inputs/sequencing/data/morisn/christopher.cooke/SC22034 \
   --genome mm10 \
-  --output-file scamp_file.yaml
+  --project-assays 10x 3prime
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -67,7 +67,7 @@ guess_scamp_file.py \
   --scientist christopher.cooke \
   --lims-id SC22034 \
   --genome mm10 \
-  --output-file scamp_file.yaml
+  --project-assays 10x 3prime
 {{< /highlight >}}
 {{< /tab >}}
 
