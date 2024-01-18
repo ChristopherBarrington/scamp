@@ -9,7 +9,7 @@ tags:
 steps:
   - name: Quantify datasets
     description: Datasets are grouped according to the presence of `quantification/*` in the `workflows`. Quantification workflows are dispatched according to the workflow values.
-    anchor: 24
+    anchor: 25
     workflows:
       - quantification/cell_ranger
       - quantification/cell_ranger_arc
