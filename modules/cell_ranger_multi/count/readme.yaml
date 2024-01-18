@@ -56,24 +56,8 @@ output:
     pattern: '*/multi'
   - name: per_sample_quantification_path
     type: path
-    description: Cell Ranger multi gene expression outputs directory for each dataset.
-    pattern: '*/count'
-  - name: per_sample_vdjb_path
-    type: path
-    description: Optional Cell Ranger multi VDJ-B outputs directory.
-    pattern: '*/vdj_b'
-  - name: per_sample_vdjt_path
-    type: path
-    description: Optional Cell Ranger multi VDJ-T outputs directory.
-    pattern: '*/vdj_t'
-  - name: per_sample_metrics_summary
-    type: file
-    description: CSV file of summary metrics for each dataset.
-    pattern: '*/metrics_summary.csv'
-  - name: per_sample_web_summary
-    type: file
-    description: HTML report of the Cell Ranger multi analysis
-    pattern: '*/web_summary.html'
+    description: Cell Ranger multi gene expression outputs directory for each dataset. Subdirecotries of these include "count" and "vdj_b" for example.
+    pattern: '*/per_sample_outs'
 
 authors:
   - "@ChristopherBarrington"
