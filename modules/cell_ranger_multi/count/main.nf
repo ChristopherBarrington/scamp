@@ -1,7 +1,7 @@
 process count {
 	cpus 16
 	memory '64GB'
-	time '3d'
+	time '1d'
 
 	input:
 		val opt
