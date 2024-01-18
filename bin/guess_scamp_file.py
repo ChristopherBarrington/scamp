@@ -67,6 +67,10 @@ parser.add_argument(
 	'--design-file', type=str, required=False, dest='design_file',
 	help='Path to sample sheet CSV file.')
 
+parser.add_argument(
+	'--barcodes-file', type=str, required=False, dest='barcodes_file',
+	help='Path to barcodes CSV file with "barcode" and "sample_name" columns.')
+
 args = parser.parse_args()
 
 # ------------------------------------------------------------------------------------------------
@@ -98,6 +102,11 @@ def validate_arguments():
 	if args.design_file is None: get_design_file_path()
 	if args.project_type is None: get_project_type_from_assays()
 	if args.project_assays is None: get_project_assays_from_type()
+
+	if any([x in ['hto', 'flex', 'plex'] for x in args.project_assays]):
+		if args.barcodes_file is None:
+			print('a multiplexing design was specified but no --barcodes-file provided')
+			sys.exit()
 
 	args.fastq_paths_glob = os.path.join(args.data_path, 'primary_data', '*', 'fastq')
 
@@ -197,14 +206,7 @@ def get_fastq_paths_from_data_path():
 # ------------------------------------------------------------------------------------------------
 
 def read_design_file():
-	df = pandas.read_csv(args.design_file)
-	important_columns = ['sample_lims', 'sample_name', 'type', 'fastq_1']
-	for important_column in important_columns:
-		if important_column not in df.columns:
-			print('`{}` undefined in sample sheet {}!'.format(important_column, args.design_file))
-			sys.exit()
-		df = df[df[important_column].isnull() == False]
-	return(df)
+	return(read_and_check_file(args.design_file, ['sample_lims', 'sample_name', 'type', 'fastq_1']))
 
 # ------------------------------------------------------------------------------------------------
 # parse the sample sheet in `data` to guess library types
@@ -322,11 +324,8 @@ def get_workflows():
 		return(['quantification/cell_ranger', 'seurat/prepare/cell_ranger'])
 	elif '10x-multiome' == args.project_type:
 		return(['quantification/cell_ranger_arc', 'seurat/prepare/cell_ranger_arc'])
-	elif args.project_type in ['10x-3prime-adt','10x-3prime-hto','10x-3prime-plex','10x-5prime-adt-bcr-hto','10x-5prime-adt-tcr','10x-5prime-bcr-tcr','10x-5prime-hto-tcr','10x-flex']:
-		return(['quantification/cell_ranger_multi'])
 	else:
-		print("get_workflows: UNKNOWN PROJECT TYPE: {}".format(args.project_type))
-		sys.exit()
+		return(['quantification/cell_ranger_multi'])
 
 def get_genome_files(dataset_index):
 	match regex_spm.fullmatch_in(args.project_type):
@@ -347,10 +346,27 @@ def get_genome_files(dataset_index):
 # ------------------------------------------------------------------------------------------------
 
 def get_datasets(sample_lims_ids):
+	dataset_barcodes = get_dataset_barcodes()
 	for dataset,libraries in sample_lims_ids.items():
 		if len(libraries) == 1:
 			sample_lims_ids[dataset] = libraries.pop()
-	return({k:{'description': k, 'limsid': sample_lims_ids[k]} for k in sample_lims_ids})
+	return({k:{'description': k, 'limsid': sample_lims_ids[k]} | dataset_barcodes.get(k, {}) for k in sample_lims_ids})
+
+# ------------------------------------------------------------------------------------------------
+# get the barcode information, if relevant
+# ------------------------------------------------------------------------------------------------
+
+def read_barcode_file():
+	return(read_and_check_file(args.barcodes_file, ['barcode', 'dataset']))
+
+def get_dataset_barcodes():
+	dataset_barcodes = {}
+	if args.barcodes_file is None:
+		return dataset_barcodes
+	df = read_barcode_file()
+	for index,row in df.iterrows():
+		dataset_barcodes.update({(row['dataset']): dataset_barcodes.get(row['dataset'], []) + [row['barcode']]})
+	return({k:{'barcode': dataset_barcodes[k][0] if len(dataset_barcodes[k]) == 1 else dataset_barcodes[k] } for k in dataset_barcodes})
 
 # ------------------------------------------------------------------------------------------------
 # write the guessed parameters file
@@ -379,6 +395,15 @@ def natural_keys(text):
 	(See Toothy's implementation in the comments)
 	'''
 	return [ atoi(c) for c in re.split(r'(\d+)', text) ]
+
+def read_and_check_file(path, important_columns):
+	df = pandas.read_csv(path)
+	for important_column in important_columns:
+		if important_column not in df.columns:
+			print('`{}` undefined in file {}!'.format(important_column, path))
+			sys.exit()
+		df = df[df[important_column].isnull() == False]
+	return(df)
 
 # ------------------------------------------------------------------------------------------------
 # call these functions to get the parameters into a structure that can be written as yaml
