@@ -20,5 +20,5 @@ process cat {
 	script:
 		catter = 'main.sh'
 		catter = output_file ==~ /.*.yaml/ ? 'yaml.sh' : catter
-		template workflow.stubRun & ignore_stub_run!='true' ? 'stub.sh' : catter
+		template workflow.stubRun && ignore_stub_run!='true' ? 'stub.sh' : catter
 }
