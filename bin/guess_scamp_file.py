@@ -71,6 +71,10 @@ parser.add_argument(
 	'--barcodes-file', type=str, required=False, dest='barcodes_file',
 	help='Path to barcodes CSV file with "barcode" and "sample_name" columns.')
 
+parser.add_argument(
+	'--antibodies-file', type=str, required=False, dest='antibodies_file',
+	help='Path to antibodies CSV file with antibody and tag information.')
+
 args = parser.parse_args()
 
 # ------------------------------------------------------------------------------------------------
@@ -374,6 +378,17 @@ def get_dataset_barcodes():
 	return({k:{'barcode': dataset_barcodes[k][0] if len(dataset_barcodes[k]) == 1 else dataset_barcodes[k] } for k in dataset_barcodes})
 
 # ------------------------------------------------------------------------------------------------
+# get paths to set files, if relevant
+# ------------------------------------------------------------------------------------------------
+
+def get_set_files():
+	set_files = {}
+	if args.antibodies_file is not None: set_files.update({'adt set path', args.antibodies_file})
+	if args.hto_file is not None: set_files.update({'hto set path', args.hto_file})
+	if args.probes_file is not None: set_files.update({'probe set path', args.probes_file})
+	return(set_files)
+
+# ------------------------------------------------------------------------------------------------
 # write the guessed parameters file
 # ------------------------------------------------------------------------------------------------
 
@@ -425,6 +440,7 @@ def main():
 	dataset_indexes = get_dataset_indexes()
 	feature_types = get_feature_types()
 	library_types, sample_lims_ids = get_library_types()
+	set_files = get_set_files()
 
 	# get parameters dependent on the above variables
 	datasets = get_datasets(sample_lims_ids)
@@ -444,7 +460,7 @@ def main():
 			'fastq paths': fastq_paths,
 			'feature types': library_types,
 			'workflows': workflows,
-			'feature identifiers': 'name'} | dataset_indexes,
+			'feature identifiers': 'name'} | dataset_indexes | set_files,
 		'_datasets': datasets}
 
 	# write the above structure to a yaml file
