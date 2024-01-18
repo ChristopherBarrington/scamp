@@ -5,7 +5,7 @@ _project:
     scientist: christopher.barrington
     lims id: SC21077
     babs id: cb000
-    type: 10x-5prime-vdj
+    type: 10x-5prime-bcr-tcr
 
 _genome:
     assembly: mm10
