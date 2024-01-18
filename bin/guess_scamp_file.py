@@ -107,7 +107,7 @@ def validate_arguments():
 	if args.project_type is None: get_project_type_from_assays()
 	if args.project_assays is None: get_project_assays_from_type()
 
-	if not args.project_type.satrtswith('10x-'):
+	if not args.project_type.startswith('10x-'):
 		args.project_type = '10x-' + args.project_type
 
 	if '10x' not in args.project_assays:
