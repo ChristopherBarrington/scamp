@@ -53,7 +53,7 @@ workflow quantification {
 		// -------------------------------------------------------------------------------------------------
 
 		// make a list of all workflows
-		all_quantifications = [cell_ranger, cell_ranger_arc]
+		all_quantifications = [cell_ranger, cell_ranger_arc, cell_ranger_multi]
 
 		// concatenate output channels from each workflow
 		concat_workflow_emissions(all_quantifications, 'result')

@@ -160,19 +160,17 @@ workflow cell_ranger_multi {
 		// make summary report for the workflow
 		// -------------------------------------------------------------------------------------------------
 
-//		all_processes = [mkref, count]
-//
-//		// collate the task yaml files into one
-//		concat_workflow_emissions(all_processes, 'task')
-//			.collect()
-//			.dump(tag: 'quantification:cell_ranger_arc:tasks', pretty: true)
-//			.set{tasks}
-//
-//		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
+		all_processes = [count]
+
+		// collate the task yaml files into one
+		concat_workflow_emissions(all_processes, 'task')
+			.collect()
+			.dump(tag: 'quantification:cell_ranger_multi:tasks', pretty: true)
+			.set{tasks}
+
+		combine_task_records([:], tasks, '*.yaml', 'tasks.yaml', 'true')
 
 	emit:
-		result = 'result'
-		tasks = 'tasks'
-//		result = result
-//		tasks = tasks
+		result = result
+		tasks = tasks
 }
