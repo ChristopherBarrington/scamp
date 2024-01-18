@@ -72,18 +72,18 @@ workflow cell_ranger_multi {
 			.map{[[it.get('limsid')].flatten().join('|'), it]}
 			.groupTuple(by: 0)
 			.map{it.last()}
-			.map{[adt_set_path:   it.collect{it.getOrDefault('adt set path', file('.undefined'))}.unique().first(), // defaults could be moduleDir + 'assets' + 'file.csv'
+			.map{[adt_set_path:   it.collect{it.get('adt set path')}.unique().first(), // defaults could be moduleDir + 'assets' + 'file.csv'
 			      barcodes:       it.collect{it.get('barcode')},
 			      dataset_ids:    it.collect{it.get('dataset id')},
 			      descriptions:   it.collect{it.get('description')},
 			      fastq_paths:    it.collect{it.get('fastq paths')}.flatten().unique(), // are these risky?
 			      feature_types:  it.first().get('feature types'),
-			      hto_set_path:   it.collect{it.getOrDefault('hto set path', file('.undefined'))}.unique().first(),
+			      hto_set_path:   it.collect{it.get('hto set path')}.unique().first(),
 			      index_path:     it.collect{it.get('index path')}.unique().first(),
 			      limsid:         it.collect{it.get('limsid')}.flatten().unique(),
-			      probe_set_path: it.collect{it.getOrDefault('probe set path', file('.undefined'))}.unique().first(),
+			      probe_set_path: it.collect{it.get('probe set path')}.unique().first(),
 			      project_type:   it.first().get('project parameters').get('type'),
-			      vdj_index_path: it.collect{it.getOrDefault('vdj index path', file('.undefined'))}.unique().first()]}
+			      vdj_index_path: it.collect{it.get('vdj index path')}.unique().first()]}
 			.map{it + [feature_types: [it.get('limsid')].flatten().collect{x -> find_key_of_value(it.get('feature_types'), x)}]}
 			.map{it + [fastq_paths: convert_to_files(it.get('fastq_paths'))]}
 			.dump(tag: 'quantification:cell_ranger_multi:configuration_params', pretty: true)
