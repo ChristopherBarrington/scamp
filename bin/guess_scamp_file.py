@@ -103,10 +103,15 @@ def validate_arguments():
 	if args.project_type is None: get_project_type_from_assays()
 	if args.project_assays is None: get_project_assays_from_type()
 
-	if any([x in ['hto', 'flex', 'plex'] for x in args.project_assays]):
-		if args.barcodes_file is None:
-			print('a multiplexing design was specified but no --barcodes-file provided')
-			sys.exit()
+	if not args.project_type.satrtswith('10x-'):
+		args.project_type = '10x-' + args.project_type
+
+	if '10x' not in args.project_assays:
+		args.project_assays.insert(0, '10x')
+
+	if any([x in ['hto', 'flex', 'plex'] for x in args.project_assays]) and args.barcodes_file is None:
+		print('a multiplexing design was specified but no --barcodes-file provided')
+		sys.exit()
 
 	args.fastq_paths_glob = os.path.join(args.data_path, 'primary_data', '*', 'fastq')
 
