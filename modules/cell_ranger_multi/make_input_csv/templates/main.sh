@@ -33,7 +33,7 @@ if [[ '$type' =~ -hto(-|\$) && '$type' =~ -(b|t)cr(-|\$) ]]; then
 fi
 
 ## write a table of paths and sample name
-find -L fastq_path_* -mindepth 1 -maxdepth 1 -regextype posix-extended -regex '.*/$fastq_files_regex' \\
+find -L fastq_path_* -mindepth 1 -maxdepth 1 -size +10M -regextype posix-extended -regex '.*/$fastq_files_regex' \\
 | sed --regexp-extended --expression 's/$fastq_files_regex/\\1/' \\
 | awk --assign OFS=',' \
      '{cmd=sprintf("basename %s", \$0); cmd | getline limsid ;
