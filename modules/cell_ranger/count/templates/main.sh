@@ -28,7 +28,8 @@ cat <<-END_TASK > task.yaml
         description: $description
         sample: $sample
         index_path: `realpath index_path`
-      meta:
+        fastq_paths:
+          - `echo \${FASTQ_PATHS} | sed --expression 's/,/\\n/g' | sed --expression '2,\$ s/^/          - /'`      meta:
         workDir: `pwd`
   process:
     ext:
