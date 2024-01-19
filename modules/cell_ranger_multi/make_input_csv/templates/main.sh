@@ -28,7 +28,7 @@ sort --key 2,2  --field-separator , <<< "$sample_types" \\
 > sample_types.csv
 
 ## change the feature_types when needed
-if [[ '$type' =~ -hto(-|\$) && '$type' =~ -vdj(-|\$) ]]; then
+if [[ '$type' =~ -hto(-|\$) && '$type' =~ -(b|t)cr(-|\$) ]]; then
 	sed --in-place 's/^Multiplexing Capture,/Antibody Capture,/' sample_types.csv
 fi
 
@@ -53,7 +53,7 @@ join -j 2 -t , -o 1.1,1.2,2.1 fastqs.csv sample_types.csv \\
 
 # --- write the [vdj] section to file ------------------------------------------------------------
 
-if [[ '$type' =~ -vdj(-|\$) ]]; then
+if [[ '$type' =~ -(b|t)cr(-|\$) ]]; then
 	printf '\\n[vdj]\\n' \\
 	>> input.csv
 	
@@ -66,10 +66,10 @@ fi
 # --- write the [feature] section to file --------------------------------------------------------
 
 if [[ '$type' =~ -adt(-|\$) ]] ||
-   [[ '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
+   [[ '$type' =~ -hto- && '$type' =~ -(b|t)cr(-|\$) ]]; then
 	if [[ ! '$type' =~ -hto(-|\$) ]]; then
 		FEATURES_REFERENCE_PATH=`readlink adt_set.csv`
-	elif [[ '$type' =~ -adt- && '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
+	elif [[ '$type' =~ -adt- && '$type' =~ -hto- && '$type' =~ -(b|t)cr(-|\$) ]]; then
 		cat adt_set.csv \\
 		> features.csv
 		
@@ -78,7 +78,7 @@ if [[ '$type' =~ -adt(-|\$) ]] ||
 		>> features.csv
 
 		FEATURES_REFERENCE_PATH=`realpath features.csv`
-	elif [[ '$type' =~ -hto- && '$type' =~ -vdj(-|\$) ]]; then
+	elif [[ '$type' =~ -hto- && '$type' =~ -(b|t)cr(-|\$) ]]; then
 		if [[ ! -e hto_set.csv ]]; then
 		  head --lines 1 $moduleDir/assets/hto_reference.csv \\
 		  > features.csv
@@ -108,7 +108,7 @@ fi
 
 if [[ '$type' =~ -flex(-|\$) ]] ||
    [[ '$type' =~ -plex(-|\$) ]] ||
-   [[ '$type' =~ -hto(-|\$) && ! '$type' =~ -adt- && ! '$type' =~ -vdj(-|\$) ]]; then
+   [[ '$type' =~ -hto(-|\$) && ! '$type' =~ -adt- && ! '$type' =~ -(b|t)cr(-|\$) ]]; then
 	if [[ '$type' =~ -hto(-|\$) ]] ||
 	   [[ '$type' =~ -plex(-|\$) ]]; then
 		printf '\\n[samples]\\nsample_id,cmo_ids,description\\n' \\
