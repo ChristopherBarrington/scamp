@@ -34,6 +34,7 @@ process make_input_csv {
 		gene_expression_section_params = task.ext.gene_expression_section ?: ''
 		vdj_section_params = task.ext.vdj_section ?: ''
 		feature_section_params = task.ext.feature_section ?: ''
+		find_fastqs_params = task.ext.find_fastqs ?: ''
 
 		// type = type.split('-').sort().join('-')
 		// type = "main"
