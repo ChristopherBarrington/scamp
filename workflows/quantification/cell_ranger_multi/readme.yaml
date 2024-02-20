@@ -1,0 +1,74 @@
+name: Quantify single nucleus multiome assays using Cell Ranger ARC
+
+description: |
+  Using `cellranger-multi` software, barcoded and probe-based libraries for gene expression assays are quantified against an index, which can be optionally created.
+
+tags:
+  - 10x
+  - quantification
+  - rna
+  - flex
+  - plex
+  - antibody derived tags (adt)
+  - hashtag oligos (hto)
+  - variable diversity joining (vdj)
+  - 5' gene expression
+  - 3' gene expression
+
+steps:
+  # - name: Create missing indexes
+  #   description: For datasets that do not have an `index path`, an index is created using the information in the `genome` stanza. The unique set of required indexes are created.
+  #   anchor: 28
+  #   modules:
+  #     - cell_ranger_multi/mkref
+
+  - name: Create anlaysis configuration file
+    description: Write a formatted configuration file that includes all libraries in this project which will be subset for libraries in a dataset.
+    anchor: 68
+    modules:
+      - cell_ranger_multi/make_input_csv
+
+  - name: Quantify assays
+    description: Use the FastQ files to quantify RNA expression and additional assays in single cells.
+    anchor: 119
+    modules:
+      - cell_ranger_multi/count
+
+output:
+  - name: result
+    type: channel
+    description: A channel of maps that are the same as the input parameter sets but now include `quantification method` and `quantification path` keys.
+
+  - name: tasks
+    type: channel
+    description: Concatenation of all tasks' parameters and process software versions.
+
+channel tags:
+  # - ':genome_indexes.missing': Datasets for which the `index path` is missing; indexes will be created for these.
+  # - ':genome_indexes.provided': Datasets for which the `index path` has been provided.
+  # - ':index_paths': The indexes that have been created or provided.
+  - ':configuration_params': Channel containing information of which samples and assays are in each library.
+  - ':libraries_to_quantify': Paths to the newly-created configuration files for each library.
+  - ':quantified_datasets': Parameter sets of libraries that were quantified into datasets.
+  - ':result': Input parameters with the `index path` (if applicable), `config_file`, `quantification method` and `quantification path` keys added.
+  - ':tasks': Each task's output `task.yaml` files from the `task` channel.
+
+parameters:
+  # _genome:
+  #   - id
+
+  _dataset:
+    - adt set path
+    - barcode
+    - dataset id
+    - description
+    - fastq paths
+    - feature types
+    - hto set path
+    - index path
+    - limsid
+    - probe set path
+    - vdj index path
+
+authors:
+  - "@ChristopherBarrington"

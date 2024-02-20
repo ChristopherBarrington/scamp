@@ -1,0 +1,63 @@
+name: count
+
+description: |
+  Aligns and quantifies FastQ files from a multiomic 10x experiment against a reference genome and include VDJ-B/T and cell surface markers. Output matrices for gene expression and features are provided in triplet and h5 formats. VDJ data are provided separately.
+
+tags:
+  - 10x
+  - quantification
+  - rna
+  - flex
+  - plex
+  - antibody derived tags (adt)
+  - hashtag oligos (hto)
+  - variable diversity joining (vdj)
+  - 5' gene expression
+  - 3' gene expression
+
+tools:
+  cell ranger:
+    description: Cell Ranger is a set of analysis pipelines that process Chromium single cell data to align reads, generate feature-barcode matrices, perform clustering and other secondary analysis, and more.
+    homepage: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger
+    documentation: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+    ext: count
+    features:
+      - multithreaded
+
+input:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: output dir
+    type: string
+    description: A path to use as the Cell Ranger multi output directory.
+  - name: dataset_ids
+    type: strings
+    description: An array of datasets that should be in the library, there may be only one. When there is only one sample in the `per_sample_outs`, the sample is renamed to the hyphen-joined list of dataset IDs.
+  - name: config.csv
+    type: file
+    description: Path to the configuration file.
+
+output:
+  - name: opt
+    type: map
+    description: A map of task-specific variables.
+  - name: task
+    type: file
+    description: YAML-formatted file of task parameters and software versions used by the task.
+    pattern: task.yaml
+  - name: config_csv
+    type: file
+    description: Configuration file used by the task.
+    pattern: '*/config.csv'
+  - name: multi_quantification_path
+    type: path
+    description: Cell Ranger multi outputs directory.
+    pattern: '*/multi'
+  - name: per_sample_quantification_path
+    type: path
+    description: Cell Ranger multi gene expression outputs directory for each dataset. Subdirecotries of these include "count" and "vdj_b" for example.
+    pattern: '*/per_sample_outs'
+
+authors:
+  - "@ChristopherBarrington"

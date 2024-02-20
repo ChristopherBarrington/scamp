@@ -156,7 +156,7 @@ def interpret_validatation_result(parameter_name, result, dataset_workflows, dat
 		messages = pass_message(parameter_name)
 	}
 	else if((parameter_name == 'index path')) { // these are special cases; a process could provide these if provided the right parameters
-		if('quantification:cell_ranger' in dataset_workflows) // index path was not provided, but is expected. check for fasta/gtf file/path
+		if(['quantification:cell_ranger', 'quantification:cell_ranger_multi'].stream().anyMatch{it in dataset_workflows}) // index path was not provided, but is expected. check for fasta/gtf file/path
 			messages = check_for_cell_ranger_index_path(parameter_name, result, dataset_parameters, parameter_specifications)
 
 		if('quantification:cell_ranger_arc' in dataset_workflows) // index path was not provided, but is expected. check for fasta/gtf file/path, organism, motifs file and non-nuclear contigs
@@ -229,7 +229,12 @@ def get_default_parameters() {
 	 'dataset id'         : {it -> make_string_directory_safe(it.get('dataset name'))},
 	 'dataset tag'        : {it -> it.get('dataset id')} ,
 	 'description'        : {it -> it.get('dataset name')},
-	 'feature identifiers': {'name'}]
+	 'feature identifiers': {'name'},
+	 'barcode'            : {'none'}, // barcode should be optional??
+	 'adt set path'       : {file('undefined-adt-set-path')},
+	 'hto set path'       : {file('undefined-hto-set-path')},
+	 'probe set path'     : {file('undefined-probe-set-path')},
+	 'vdj index path'     : {file('undefined-vdj-index-path')}]
 }
 
 // define some checker functions for often used or process-provided parameters

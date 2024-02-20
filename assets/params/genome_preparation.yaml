@@ -1,10 +1,10 @@
 _project:
     github:
         remote: ChristopherBarrington/scamp-push-test
-    lab: labb
-    scientist: scientist.b
-    lims id: SC23002
-    babs id: sn002
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC23000
+    babs id: cb000
 
 _genome:
     name: mm10
@@ -25,7 +25,3 @@ _defaults:
 
 _datasets:
     an example dataset: []
-        # description: PGCLC sorted by STELLA at 120 hours
-        # limsid: COO4671A1
-        # dataset tag: ST120R1
-        #quantification path: inputs/cellranger_nm322/COO4671A1/outs

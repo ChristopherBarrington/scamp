@@ -60,12 +60,36 @@
       type: string
       provider: process
 
+    - name: barcode
+      description: A barcode identifier, for example BC001.
+      type: string(s)
+      provider: optional
+
+    - name: vdj index path
+      description: Path to VDJ reference index.
+      type: path
+      provider: optional
+
+    - name: adt set path
+      description: Path to antibody-derived tags reference file.
+      type: path
+      provider: optional
+
+    - name: hto set path
+      description: Path to hashtag oligos reference file.
+      type: path
+      provider: optional
+
+    - name: probe set path
+      description: A 10x-provided file linking probes and gene targets.
+      type: path
+      provider: optional
+
 - title: Project parameters
   name: _project
   description: A reserved stanza that defines the project, rather than specifc data.
   icon: rocket
   parameters:
-
     - name: lab
       description: The `<last name><first initial>` formatted name of the lab.
       type: string
@@ -93,7 +117,6 @@
   description: A dictionary of parameters that define a genome. This can be used to define the parameters for a custom genome.
   icon: vial
   parameters:
-
     - name: organism
       description: Latin name for the species, such as "mus musculus".
       type: string
@@ -142,7 +165,6 @@
   description: Parameters used by the pipeline but are not directly part of {scamp} and specified with the `--` command line option. Default values are defined in `params.config`.
   icon: globe
   parameters:
-
     - name: publish_mode
       description: How results of tasks are outuput, defaults to `copy`. Other modes may affect the pipeline so the only alterantive to `copy` is `symlink`.
       type: string

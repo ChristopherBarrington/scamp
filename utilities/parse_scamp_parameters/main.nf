@@ -8,6 +8,7 @@ include { remove_keys_from_map }       from '../remove_keys_from_map'
 
 def parse_scamp_parameters() {
 	def genome_params = get_genome_params()
+	def project_params = get_project_params()
 	def default_dataset_params = get_default_dataset_params()
 	def possible_file_keys = get_possible_file_keys()
 	def project_parameters = get_project_parameters()
@@ -20,8 +21,8 @@ def parse_scamp_parameters() {
 		// collect hashes into a collection of maps
 		.collect{k,v -> v}
 
-		// add genome parameters to each dataset
-		.collect{it + ['genome parameters': genome_params]}
+		// add genome and project parameters to each dataset
+		.collect{it + ['genome parameters': genome_params, 'project parameters': project_params]}
 
 		// add default values to each set of dataset parameters
 		.collect{default_dataset_params + it}
@@ -52,7 +53,18 @@ def parse_scamp_parameters(String workflow) {
 def get_genome_params() {
 	def genome_params = get_scamp_params().get('_genome')
 	genome_params
-		.plus(['id': make_string_directory_safe(genome_params.get('id', genome_params.get('assembly')))])
+		.plus([id: make_string_directory_safe(genome_params.get('id', genome_params.get('assembly')))])
+}
+
+// get a hash of project parameters
+
+def get_project_params() {
+	def project_params = get_scamp_params().get('_project')
+
+	// define `type`, if missing, and update `types` from `type`; `type` takes priority and will define `types` even if user-specified
+	project_params
+		.plus([type: project_params.get('type', '10x-3prime').toLowerCase()])
+		.plus([types: project_params.get('type').split('-').sort()])
 }
 
 // get a hash of default parameters to use in all datasets
@@ -79,16 +91,38 @@ def get_scamp_params() {
 	read_yaml_file(params.get('scamp_file'))
 }
 
+// parse barcodes into a string, if there are multiple barcodes for the same dataset
+
+def concatenate_barcodes(java.util.LinkedHashMap x) {
+	if(x.keySet().contains('barcode'))
+		x.barcode = concatenate_barcodes(x.barcode)
+	x
+}
+
+def concatenate_barcodes(String barcode) {
+	barcode
+}
+
+def concatenate_barcodes(java.util.ArrayList barcodes) {
+	barcodes.join('|')
+}
+
 // define which parameter keys should be files
 
 def get_possible_file_keys() {
-	['index path',
-	 'quantification path',
+	['adt set path',
+	 'cell cycle genes',
 	 'fastq paths',
-	 'fasta file', 'fasta path',
+	 'fasta file',
 	 'fasta index file',
-	 'gtf file', 'gtf path',
-	 'motifs file',
+	 'fasta path',
+	 'gtf file',
+	 'gtf path',
+	 'hto set path',
+	 'index path',
 	 'mitochondrial features',
-	 'cell cycle genes']
+	 'motifs file',
+	 'probe set path',
+	 'quantification path',
+	 'vdj index path']
 }

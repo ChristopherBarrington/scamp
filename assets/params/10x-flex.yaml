@@ -1,0 +1,88 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC23193
+    babs id: cb000
+    type: 10x-flex
+
+_genome:
+    assembly: GRCh38
+    name: GRCh38
+    organism: homo sapiens
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+    # mitochondrial features: inputs/mm10_mitochondrial_genes.yaml
+    # cell cycle genes: inputs/cell_cycle_genes.yaml
+    # fasta path: inputs/fastas
+    # fasta file: inputs/fasta.fa
+    # fasta index file: inputs/fasta.fai
+    # gtf path: inputs/gtfs
+    # gtf file: inputs/gtf.gtf
+    # motifs file: inputs/motifs
+
+_defaults:
+    feature identifiers: name
+    feature types:
+        Gene Expression:
+            - BRA6403A1
+            - BRA6403A2
+    fastq paths:
+        - inputs/10x-flex/data/230714_A01366_0416_BHHCT7DSX7/fastq
+        - inputs/10x-flex/data/231201_A01366_0489_BHTNK2DSX7/fastq
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-GRCh38-2020-A
+    probe set path: inputs/10x-flex/Chromium_Human_Transcriptome_Probe_Set_v1.0.1_GRCh38-2020-A.csv
+    workflows:
+        - quantification/cell ranger multi
+
+_datasets:
+    T094:
+        description: T094 V1 20220920 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC001
+            - BC009
+    C077:
+        description: C077 V4 20221017 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC002
+            - BC010
+    T095:
+        description: T095 V1 20221017 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC003
+            - BC011
+    C098:
+        description: C098 V1 20221201 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC004
+            - BC012
+    T105:
+        description: T105 V1 20230116 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC005
+            - BC013
+    C106:
+        description: C106 V1 20230206 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC006
+            - BC014
+    C107:
+        description: C107 V1 20230206 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC007
+            - BC015
+    C115:
+        description: C115 V1 20230302 sample
+        limsid: BRA6403A1
+        barcode:
+            - BC008
+            - BC016

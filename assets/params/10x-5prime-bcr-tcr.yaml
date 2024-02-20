@@ -1,0 +1,63 @@
+_project:
+    github:
+        remote: ChristopherBarrington/scamp-push-test
+    lab: barringtonc
+    scientist: christopher.barrington
+    lims id: SC21077
+    babs id: cb000
+    type: 10x-5prime-bcr-tcr
+
+_genome:
+    assembly: mm10
+    name: mm10
+    organism: mus musculus
+    ensembl release: 98
+    non-nuclear contigs:
+        - chrM
+
+_defaults:
+    feature identifiers: name
+    feature types:
+        Gene Expression:
+            - MAY3201A19
+            - MAY3201A22
+            - MAY3201A25
+            - MAY3201A28
+        VDJ-T:
+            - MAY3201A20
+            - MAY3201A23
+            - MAY3201A26
+            - MAY3201A29
+        VDJ-B:
+            - MAY3201A21
+            - MAY3201A24
+            - MAY3201A27
+            - MAY3201A30
+    fastq paths:
+        - inputs/10x-5prime-vdj/data/211215_A01366_0116_AH53C7DMXY/fastq
+    index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-gex-mm10-2020-A
+    vdj index path: /camp/svc/reference/Genomics/10x/10x_transcriptomes/refdata-cellranger-vdj-GRCm38-alts-ensembl-7.0.0
+    workflows:
+        - quantification/cell ranger multi
+
+_datasets:
+    26_4g_pre:
+        limsid:
+            - MAY3201A19
+            - MAY3201A20
+            - MAY3201A21
+    26_4g_post:
+        limsid:
+            - MAY3201A22
+            - MAY3201A23
+            - MAY3201A24
+    26 4b post:
+        limsid:
+            - MAY3201A25
+            - MAY3201A26
+            - MAY3201A27
+    26 4b pre:
+        limsid:
+            - MAY3201A28
+            - MAY3201A29
+            - MAY3201A30

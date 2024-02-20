@@ -2,10 +2,11 @@
 
 import argparse
 import csv
-import re
-from ruamel.yaml import YAML
 import glob, os.path, sys
-import pandas as pd
+import pandas
+import re, regex_spm
+
+from ruamel.yaml import YAML
 
 if sys.version_info.major <= 3 and sys.version_info.minor < 10:
 	raise Exception('Python 3.10 or a more recent version is required.')
@@ -54,12 +55,33 @@ parser.add_argument(
 
 parser.add_argument(
 	'--project-type', type=str, required=False, dest='project_type',
-	help='Protocol used to generate these datasets.',
-	choices=['10X-3prime', '10X-Multiomics', '10X-FeatureBarcoding', 'hive'])
+	help='Protocol used to generate these datasets.')
+	# choices=['10X-3prime', '10X-Multiomics', '10X-FeatureBarcoding'])
+
+parser.add_argument(
+	'--project-assays', type=str, required=False, dest='project_assays', nargs='+',
+	help='A list of the assays used in the project. These are a curated set of keywords.',
+	choices=['10x', '3prime', '5prime', 'adt', 'bcr', 'flex', 'hto', 'plex', 'tcr'])
 
 parser.add_argument(
 	'--design-file', type=str, required=False, dest='design_file',
 	help='Path to sample sheet CSV file.')
+
+parser.add_argument(
+	'--barcodes-file', type=str, required=False, dest='barcodes_file',
+	help='Path to barcodes CSV file with "barcode" and "sample_name" columns.')
+
+parser.add_argument(
+	'--antibodies-file', type=str, required=False, dest='antibodies_file',
+	help='Path to antibodies CSV file with antibody and tag information.')
+
+parser.add_argument(
+	'--hto-file', type=str, required=False, dest='hto_file',
+	help='Path to CSV for HTO antibody tags. Can be omitted in which case the default TotalSeq set is used from the module assets.')
+
+parser.add_argument(
+	'--probes-file', type=set, required=False, dest='probes_file',
+	help='Path to 10x probes file for Flex analyses.')
 
 args = parser.parse_args()
 
@@ -90,7 +112,18 @@ def validate_arguments():
 	if args.lims_id is None: get_lims_id_from_data_path()
 	if args.scientist is None: get_scientist_from_data_path()
 	if args.design_file is None: get_design_file_path()
-	if args.project_type is None: get_project_type_from_sample_sheet()
+	if args.project_type is None: get_project_type_from_assays()
+	if args.project_assays is None: get_project_assays_from_type()
+
+	if not args.project_type.startswith('10x-'):
+		args.project_type = '10x-' + args.project_type
+
+	if '10x' not in args.project_assays:
+		args.project_assays.insert(0, '10x')
+
+	if any([x in ['hto', 'flex', 'plex'] for x in args.project_assays]) and args.barcodes_file is None:
+		print('a multiplexing design was specified but no --barcodes-file provided')
+		sys.exit()
 
 	args.fastq_paths_glob = os.path.join(args.data_path, 'primary_data', '*', 'fastq')
 
@@ -144,15 +177,17 @@ def get_lab_from_data_path():
 def get_design_file_path():
 	args.design_file = os.path.join(args.data_path, "{}_design.csv".format(args.lims_id))
 
-# parse sample sheet to get project type
-def get_project_type_from_sample_sheet():
-	sample_sheet = read_design_file()
-	project_types = list(sample_sheet['type'].unique())
-	if len(project_types) != 1:
-		print('multiple project types found in the sample sheet!')
+def get_project_type_from_assays():
+	if args.project_assays is None:
+		print('cannot get project_type if --project-assays was not provided!')
 		sys.exit()
-	else:
-		args.project_type = project_types[0]
+	args.project_type = '-'.join(sorted(args.project_assays))
+
+def get_project_assays_from_type():
+	if args.project_type is None:
+		print('cannot get project assays if --project-type was not provided!')
+		sys.exit()
+	args.project_assays = sorted(args.project_type.split('-'))
 
 # ------------------------------------------------------------------------------------------------
 # get information for genome used in the project
@@ -188,14 +223,7 @@ def get_fastq_paths_from_data_path():
 # ------------------------------------------------------------------------------------------------
 
 def read_design_file():
-	df = pd.read_csv(args.design_file)
-	important_columns = ['sample_lims', 'sample_name', 'type', 'fastq_1']
-	for important_column in important_columns:
-		if important_column not in df.columns:
-			print('`{}` undefined in sample sheet {}!'.format(important_column, args.design_file))
-			sys.exit()
-		df = df[df[important_column].isnull() == False]
-	return(df)
+	return(read_and_check_file(args.design_file, ['sample_lims', 'sample_name', 'type', 'fastq_1']))
 
 # ------------------------------------------------------------------------------------------------
 # parse the sample sheet in `data` to guess library types
@@ -206,7 +234,10 @@ def get_feature_types_to_search_terms():
 	return({
 		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$'],
 		'Chromatin Accessibility': ['^ATAC_', '_ATAC$', '_mxATAC$'],
-		'CMO': ['_CMO$']})
+		'Multiplexing Capture': ['_CMO$'],
+		'VDJ-B': ['_B$', '_BCR$'],
+		'VDJ-T': ['_T$', '_TCR$', '_TCR_$'],
+		'Antibody Capture': ['_TSC$']})
 
 def get_library_types():
 	library_types = {}
@@ -237,13 +268,13 @@ def get_library_types():
 		print('some rows contained more than one feature type! check sample name regexes!')
 
 	# check that every row has a feature type
-	if (sample_sheet['library_type'].eq('unassigned')).any() and args.project_type != '10X-3prime':
+	if (sample_sheet['library_type'].eq('unassigned')).any() and args.project_type != '10x-3prime':
 		print(sample_sheet[sample_sheet['library_type'] == 'unassigned'])
 		print('some rows could not be assigned a feature type! check sample name regexes!')
 
 	# if all libraries are unassigned type and the project type is 10X-3prime, set the library type to Gene Expression
-	if (sample_sheet['library_type'].eq('unassigned')).all() and args.project_type == '10X-3prime':
-		print('all rows were unassigned but the project type is 10X-3prime; guessing that all libraries will be Gene Expression')
+	if (sample_sheet['library_type'].eq('unassigned')).all() and args.project_type == '10x-3prime':
+		print('all rows were unassigned but the project type is 10x-3prime; guessing that all libraries will be Gene Expression')
 		sample_sheet['library_type'] = 'Gene Expression'
 
 	# get a dictionary of lims id in library type groups
@@ -261,69 +292,70 @@ def get_library_types():
 # values taken from `project_type`
 # ------------------------------------------------------------------------------------------------
 
-def get_dataset_index():
+def get_dataset_indexes():
 	indexes_root = '/flask/reference/Genomics'
 	indexes_10x_root = os.path.join(indexes_root, '10x')
-	indexes_10x_3prime_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
-	indexes_10x_multiomics_root = os.path.join(indexes_10x_root, '10x_arc')
+	indexes_10x_arc_root = os.path.join(indexes_10x_root, '10x_arc')
+	indexes_10x_gex_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
+	indexes_10x_vdj_root = os.path.join(indexes_10x_root, '10x_transcriptomes')
 
-	match args.project_type:
-		case '10X-3prime':
-			return({
-				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
-				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
+	indexes = {
+		'mm10': {
+			'arc': os.path.join(indexes_10x_arc_root, 'refdata-cellranger-arc-mm10-2020-A-2.0.0'),
+			'gex': os.path.join(indexes_10x_gex_root, 'refdata-gex-mm10-2020-A'),
+			'vdj': os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCm38-alts-ensembl-7.0.0')},
+		'GRCh38': {
+			'arc': os.path.join(indexes_10x_arc_root, 'refdata-cellranger-arc-GRCh38-2020-A-2.0.0'),
+			'gex': os.path.join(indexes_10x_gex_root, 'refdata-gex-GRCh38-2020-A'),
+			'vdj': os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCh38-alts-ensembl-7.1.0')}
+	}
 
-		case '10X-Multiomics':
-			return({
-				'mm10': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-mm10-2020-A-2.0.0'),
-				'GRCh38': os.path.join(indexes_10x_multiomics_root, 'refdata-cellranger-arc-GRCh38-2020-A-2.0.0')}.get(args.genome))
-
-		case '10X-FeatureBarcoding':
-			return({
-				'mm10': os.path.join(indexes_10x_3prime_root, 'refdata-gex-mm10-2020-A'),
-				'GRCh38': os.path.join(indexes_10x_3prime_root, 'refdata-gex-GRCh38-2020-A')}.get(args.genome))
-
-		case 'hive':
-			return({
-				'GRCh38': 'unknown'
-				}.get(args.genome))
-
+	match regex_spm.fullmatch_in(args.project_type):
+		case r'^10x(-|.*)-bcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
+		case r'^10x(-|.*)-tcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
+		case r'^10x-(3|5)prime(-|$).*': return({'index path': indexes.get(args.genome).get('gex')})
+		case r'^10x-multiome$'        : return({'index path': indexes.get(args.genome).get('arc')})
 		case _:
-			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
+			print("get_dataset_indexes: UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
 
 def get_feature_types():
+	assay_types = {
+		'10x' : {
+			'3prime'  : 'Gene Expression',
+			'5prime'  : 'Gene Expression',
+			'adt'     : 'Antibody Capture',
+			'bcr'     : 'VDJ-B',
+			'flex'    : 'Gene Expression',
+			'hto'     : 'Multiplexing Capture',
+			'multiome': ['Gene Expression', 'Chromatin Accessibility'],
+			'plex'    : 'Gene Expression',
+			'tcr'     : 'VDJ-T'}}
+
 	match args.project_type:
-		case '10X-3prime': return(['Gene Expression'])
-		case '10X-Multiomics': return(['Gene Expression', 'Chromatin Accessibility'])
-		case '10X-FeatureBarcoding':return(['Gene Expression', 'CMO'])
-		case _:
-			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
-			sys.exit()
+		case '10x-multiome': assay_types['10x']['multiome']
+		case _: list(set([assay_types.get('10x').get(assay) for assay in args.project_type.removeprefix('10x-').split('-')]))
 
 def get_workflows():
-	match args.project_type:
-		case '10X-3prime': return(['quantification/cell_ranger', 'seurat/prepare/cell_ranger'])
-		case '10X-Multiomics': return(['quantification/cell_ranger_arc', 'seurat/prepare/cell_ranger_arc'])
-		case '10X-FeatureBarcoding': return(['quantification/cell_ranger_multi', 'seurat/prepare/cell_ranger'])
-		case _:
-			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
-			sys.exit()
+	if args.project_type in ['10x-3prime', '10x-5prime']:
+		return(['quantification/cell_ranger', 'seurat/prepare/cell_ranger'])
+	elif '10x-multiome' == args.project_type:
+		return(['quantification/cell_ranger_arc', 'seurat/prepare/cell_ranger_arc'])
+	else:
+		return(['quantification/cell_ranger_multi'])
 
 def get_genome_files(dataset_index):
-	match args.project_type:
-		case '10X-3prime': return({
+	match regex_spm.fullmatch_in(args.project_type):
+		case r'^10x-(3|5)prime(-|$).*': return({
 			'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
 			'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
 			'gtf file': os.path.join(dataset_index, 'genes/genes.gtf')})
-
-		case '10X-Multiomics': return({
-				'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
-				'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
-				'gtf file': os.path.join(dataset_index, 'genes/genes.gtf.gz')})
-
+		case r'^10x-multiome$': return({
+			'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
+			'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
+			'gtf file': os.path.join(dataset_index, 'genes/genes.gtf.gz')})
 		case _:
-			print("UNKNOWN PROJECT TYPE: {}".format(args.project_type))
+			print("get_genome_files: UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
 
 # ------------------------------------------------------------------------------------------------
@@ -331,10 +363,38 @@ def get_genome_files(dataset_index):
 # ------------------------------------------------------------------------------------------------
 
 def get_datasets(sample_lims_ids):
+	dataset_barcodes = get_dataset_barcodes()
 	for dataset,libraries in sample_lims_ids.items():
 		if len(libraries) == 1:
 			sample_lims_ids[dataset] = libraries.pop()
-	return({k:{'description': k, 'limsid': sample_lims_ids[k]} for k in sample_lims_ids})
+	return({k:{'description': k, 'limsid': sample_lims_ids[k]} | dataset_barcodes.get(k, {}) for k in sample_lims_ids})
+
+# ------------------------------------------------------------------------------------------------
+# get the barcode information, if relevant
+# ------------------------------------------------------------------------------------------------
+
+def read_barcode_file():
+	return(read_and_check_file(args.barcodes_file, ['barcode', 'dataset']))
+
+def get_dataset_barcodes():
+	dataset_barcodes = {}
+	if args.barcodes_file is None:
+		return dataset_barcodes
+	df = read_barcode_file()
+	for index,row in df.iterrows():
+		dataset_barcodes.update({(row['dataset']): dataset_barcodes.get(row['dataset'], []) + [row['barcode']]})
+	return({k:{'barcode': dataset_barcodes[k][0] if len(dataset_barcodes[k]) == 1 else dataset_barcodes[k] } for k in dataset_barcodes})
+
+# ------------------------------------------------------------------------------------------------
+# get paths to set files, if relevant
+# ------------------------------------------------------------------------------------------------
+
+def get_set_files():
+	set_files = {}
+	if args.antibodies_file is not None: set_files.update({'adt set path': args.antibodies_file})
+	if args.hto_file is not None: set_files.update({'hto set path': args.hto_file})
+	if args.probes_file is not None: set_files.update({'probe set path': args.probes_file})
+	return(set_files)
 
 # ------------------------------------------------------------------------------------------------
 # write the guessed parameters file
@@ -364,6 +424,15 @@ def natural_keys(text):
 	'''
 	return [ atoi(c) for c in re.split(r'(\d+)', text) ]
 
+def read_and_check_file(path, important_columns):
+	df = pandas.read_csv(path)
+	for important_column in important_columns:
+		if important_column not in df.columns:
+			print('`{}` undefined in file {}!'.format(important_column, path))
+			sys.exit()
+		df = df[df[important_column].isnull() == False]
+	return(df)
+
 # ------------------------------------------------------------------------------------------------
 # call these functions to get the parameters into a structure that can be written as yaml
 # ------------------------------------------------------------------------------------------------
@@ -376,13 +445,14 @@ def main():
 	workflows = get_workflows()
 	genome = get_genome_parameters()
 	fastq_paths = get_fastq_paths_from_data_path()
-	dataset_index = get_dataset_index()
+	dataset_indexes = get_dataset_indexes()
 	feature_types = get_feature_types()
 	library_types, sample_lims_ids = get_library_types()
+	set_files = get_set_files()
 
 	# get parameters dependent on the above variables
 	datasets = get_datasets(sample_lims_ids)
-	genome = genome | get_genome_files(dataset_index)
+	genome = genome | get_genome_files(dataset_indexes.get('index path'))
 
 	# put the parameters together
 	params = {
@@ -391,14 +461,14 @@ def main():
 			'scientist': args.scientist,
 			'lims id': args.lims_id,
 			'babs id': 'unknown',
-			'type': args.project_type},
+			'type': args.project_type,
+			'assays': args.project_assays},
 		'_genome':	genome,
 		'_defaults': {
 			'fastq paths': fastq_paths,
 			'feature types': library_types,
-			'index path': dataset_index,
 			'workflows': workflows,
-			'feature identifiers': 'name'},
+			'feature identifiers': 'name'} | dataset_indexes | set_files,
 		'_datasets': datasets}
 
 	# write the above structure to a yaml file

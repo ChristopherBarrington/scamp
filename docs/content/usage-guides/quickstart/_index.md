@@ -41,13 +41,17 @@ nextflow pull ChristopherBarrington/scamp
 
 `guess_scamp_file.py` includes a set of default parameters, which will need to be updated as we include new protocols. Example usage is shown below, where we indicate the genome that we want to use for the project, the LIMS ID under which the data was produced and the name of the output YAML file. For command line options, use `guess_scamp_file.py --help`.
 
+For projects using dataset barcodes (10x Flex, Plex or HTO for example) a `barcodes.csv` file is required. This is a two-column CSV with "barcode" and "dataset" variables. Each row should be a unique barcode:dataset pair - if a dataset is labelled by multiple barcodes in the project, these should be represented on multiple rows. The "dataset" should match the name of the dataset in the project's design file (either in the ASF `data` directory or specified by `--design-file`). The barcodes and design files are parsed and joined together using the "barcode" as the key. Barcode information is not tracked in the LIMS and must be provided by the scientist.
+
+A collection of assays can be included from which the project `type` can be defined. The project's assays is a curated set of keywords to define what types of data should be expected. For example, `--project-assays 3prime 10x` will be translated into `--project-type 10x-3prime`. A list of valid assay names can be found with `guess_scamp_file.py --help`. If `--project-type` is not provided, it is sought from `--project-assays` and vice versa. Only one of `--project-type` and `--project-assays` is required, but it is better to provide `--project-assays`; the assays in `--project-type` must be hyphen-separated and sorted alphabetically.
+
 {{< tabs title="guess_scamp_file.py usage examples" >}}
 {{< tab title="lims id" >}}
 {{< highlight bash >}}
 guess_scamp_file.py \
   --lims-id SC22034 \
   --genome mm10 \
-  --output-file scamp_file.yaml
+  --project-assays 10x 3prime
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -56,7 +60,7 @@ guess_scamp_file.py \
 guess_scamp_file.py \
   --data-path /nemo/stp/babs/inputs/sequencing/data/morisn/christopher.cooke/SC22034 \
   --genome mm10 \
-  --output-file scamp_file.yaml
+  --project-assays 10x 3prime
 {{< /highlight >}}
 {{< /tab >}}
 
@@ -67,7 +71,16 @@ guess_scamp_file.py \
   --scientist christopher.cooke \
   --lims-id SC22034 \
   --genome mm10 \
-  --output-file scamp_file.yaml
+  --project-assays 10x 3prime
+{{< /highlight >}}
+{{< /tab >}}
+
+{{< tab title="barcoded samples" >}}
+{{< highlight bash >}}
+guess_scamp_file.py \
+  --lims-id SC22034 \
+  --barcodes-file inputs/barcodes.csv \
+  --project-assays 10x flex
 {{< /highlight >}}
 {{< /tab >}}
 
