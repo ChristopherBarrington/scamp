@@ -4,9 +4,9 @@
 // -------------------------------------------------------------------------------------------------
 
 include { cat as combine_task_records } from '../../../modules/tools/cat'
-include { count }                       from '../../../modules/cell_ranger_multi/count'
-include { make_input_csv }              from '../../../modules/cell_ranger_multi/make_input_csv'
-include { mkref }                       from '../../../modules/cell_ranger_arc/mkref'
+include { count }                       from '../../../modules/cell_ranger/multi'
+include { config }    from '../../../modules/cell_ranger/config'
+include { mkref }                       from '../../../modules/cell_ranger/mkref'
 
 include { check_for_matching_key_values }     from '../../../utilities/check_for_matching_key_values'
 include { concat_workflow_emissions }         from '../../../utilities/concat_workflow_emissions'
@@ -104,13 +104,13 @@ workflow cell_ranger_multi {
 		vdj_index_paths = configuration_params.map{it.get('vdj_index_path')}
 
 		// make a sample sheet for each cell ranger multi task
-		make_input_csv(configuration_params,
+		config(configuration_params,
 		               project_types, limsids, dataset_ids, descriptions, barcodes, feature_types,
 		               fastq_paths, index_paths, vdj_index_paths,
 		               probe_set_paths, adt_set_paths, hto_set_paths)
 
 		// make a channel of newly created cell ranger multi configuration files
-		merge_process_emissions(make_input_csv, ['opt', 'input_csv'])
+		merge_process_emissions(config, ['opt', 'input_csv'])
 			.map{it.get('opt') + [config_file: it.get('input_csv')]}
 			.dump(tag: 'quantification:cell_ranger_multi:quantification_configs', pretty: true)
 			.set{quantification_configs}
