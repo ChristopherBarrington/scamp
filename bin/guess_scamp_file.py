@@ -41,7 +41,7 @@ parser.add_argument(
 parser.add_argument(
 	'--genome', type=str, required=True, dest='genome',
 	help='Genome used in the project.',
-	choices=['mm10', 'GRCh38'])
+	choices=['mm10', 'GRCh38', 'BDGP6.22', 'GRCg6a'])
 
 parser.add_argument(
 	'--data-root', type=str, required=False, dest='data_root',
@@ -206,6 +206,18 @@ def get_genome_parameters():
 			'assembly': 'GRCh38',
 			'ensembl release': 98,
 			'non-nuclear contigs': ['chrM'],
+			'mitochondrial features': 'undefined'},
+		'BDGP6.22': {
+			'organism': 'drosophila melanogaster',
+			'assembly': 'BDGP6.22',
+			'ensembl release': 97,
+			'non-nuclear contigs': ['mitochondrion_genome'],
+			'mitochondrial features': 'undefined'},
+		'GRCg6a': {
+			'organism': 'gallus gallus',
+			'assembly': 'GRCg6a',
+			'ensembl release': 97,
+			'non-nuclear contigs': ['MT'],
 			'mitochondrial features': 'undefined'}}
 	return(genomes.get(args.genome))
 
@@ -232,7 +244,7 @@ def read_design_file():
 def get_feature_types_to_search_terms():
 	# dictionary of search terms in `sample_name` and their feature type
 	return({
-		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$'],
+		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$', '_snGEX'],
 		'Chromatin Accessibility': ['^ATAC_', '_ATAC$', '_mxATAC$'],
 		'Multiplexing Capture': ['_CMO$'],
 		'VDJ-B': ['_B$', '_BCR$'],
@@ -307,8 +319,11 @@ def get_dataset_indexes():
 		'GRCh38': {
 			'arc': os.path.join(indexes_10x_arc_root, 'refdata-cellranger-arc-GRCh38-2020-A-2.0.0'),
 			'gex': os.path.join(indexes_10x_gex_root, 'refdata-gex-GRCh38-2020-A'),
-			'vdj': os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCh38-alts-ensembl-7.1.0')}
-	}
+			'vdj': os.path.join(indexes_10x_vdj_root, 'refdata-cellranger-vdj-GRCh38-alts-ensembl-7.1.0')},
+		'BDGP6.22': {
+			'gex': os.path.join(indexes_10x_gex_root, 'Drosophila_melanogaster-release-97')},
+		'GRCg6a': {
+			'gex': os.path.join(indexes_10x_gex_root, 'Gallus_gallus-6.0-release-97')}}
 
 	match regex_spm.fullmatch_in(args.project_type):
 		case r'^10x(-|.*)-bcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
