@@ -478,7 +478,7 @@ def main():
 			'babs id': 'unknown',
 			'type': args.project_type,
 			'assays': args.project_assays},
-		'_genome':	genome,
+		'_genome': genome,
 		'_defaults': {
 			'fastq paths': fastq_paths,
 			'feature types': library_types,
