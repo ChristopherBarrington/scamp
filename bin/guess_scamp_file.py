@@ -361,11 +361,11 @@ def get_workflows():
 
 def get_genome_files(dataset_index):
 	match regex_spm.fullmatch_in(args.project_type):
-		case r'^10x-(3|5)prime(-|$).*': return({
+		case r'^10x-(3|5)prime(-|$).*' | '10x-flex': return({
 			'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
 			'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
 			'gtf file': os.path.join(dataset_index, 'genes/genes.gtf')})
-		case r'^10x-multiome$': return({
+		case '10x-multiome': return({
 			'fasta file': os.path.join(dataset_index, 'fasta/genome.fa'),
 			'fasta index file': os.path.join(dataset_index, 'fasta/genome.fa.fai'),
 			'gtf file': os.path.join(dataset_index, 'genes/genes.gtf.gz')})
