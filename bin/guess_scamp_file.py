@@ -256,7 +256,7 @@ def get_library_types():
 	sample_lims_ids = {}
 	sample_sheet = read_design_file()
 	feature_types_to_search_terms = get_feature_types_to_search_terms()
-
+	
 	# add the library type column to check that all rows get assigned
 	sample_sheet['library_type'] = 'unassigned'
 
@@ -440,7 +440,7 @@ def natural_keys(text):
 	return [ atoi(c) for c in re.split(r'(\d+)', text) ]
 
 def read_and_check_file(path, important_columns):
-	df = pandas.read_csv(path)
+	df = pandas.read_csv(path, keep_default_na=False)
 	for important_column in important_columns:
 		if important_column not in df.columns:
 			print('`{}` undefined in file {}!'.format(important_column, path))
