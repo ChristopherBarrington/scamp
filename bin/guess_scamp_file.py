@@ -326,11 +326,10 @@ def get_dataset_indexes():
 			'gex': os.path.join(indexes_10x_gex_root, 'Gallus_gallus-6.0-release-97')}}
 
 	match regex_spm.fullmatch_in(args.project_type):
-		case r'^10x(-|.*)-bcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
-		case r'^10x(-|.*)-tcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
-		case r'^10x-(3|5)prime(-|$).*': return({'index path': indexes.get(args.genome).get('gex')})
-		case r'^10x-flex$'            : return({'index path': indexes.get(args.genome).get('gex')})
-		case r'^10x-multiome$'        : return({'index path': indexes.get(args.genome).get('arc')})
+		case r'^10x(-|.*)-bcr(-|$).*'               : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
+		case r'^10x(-|.*)-tcr(-|$).*'               : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
+		case r'^10x-(3|5)prime(-|$).*' | '10x-flex' : return({'index path': indexes.get(args.genome).get('gex')})
+		case '10x-multiome'                         : return({'index path': indexes.get(args.genome).get('arc')})
 		case _:
 			print("get_dataset_indexes: UNKNOWN PROJECT TYPE: {}".format(args.project_type))
 			sys.exit()
