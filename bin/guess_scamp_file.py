@@ -244,7 +244,7 @@ def read_design_file():
 def get_feature_types_to_search_terms():
 	# dictionary of search terms in `sample_name` and their feature type
 	return({
-		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$', '_snGEX'],
+		'Gene Expression': ['^GEX_', '_GEX$', '_mxGEX$', '_snGEX$', '_fxGEX$'],
 		'Chromatin Accessibility': ['^ATAC_', '_ATAC$', '_mxATAC$'],
 		'Multiplexing Capture': ['_CMO$'],
 		'VDJ-B': ['_B$', '_BCR$'],
