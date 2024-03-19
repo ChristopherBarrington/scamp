@@ -329,6 +329,7 @@ def get_dataset_indexes():
 		case r'^10x(-|.*)-bcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
 		case r'^10x(-|.*)-tcr(-|$).*' : return({'index path': indexes.get(args.genome).get('gex'), 'vdj index path': indexes.get(args.genome).get('vdj')})
 		case r'^10x-(3|5)prime(-|$).*': return({'index path': indexes.get(args.genome).get('gex')})
+		case r'^10x-flex$'            : return({'index path': indexes.get(args.genome).get('gex')})
 		case r'^10x-multiome$'        : return({'index path': indexes.get(args.genome).get('arc')})
 		case _:
 			print("get_dataset_indexes: UNKNOWN PROJECT TYPE: {}".format(args.project_type))
