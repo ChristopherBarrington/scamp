@@ -105,7 +105,7 @@ workflow cell_ranger {
 			.map{concatenate_maps_list(it)}
 			.map{it + [ordered_assays: it.subMap('rna_assay_by_accession', 'rna_assay_by_name').values().toList()]}
 			.map{if(it.get('feature identifiers') == 'name') {it.ordered_assays = it.get('ordered_assays').reverse()} ; it}
-			.map{it + ['remove barcode suffixes': 'TRUE']} // should be a user parameter
+			.map{it + ['remove barcode suffixes': 'FALSE']} // should be a user parameter
 			.map{it.subMap(['dataset id', 'ordered_assays', 'remove barcode suffixes', 'features', 'dataset name']) + it.get('genome parameters').subMap(['granges'])}
 			.dump(tag: 'seurat:prepare:cell_ranger:objects_to_create', pretty: true)
 			.set{objects_to_create}
